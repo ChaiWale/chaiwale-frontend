@@ -62,7 +62,7 @@ export default function PrivacyPolicyPage() {
             <p>
               For any privacy queries, account deletions, or data requests, reach us at:
               <br />
-              <strong>Chaiwale Kitchen</strong>: G-31 / G-48, Vardhman Grand Plaza, Mangalam Palace, Rohini Sector-3, New Delhi - 110085
+              <strong>Chaiwale Kitchen</strong>: G-31, Vardhman Grand Plaza, Mangalam Place, Rohini Sector-3, New Delhi - 110085
               <br />
               Email: <strong>admin@chaiwale.co.in</strong> | WhatsApp: <strong>+91 88004 10441</strong>
             </p>

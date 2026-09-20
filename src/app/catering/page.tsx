@@ -6,6 +6,19 @@ import { submitCateringEnquiry } from '../../services/api.client';
 
 export default function CateringPage() {
   const [selectedService, setSelectedService] = useState('corporate');
+
+  // Map service tab ID → default eventType value
+  const serviceEventTypeMap: Record<string, string> = {
+    corporate: 'OFFICE_LUNCH',
+    bhandara: 'BHANDARA',
+    event: 'EVENT_BULK',
+    custom: 'CUSTOM_EVENT'
+  };
+
+  const handleSelectService = (id: string) => {
+    setSelectedService(id);
+    setForm((prev) => ({ ...prev, eventType: serviceEventTypeMap[id] as any }));
+  };
   const [submitted, setSubmitted] = useState<{ leadNumber: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -110,7 +123,7 @@ export default function CateringPage() {
             return (
               <button
                 key={s.id}
-                onClick={() => setSelectedService(s.id)}
+                onClick={() => handleSelectService(s.id)}
                 style={{
                   backgroundColor: isSelected ? '#FFFFFF' : '#F4EAE0',
                   border: isSelected ? '2px solid var(--cw-color-primary)' : '1px solid #E5D7C9',

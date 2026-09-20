@@ -5,144 +5,161 @@ export const Footer: React.FC = () => {
   return (
     <footer
       style={{
-        backgroundColor: '#1C1917',
+        backgroundColor: '#1A1210',
         color: '#ffffff',
-        borderTop: '1px solid rgba(255,255,255,0.08)',
-        paddingTop: '48px',
-        paddingBottom: '32px'
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+        paddingTop: '56px',
+        paddingBottom: '0'
       }}
     >
-      <div className="cw-container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+
+        {/* Main Grid — 4 columns */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '36px',
-            marginBottom: '40px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '40px',
+            marginBottom: '48px'
           }}
         >
-          {/* Brand Col */}
+
+          {/* ── Brand Column ── */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-              <img
-                src="/assets/chaiwale-logo.jpeg"
-                alt="Chaiwale"
-                style={{ height: '48px', width: 'auto', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)' }}
-              />
-              <div>
-                <span style={{ fontFamily: 'var(--cw-font-heading)', fontSize: '20px', fontWeight: 800, color: '#ffffff', display: 'block', letterSpacing: '0.5px' }}>
-                  CHAIWALE
-                </span>
-                <span style={{ fontSize: '11px', color: '#D97706', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase' }}>
-                  Meals • Chai • More
-                </span>
-              </div>
-            </div>
-            <p style={{ color: '#D6D3D1', fontSize: '13px', lineHeight: 1.6, marginBottom: '16px' }}>
-              Sip, Bite, Repeat. Authentic Kulhad Chai, wholesome North Indian meals, Mom's Daawat non-veg handi specialties, and institutional catering across Delhi NCR.
+            <img
+              src="/assets/chaiwale-logo.jpeg"
+              alt="Chaiwale"
+              style={{ height: '54px', width: 'auto', borderRadius: '10px', marginBottom: '16px' }}
+            />
+            <p style={{ color: '#B5ADA8', fontSize: '13px', lineHeight: 1.7, marginBottom: '20px' }}>
+              Authentic Kulhad Chai, wholesome North Indian meals, and institutional catering across Delhi NCR.
             </p>
 
-            {/* Instagram Link with Icon */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E1306C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-              <a
-                href="https://www.instagram.com/chaiwaleofficial/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: '#F3F4F6', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}
-              >
-                Instagram: <span style={{ color: '#F472B6', textDecoration: 'underline' }}>@chaiwaleofficial</span>
-              </a>
-            </div>
-
-            {/* FSSAI Badge */}
-            <div
+            {/* Instagram — icon only, no handle text */}
+            <a
+              href="https://www.instagram.com/chaiwaleofficial/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Chaiwale on Instagram"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                padding: '6px 12px',
-                borderRadius: '6px'
+                justifyContent: 'center',
+                width: '36px',
+                height: '36px',
+                borderRadius: '8px',
+                background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
+                marginBottom: '20px'
               }}
             >
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#F59E0B', letterSpacing: '0.5px' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
+
+            {/* FSSAI — on its own line, no overlap */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 800, color: '#D97706', letterSpacing: '0.5px' }}>
                 FSSAI
               </span>
-              <span style={{ fontSize: '12px', color: '#E5E7EB', fontFamily: 'monospace', fontWeight: 600 }}>
-                Lic. No. 23326001003387
+              <span style={{ fontSize: '11px', color: '#7C6D67', fontFamily: 'monospace' }}>
+                23326001003387
               </span>
             </div>
           </div>
 
-          {/* Quick Nav */}
+          {/* ── Quick Links ── */}
           <div>
-            <h4 style={{ color: '#ffffff', fontSize: '14px', fontWeight: 800, marginBottom: '16px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Food & Catering Menu
+            <h4 style={{ color: '#ffffff', fontSize: '12px', fontWeight: 700, marginBottom: '18px', letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.5 }}>
+              Quick Links
             </h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', color: '#D6D3D1' }}>
-              <li><Link href="/menu" style={{ color: 'inherit', textDecoration: 'none' }}>☕ Full Cafe & Shakes Menu</Link></li>
-              <li><Link href="/menu#moms-daawat" style={{ color: '#F87171', fontWeight: 600, textDecoration: 'none' }}>🍗 Mom's Daawat Specialities</Link></li>
-              <li><Link href="/catering#bhandara" style={{ color: '#FBBF24', fontWeight: 600, textDecoration: 'none' }}>🙏 Bhandara Service (51 Plates @ ₹3,999)</Link></li>
-              <li><Link href="/catering#meal-plans" style={{ color: '#34D399', fontWeight: 600, textDecoration: 'none' }}>🍱 Monthly Meal Plans & PG Tiffin</Link></li>
-              <li><Link href="/catering" style={{ color: 'inherit', textDecoration: 'none' }}>🏢 Corporate Office Catering</Link></li>
-              <li><Link href="/quote" style={{ color: 'inherit', textDecoration: 'none' }}>📝 Request Bulk Catering Quote</Link></li>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <li><Link href="/menu" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Full Cafe &amp; Shakes Menu</Link></li>
+              <li><Link href="/menu#moms-daawat" style={{ color: '#F87171', fontSize: '14px', textDecoration: 'none', fontWeight: 600 }}>Mom&apos;s Daawat Specialities</Link></li>
+              <li><Link href="/catering#bhandara" style={{ color: '#FBBF24', fontSize: '14px', textDecoration: 'none', fontWeight: 600 }}>Bhandara Service — 51 Plates @ ₹3,999</Link></li>
+              <li><Link href="/catering#meal-plans" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Monthly Meal Plans &amp; PG Tiffin</Link></li>
+              <li><Link href="/catering" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Corporate Office Catering</Link></li>
+              <li><Link href="/quote" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Request a Catering Quote</Link></li>
             </ul>
           </div>
 
-          {/* Kitchen Location & Contact */}
+          {/* ── Contact ── */}
           <div>
-            <h4 style={{ color: '#ffffff', fontSize: '14px', fontWeight: 800, marginBottom: '16px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-              Kitchen Location & Contact
+            <h4 style={{ color: '#ffffff', fontSize: '12px', fontWeight: 700, marginBottom: '18px', letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.5 }}>
+              Contact
             </h4>
-            <p style={{ color: '#D6D3D1', fontSize: '13px', lineHeight: 1.6, marginBottom: '12px' }}>
-              📍 G-31 & G-48, Vardhman Grand Plaza, Mangalam Palace, M2K Road, Rohini Sector-3, New Delhi - 110085
-            </p>
-            <p style={{ color: '#D6D3D1', fontSize: '13px', marginBottom: '8px' }}>
-              📞 Phone: <a href="tel:+918800410441" style={{ color: '#ffffff', fontWeight: 700 }}>+91 88004 10441</a> / <a href="tel:+919310112564" style={{ color: '#ffffff', fontWeight: 700 }}>+91 93101 12564</a>
-            </p>
-            <p style={{ color: '#D6D3D1', fontSize: '13px', marginBottom: '8px' }}>
-              💬 WhatsApp: <a href="https://wa.me/918800410441" target="_blank" rel="noopener noreferrer" style={{ color: '#25D366', fontWeight: 700 }}>+91 88004 10441</a>
-            </p>
-            <p style={{ color: '#9CA3AF', fontSize: '12px', marginTop: '8px' }}>
-              🕒 Hours: Open Everyday 08:00 AM – 11:00 PM
-            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <p style={{ color: '#7C6D67', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>Address</p>
+                <p style={{ color: '#B5ADA8', fontSize: '13px', lineHeight: 1.6 }}>
+                  G-31, Vardhman Grand Plaza,<br />
+                  Rohini Sector-3, New Delhi – 110085
+                </p>
+              </div>
+              <div>
+                <p style={{ color: '#7C6D67', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>Phone</p>
+                <a href="tel:+918800410441" style={{ color: '#E8E0D8', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'block' }}>+91 88004 10441</a>
+                <a href="tel:+919310112564" style={{ color: '#E8E0D8', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'block', marginTop: '2px' }}>+91 93101 12564</a>
+              </div>
+              <div>
+                <p style={{ color: '#7C6D67', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>WhatsApp</p>
+                <a href="https://wa.me/919310112564" target="_blank" rel="noopener noreferrer" style={{ color: '#25D366', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>+91 93101 12564</a>
+              </div>
+              <div>
+                <p style={{ color: '#7C6D67', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>Hours</p>
+                <p style={{ color: '#B5ADA8', fontSize: '13px' }}>Open Every Day — 8:00 AM to 6:00 PM</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Map Embed ── */}
+          <div>
+            <h4 style={{ color: '#ffffff', fontSize: '12px', fontWeight: 700, marginBottom: '18px', letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.5 }}>
+              Find Us
+            </h4>
+            <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <iframe
+                title="Chaiwale — G-31 Vardhman Grand Plaza, Rohini Sector-3"
+                src="https://maps.google.com/maps?q=28.6989677,77.1141765&output=embed&z=17"
+                width="100%"
+                height="200"
+                style={{ border: 0, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
+            <a
+              href="https://maps.google.com/?q=28.6989677,77.1141765"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'block', textAlign: 'center', marginTop: '8px', color: '#60A5FA', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}
+            >
+              Open in Google Maps ↗
+            </a>
           </div>
         </div>
 
-        {/* Bottom Legal Bar */}
+        {/* ── Bottom Bar ── */}
         <div
           style={{
-            borderTop: '1px solid rgba(255,255,255,0.08)',
-            paddingTop: '20px',
+            borderTop: '1px solid rgba(255,255,255,0.07)',
+            padding: '18px 0',
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '14px',
+            gap: '12px',
             fontSize: '12px',
-            color: '#A8A29E'
+            color: '#5C504A'
           }}
         >
-          <div>
-            © 2026 Chaiwale Cafe & Catering. All rights reserved. • 100% Zero-Tax Registered Kitchen.
-          </div>
-
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <span style={{ color: '#D97706', fontWeight: 600 }}>FSSAI: 23326001003387</span>
-            <span>•</span>
-            <Link href="/privacy-policy" style={{ color: '#D6D3D1', textDecoration: 'underline' }}>
-              Privacy Policy
-            </Link>
-            <span>•</span>
-            <Link href="/terms" style={{ color: '#D6D3D1', textDecoration: 'underline' }}>
-              Terms & Conditions
-            </Link>
+          <span>© 2026 Chaiwale Cafe &amp; Catering. All rights reserved.</span>
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+            <Link href="/privacy-policy" style={{ color: '#7C6D67', textDecoration: 'none' }}>Privacy Policy</Link>
+            <Link href="/terms" style={{ color: '#7C6D67', textDecoration: 'none' }}>Terms &amp; Conditions</Link>
           </div>
         </div>
       </div>

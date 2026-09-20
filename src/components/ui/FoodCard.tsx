@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Badge } from './Badge';
+import { resolveMediaUrl, MenuItemVariantDto } from '../../services/api.client';
 
 export interface FoodCardProps {
   id: string;
@@ -9,8 +10,12 @@ export interface FoodCardProps {
   price: number;
   category: string;
   isVeg: boolean;
+  isEgg?: boolean;
+  spiceLevel?: string;
+  tags?: string[];
   description?: string;
   imageSrc?: string;
+  variants?: MenuItemVariantDto[];
   onAddToCart?: (id: string, qty: number) => void;
 }
 
@@ -20,11 +25,16 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   price,
   category,
   isVeg,
+  isEgg,
+  spiceLevel,
+  tags,
   description,
   imageSrc,
+  variants,
   onAddToCart
 }) => {
   const [qty, setQty] = useState(0);
+  const resolvedImage = resolveMediaUrl(imageSrc);
 
   const handleAdd = () => {
     const nextQty = qty + 1;
@@ -70,9 +80,9 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           border: '1px solid var(--cw-color-border-light)'
         }}
       >
-        {imageSrc ? (
+        {resolvedImage ? (
           <img
-            src={imageSrc}
+            src={resolvedImage}
             alt={name}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             loading="lazy"
@@ -86,11 +96,18 @@ export const FoodCard: React.FC<FoodCardProps> = ({
 
       {/* Middle: Details */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-          <Badge variant={isVeg ? 'veg' : 'non-veg'}>{isVeg ? 'Veg' : 'Non-Veg'}</Badge>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+          <Badge variant={isEgg ? 'accent' : isVeg ? 'veg' : 'non-veg'}>
+            {isEgg ? 'Egg' : isVeg ? 'Veg' : 'Non-Veg'}
+          </Badge>
           <span style={{ fontSize: '11px', color: 'var(--cw-color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
             {category}
           </span>
+          {spiceLevel && spiceLevel !== 'NONE' && (
+            <span style={{ fontSize: '11px' }} title={`Spice: ${spiceLevel}`}>
+              {spiceLevel === 'HOT' ? '🌶️🌶️🌶️' : spiceLevel === 'MEDIUM' ? '🌶️🌶️' : '🌶️'}
+            </span>
+          )}
         </div>
 
         <h4
@@ -121,11 +138,39 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           </p>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-          <span style={{ fontSize: '12px', color: 'var(--cw-color-text-muted)' }}>₹</span>
-          <span style={{ fontSize: '17px', fontWeight: 800, color: 'var(--cw-color-primary)', fontFamily: 'var(--cw-font-heading)' }}>
-            {price}
-          </span>
+        {tags && tags.length > 0 && (
+          <div style={{ display: 'flex', gap: '4px', marginBottom: '6px', flexWrap: 'wrap' }}>
+            {tags.map((t) => (
+              <span
+                key={t}
+                style={{
+                  fontSize: '10px',
+                  padding: '1px 6px',
+                  borderRadius: '4px',
+                  backgroundColor: '#FEF3C7',
+                  color: '#92400E',
+                  fontWeight: 700
+                }}
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
+            <span style={{ fontSize: '12px', color: 'var(--cw-color-text-muted)' }}>₹</span>
+            <span style={{ fontSize: '17px', fontWeight: 800, color: 'var(--cw-color-primary)', fontFamily: 'var(--cw-font-heading)' }}>
+              {price}
+            </span>
+          </div>
+
+          {variants && variants.length > 0 && (
+            <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
+              ({variants.map((v) => `${v.name} ₹${v.price}`).join(' • ')})
+            </span>
+          )}
         </div>
       </div>
 

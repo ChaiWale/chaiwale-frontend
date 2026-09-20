@@ -358,6 +358,10 @@ export default function MenuPage() {
                     price={Number(item.base_price)}
                     category={category}
                     isVeg={item.is_veg}
+                    isEgg={item.is_egg}
+                    spiceLevel={item.spice_level}
+                    tags={item.tags}
+                    variants={item.variants}
                     description={item.description || undefined}
                     imageSrc={item.image_path || undefined}
                     onAddToCart={handleAddToCart}

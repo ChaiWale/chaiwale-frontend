@@ -7,6 +7,13 @@ export interface CategoryDto {
   display_order: number;
 }
 
+export interface MenuItemVariantDto {
+  id: string;
+  name: string;
+  price: number;
+  is_available: boolean;
+}
+
 export interface MenuItemDto {
   id: string;
   category_id: string;
@@ -15,8 +22,23 @@ export interface MenuItemDto {
   description: string | null;
   base_price: number;
   is_veg: boolean;
+  is_egg?: boolean;
+  spice_level?: string;
+  tags?: string[];
   image_path: string | null;
   is_available: boolean;
+  variants?: MenuItemVariantDto[];
+}
+
+export function resolveMediaUrl(path: string | null | undefined): string {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+    return path;
+  }
+  if (path.startsWith('/')) {
+    return `${BACKEND_URL}${path}`;
+  }
+  return `${BACKEND_URL}/api/v1/media/${path}`;
 }
 
 export interface OrderItemInput {

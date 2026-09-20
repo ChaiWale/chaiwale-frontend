@@ -13,70 +13,41 @@ export const metadata: Metadata = {
   }
 };
 
-export default function HomePage() {
-  // Staple items from authentic reference data
-  const signatureItems = [
-    {
-      id: 'tea',
-      name: 'Authentic Kulhad Chai',
-      price: 12,
-      category: 'Tea',
-      isVeg: true,
-      description: 'Slow-brewed rich creamy milk tea served piping hot.',
-      imageSrc: '/assets/images/chai.jpg'
-    },
-    {
-      id: 'chai-wale-special-milk-tea',
-      name: 'Chai Wale Special Milk Tea',
-      price: 25,
-      category: 'Tea',
-      isVeg: true,
-      description: 'Signature spiced special milk tea prepared with fresh ginger and cardamom.',
-      imageSrc: '/assets/images/chai.jpg'
-    },
-    {
-      id: 'samosa',
-      name: 'Crispy Samosa',
-      price: 15,
-      category: 'Snacks',
-      isVeg: true,
-      description: 'Fresh crispy golden pastry stuffed with spicy potato and green peas.',
-      imageSrc: '/assets/images/samosa.jpg'
-    },
-    {
-      id: 'bun-maska',
-      name: 'Fresh Bun Maska',
-      price: 25,
-      category: 'Snacks',
-      isVeg: true,
-      description: 'Warm, soft bakery bun loaded with dollops of creamy fresh butter.',
-      imageSrc: '/assets/images/bun-maska.jpg'
-    },
-    {
-      id: 'aalu-paratha',
-      name: 'Tawa Aalu Paratha',
-      price: 30,
-      category: 'Breakfast',
-      isVeg: true,
-      description: 'Crisp whole-wheat flatbread stuffed with spiced mashed potatoes.'
-    },
-    {
-      id: 'veg-thali',
-      name: 'Special Veg. Thali (Complete Meal)',
-      price: 99,
-      category: 'Thali',
-      isVeg: true,
-      description: '3 Sabzi + 4 Tawa Roti + Rice + Salad + Achar + Sweet.'
-    },
-    {
-      id: 'authentic-bihari-chicken-half',
-      name: "Mom's Daawat Bihari Chicken (Half)",
-      price: 400,
-      category: "Mom's Daawat",
-      isVeg: false,
-      description: 'Slow cooked in sealed clay handi with whole garlic bulbs and authentic Bihari spices.'
-    }
-  ];
+// Server-side fetch — runs at build time / request time, no client JS needed
+async function fetchFeaturedItems() {
+  const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+  try {
+    const res = await fetch(`${BACKEND}/api/v1/menu/items`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    const data = Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
+    return data.slice(0, 6);
+  } catch {
+    return [];
+  }
+}
+
+async function fetchCategories() {
+  const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+  try {
+    const res = await fetch(`${BACKEND}/api/v1/menu/categories`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return Array.isArray(json.data) ? json.data : (Array.isArray(json) ? json : []);
+  } catch {
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  const rawFeaturedItems = await fetchFeaturedItems();
+  const featuredItems = Array.isArray(rawFeaturedItems) ? rawFeaturedItems : [];
+  const rawCategories = await fetchCategories();
+  const categories = Array.isArray(rawCategories) ? rawCategories : [];
+  // Build a category id → name map for display
+  const catMap = Object.fromEntries(categories.map((c) => [c.id, c.name]));
 
   return (
     <div>
@@ -118,7 +89,7 @@ export default function HomePage() {
                   marginBottom: '16px'
                 }}
               >
-                ☕ More Than a Café • Complete Platform
+                Rohini's Favourite Cafe
               </div>
 
               <h1
@@ -299,7 +270,7 @@ export default function HomePage() {
                   zIndex: 4
                 }}
               >
-                ⭐ 100% Fresh Ingredients
+                100% Fresh Ingredients
               </div>
             </div>
           </div>
@@ -345,18 +316,24 @@ export default function HomePage() {
               gap: '16px'
             }}
           >
-            {signatureItems.map((item) => (
+            {featuredItems.length > 0 ? featuredItems.map((item) => (
               <FoodCard
                 key={item.id}
                 id={item.id}
                 name={item.name}
-                price={item.price}
-                category={item.category}
-                isVeg={item.isVeg}
-                description={item.description}
-                imageSrc={item.imageSrc}
+                price={Number(item.base_price)}
+                category={catMap[item.category_id] || 'Chaiwale'}
+                isVeg={item.is_veg}
+                isEgg={item.is_egg}
+                spiceLevel={item.spice_level}
+                tags={item.tags}
+                variants={item.variants}
+                description={item.description || undefined}
+                imageSrc={item.image_path || undefined}
               />
-            ))}
+            )) : (
+              <p style={{ color: 'var(--cw-color-text-muted)', fontSize: '14px' }}>Menu loading... <Link href="/menu" style={{ color: 'var(--cw-color-primary)' }}>View full menu →</Link></p>
+            )}
           </div>
         </div>
       </section>
@@ -379,8 +356,8 @@ export default function HomePage() {
             <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '340px' }}>
               <img
                 src="/assets/bhandara-banner.jpg"
-                alt="Bhandara Hai? Khana Hum Sambhal Lenge"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                alt="Bhandara Hai? Khana Hum Sambhal Lenge - Chaiwale Catering"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
               />
             </div>
             <div style={{ padding: '36px 32px' }}>
@@ -426,7 +403,7 @@ export default function HomePage() {
                     boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)'
                   }}
                 >
-                  💬 Book Bhandara (WhatsApp: 8800410441)
+                  Book Bhandara — WhatsApp 88004 10441
                 </a>
               </div>
             </div>
@@ -497,14 +474,14 @@ export default function HomePage() {
                   boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)'
                 }}
               >
-                💬 WhatsApp "TRIAL" to 8800410441
+                WhatsApp "TRIAL" to 88004 10441
               </a>
             </div>
             <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '340px' }}>
               <img
-                src="/assets/monthly-meals-banner.png"
-                alt="Monthly Meal Plans Ghar Jaisa Khana"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                src="/assets/monthly-meals-banner.jpg"
+                alt="Good Food For A Better You - Monthly Meal Plans"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
               />
             </div>
           </div>
