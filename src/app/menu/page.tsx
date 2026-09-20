@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { FoodCard } from '../../components/ui/FoodCard';
 import { fetchCategories, fetchMenuItems, submitOrder, fetchUpiConfig, CategoryDto, MenuItemDto, UpiConfigDto } from '../../services/api.client';
@@ -29,12 +29,48 @@ export default function MenuPage() {
   const [upiConfig, setUpiConfig] = useState<UpiConfigDto | null>(null);
   const [copiedUpi, setCopiedUpi] = useState(false);
 
+  // Category horizontal scroll controls
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkCategoryScroll = () => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 6);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 6);
+  };
+
+  useEffect(() => {
+    checkCategoryScroll();
+    window.addEventListener('resize', checkCategoryScroll);
+    return () => window.removeEventListener('resize', checkCategoryScroll);
+  }, [categories]);
+
+  const scrollCategories = (direction: 'left' | 'right') => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    const distance = 260;
+    el.scrollBy({
+      left: direction === 'left' ? -distance : distance,
+      behavior: 'smooth'
+    });
+    setTimeout(checkCategoryScroll, 320);
+  };
+
+  const handleSelectCategory = (catName: string, e?: React.MouseEvent<HTMLButtonElement>) => {
+    setSelectedCategory(catName);
+    if (e?.currentTarget) {
+      e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  };
+
   const [checkoutForm, setCheckoutForm] = useState({
     name: '',
     phone: '',
     address: '',
     orderType: 'DIRECT_DELIVERY' as const,
-    paymentMode: 'CASH' as 'CASH' | 'UPI' | 'CREDIT',
+    paymentMode: 'CASH' as 'CASH' | 'UPI',
     transactionRef: '',
     instructions: ''
   });
@@ -84,6 +120,10 @@ export default function MenuPage() {
 
   const totalCartCount = useMemo(() => {
     return Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+  }, [cart]);
+
+  const totalCartPrice = useMemo(() => {
+    return Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
   }, [cart]);
 
   // Group items by category
@@ -156,7 +196,7 @@ export default function MenuPage() {
         style={{
           backgroundColor: '#FFFFFF',
           borderBottom: '1px solid var(--cw-color-border)',
-          padding: '20px 0 14px',
+          padding: '16px 0 12px',
           position: 'sticky',
           top: 'var(--cw-header-height)',
           zIndex: 900,
@@ -164,7 +204,7 @@ export default function MenuPage() {
         }}
       >
         <div className="cw-container">
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: '240px' }}>
               <input
                 type="text"
@@ -198,60 +238,127 @@ export default function MenuPage() {
                   gap: '8px'
                 }}
               >
-                🛒 Cart ({totalCartCount})
+                🛒 Cart ({totalCartCount}) • ₹{totalCartPrice}
               </button>
             )}
           </div>
 
-          {/* Category Pills */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              overflowX: 'auto',
-              paddingBottom: '4px',
-              scrollbarWidth: 'none'
-            }}
-          >
-            <button
-              onClick={() => setSelectedCategory('All')}
-              style={{
-                whiteSpace: 'nowrap',
-                padding: '7px 16px',
-                borderRadius: 'var(--cw-radius-pill)',
-                border: '1px solid',
-                borderColor: selectedCategory === 'All' ? 'var(--cw-color-primary)' : 'var(--cw-color-border)',
-                backgroundColor: selectedCategory === 'All' ? 'var(--cw-color-primary)' : '#FFFFFF',
-                color: selectedCategory === 'All' ? '#FFFFFF' : 'var(--cw-color-text-main)',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              All
-            </button>
-            {categories.map((cat) => (
+          {/* Enhanced Category Bar with Left/Right Scroll Arrows */}
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            {canScrollLeft && (
               <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.name)}
+                type="button"
+                onClick={() => scrollCategories('left')}
+                aria-label="Scroll categories left"
                 style={{
-                  whiteSpace: 'nowrap',
-                  padding: '7px 16px',
-                  borderRadius: 'var(--cw-radius-pill)',
-                  border: '1px solid',
-                  borderColor: selectedCategory === cat.name ? 'var(--cw-color-primary)' : 'var(--cw-color-border)',
-                  backgroundColor: selectedCategory === cat.name ? 'var(--cw-color-primary)' : '#FFFFFF',
-                  color: selectedCategory === cat.name ? '#FFFFFF' : 'var(--cw-color-text-main)',
-                  fontWeight: 600,
-                  fontSize: '13px',
+                  position: 'absolute',
+                  left: -8,
+                  zIndex: 10,
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid var(--cw-color-border)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                  color: 'var(--cw-color-primary)',
+                  fontWeight: 800,
+                  lineHeight: 1
                 }}
               >
-                {cat.name}
+                ‹
               </button>
-            ))}
+            )}
+
+            <div
+              ref={categoryScrollRef}
+              onScroll={checkCategoryScroll}
+              style={{
+                display: 'flex',
+                gap: '8px',
+                overflowX: 'auto',
+                padding: '4px 6px',
+                scrollbarWidth: 'none',
+                WebkitOverflowScrolling: 'touch',
+                scrollBehavior: 'smooth',
+                width: '100%'
+              }}
+            >
+              <button
+                onClick={(e) => handleSelectCategory('All', e)}
+                style={{
+                  whiteSpace: 'nowrap',
+                  padding: '8px 18px',
+                  borderRadius: 'var(--cw-radius-pill)',
+                  border: '1px solid',
+                  borderColor: selectedCategory === 'All' ? 'var(--cw-color-primary)' : 'var(--cw-color-border)',
+                  backgroundColor: selectedCategory === 'All' ? 'var(--cw-color-primary)' : '#FFFFFF',
+                  color: selectedCategory === 'All' ? '#FFFFFF' : 'var(--cw-color-text-main)',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  transition: 'all 0.18s ease',
+                  flexShrink: 0
+                }}
+              >
+                All
+              </button>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={(e) => handleSelectCategory(cat.name, e)}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    padding: '8px 18px',
+                    borderRadius: 'var(--cw-radius-pill)',
+                    border: '1px solid',
+                    borderColor: selectedCategory === cat.name ? 'var(--cw-color-primary)' : 'var(--cw-color-border)',
+                    backgroundColor: selectedCategory === cat.name ? 'var(--cw-color-primary)' : '#FFFFFF',
+                    color: selectedCategory === cat.name ? '#FFFFFF' : 'var(--cw-color-text-main)',
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    transition: 'all 0.18s ease',
+                    flexShrink: 0
+                  }}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+
+            {canScrollRight && (
+              <button
+                type="button"
+                onClick={() => scrollCategories('right')}
+                aria-label="Scroll categories right"
+                style={{
+                  position: 'absolute',
+                  right: -8,
+                  zIndex: 10,
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid var(--cw-color-border)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                  color: 'var(--cw-color-primary)',
+                  fontWeight: 800,
+                  lineHeight: 1
+                }}
+              >
+                ›
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -432,8 +539,11 @@ export default function MenuPage() {
               borderRadius: 'var(--cw-radius-xl)',
               maxWidth: '480px',
               width: '100%',
-              padding: '28px',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.2)',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              WebkitOverflowScrolling: 'touch',
+              padding: '24px 20px',
+              boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
               position: 'relative'
             }}
           >
@@ -469,12 +579,6 @@ export default function MenuPage() {
                   <div style={{ padding: '12px', backgroundColor: '#FEF3C7', border: '1px solid #FCD34D', borderRadius: 'var(--cw-radius-md)', margin: '14px 0', fontSize: '13px', color: '#92400E' }}>
                     📱 <strong>UPI Payment Status: PENDING VERIFICATION</strong><br />
                     Your transaction reference has been logged. Our kitchen & billing staff will verify the credit with our Paytm merchant bank before dispatch.
-                  </div>
-                )}
-                {orderSuccess.paymentMode === 'CREDIT' && (
-                  <div style={{ padding: '12px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 'var(--cw-radius-md)', margin: '14px 0', fontSize: '13px', color: '#1E40AF' }}>
-                    📑 <strong>Payment Mode: CREDIT / UDHAAR</strong><br />
-                    This order will be added to your outstanding balance register and issued with an official udhaar invoice.
                   </div>
                 )}
                 {orderSuccess.paymentMode === 'CASH' && (
@@ -527,8 +631,8 @@ export default function MenuPage() {
                 <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--cw-color-dark)', marginBottom: '4px' }}>
                   Complete Your Order
                 </h3>
-                <p style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', marginBottom: '18px' }}>
-                  Item prices and 5% GST are computed authoritatively by the central billing engine.
+                <p style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', marginBottom: '16px' }}>
+                  Freshly prepared at Chaiwale Rohini. Transparent zero-tax pricing.
                 </p>
 
                 {/* Items Summary */}
@@ -539,13 +643,9 @@ export default function MenuPage() {
                       <span style={{ fontWeight: 600 }}>₹{it.price * it.qty}</span>
                     </div>
                   ))}
-                  <div style={{ borderTop: '1px dashed #CBD5E1', marginTop: '6px', paddingTop: '6px', display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#64748B' }}>
-                    <span>Estimated 5% Restaurant GST</span>
-                    <span>₹{(Object.values(cart).reduce((sum, it) => sum + it.price * it.qty, 0) * 0.05).toFixed(2)}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '14px', color: '#0F172A', marginTop: '4px' }}>
-                    <span>Estimated Total</span>
-                    <span>₹{(Object.values(cart).reduce((sum, it) => sum + it.price * it.qty, 0) * 1.05).toFixed(2)}</span>
+                  <div style={{ borderTop: '1px solid #E2E8F0', marginTop: '6px', paddingTop: '6px', display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
+                    <span>Total Amount</span>
+                    <span style={{ color: 'var(--cw-color-primary)' }}>₹{totalCartPrice}</span>
                   </div>
                 </div>
 
@@ -596,23 +696,24 @@ export default function MenuPage() {
                     />
                   </div>
 
-                  {/* Payment Mode Selection */}
+                  {/* Payment Mode Selection: CASH / COD or UPI SCAN only */}
                   <div>
                     <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px', color: '#0F172A' }}>
                       Select Payment Mode *
                     </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
                       <label
                         style={{
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          padding: '10px 6px',
+                          padding: '12px 8px',
                           borderRadius: 'var(--cw-radius-md)',
                           border: checkoutForm.paymentMode === 'CASH' ? '2px solid var(--cw-color-primary)' : '1px solid #CBD5E1',
                           backgroundColor: checkoutForm.paymentMode === 'CASH' ? '#FFFBEB' : '#FFFFFF',
                           cursor: 'pointer',
-                          textAlign: 'center'
+                          textAlign: 'center',
+                          transition: 'all 0.15s ease'
                         }}
                       >
                         <input
@@ -623,9 +724,9 @@ export default function MenuPage() {
                           onChange={() => setCheckoutForm({ ...checkoutForm, paymentMode: 'CASH' })}
                           style={{ display: 'none' }}
                         />
-                        <span style={{ fontSize: '18px', marginBottom: '2px' }}>💵</span>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A' }}>CASH / COD</span>
-                        <span style={{ fontSize: '10px', color: '#64748B' }}>Pay on Delivery</span>
+                        <span style={{ fontSize: '22px', marginBottom: '4px' }}>💵</span>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>CASH / COD</span>
+                        <span style={{ fontSize: '11px', color: '#64748B' }}>Pay on Delivery</span>
                       </label>
 
                       <label
@@ -633,12 +734,13 @@ export default function MenuPage() {
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
-                          padding: '10px 6px',
+                          padding: '12px 8px',
                           borderRadius: 'var(--cw-radius-md)',
                           border: checkoutForm.paymentMode === 'UPI' ? '2px solid var(--cw-color-primary)' : '1px solid #CBD5E1',
                           backgroundColor: checkoutForm.paymentMode === 'UPI' ? '#FFFBEB' : '#FFFFFF',
                           cursor: 'pointer',
-                          textAlign: 'center'
+                          textAlign: 'center',
+                          transition: 'all 0.15s ease'
                         }}
                       >
                         <input
@@ -649,35 +751,9 @@ export default function MenuPage() {
                           onChange={() => setCheckoutForm({ ...checkoutForm, paymentMode: 'UPI' })}
                           style={{ display: 'none' }}
                         />
-                        <span style={{ fontSize: '18px', marginBottom: '2px' }}>📱</span>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A' }}>UPI SCAN</span>
-                        <span style={{ fontSize: '10px', color: '#64748B' }}>Paytm / GPay QR</span>
-                      </label>
-
-                      <label
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          padding: '10px 6px',
-                          borderRadius: 'var(--cw-radius-md)',
-                          border: checkoutForm.paymentMode === 'CREDIT' ? '2px solid var(--cw-color-primary)' : '1px solid #CBD5E1',
-                          backgroundColor: checkoutForm.paymentMode === 'CREDIT' ? '#FFFBEB' : '#FFFFFF',
-                          cursor: 'pointer',
-                          textAlign: 'center'
-                        }}
-                      >
-                        <input
-                          type="radio"
-                          name="paymentMode"
-                          value="CREDIT"
-                          checked={checkoutForm.paymentMode === 'CREDIT'}
-                          onChange={() => setCheckoutForm({ ...checkoutForm, paymentMode: 'CREDIT' })}
-                          style={{ display: 'none' }}
-                        />
-                        <span style={{ fontSize: '18px', marginBottom: '2px' }}>📑</span>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A' }}>CREDIT / UDHAAR</span>
-                        <span style={{ fontSize: '10px', color: '#64748B' }}>Regular Account</span>
+                        <span style={{ fontSize: '22px', marginBottom: '4px' }}>📱</span>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#0F172A' }}>UPI SCAN</span>
+                        <span style={{ fontSize: '11px', color: '#64748B' }}>Paytm / GPay QR</span>
                       </label>
                     </div>
                   </div>
@@ -741,12 +817,6 @@ export default function MenuPage() {
                       </div>
                     </div>
                   )}
-
-                  {checkoutForm.paymentMode === 'CREDIT' && (
-                    <div style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 'var(--cw-radius-md)', padding: '12px', fontSize: '12px', color: '#1E40AF' }}>
-                      ℹ️ <strong>Credit / Udhaar Billing:</strong> Available for authorized corporate partners and regular registered patrons. The bill will be added to your account ledger and can be settled partially or fully via BillBook.
-                    </div>
-                  )}
                 </div>
 
                 <button
@@ -755,7 +825,7 @@ export default function MenuPage() {
                   style={{
                     width: '100%',
                     marginTop: '20px',
-                    padding: '13px',
+                    padding: '14px',
                     backgroundColor: orderSubmitting ? '#94A3B8' : 'var(--cw-color-primary)',
                     color: '#FFFFFF',
                     fontWeight: 700,
@@ -765,7 +835,7 @@ export default function MenuPage() {
                     cursor: orderSubmitting ? 'not-allowed' : 'pointer'
                   }}
                 >
-                  {orderSubmitting ? 'Transmitting to Kitchen...' : `Confirm & Place Order (₹${(Object.values(cart).reduce((sum, it) => sum + it.price * it.qty, 0) * 1.05).toFixed(2)}) →`}
+                  {orderSubmitting ? 'Transmitting to Kitchen...' : `Confirm & Place Order (₹${totalCartPrice}) →`}
                 </button>
               </form>
             )}
