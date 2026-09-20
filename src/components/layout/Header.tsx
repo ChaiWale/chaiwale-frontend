@@ -136,6 +136,26 @@ export const Header: React.FC = () => {
 
           {/* Right CTA */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+            <Link
+              href="/menu"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                backgroundColor: '#FAF5EE',
+                border: '1px solid #EAE0D2',
+                color: '#6F432A',
+                padding: '8px 14px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: 700,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              🛒 Cart
+            </Link>
+
             <a
               href="https://wa.me/919310112564?text=Hi%20Chaiwale%21%20I%20want%20to%20place%20an%20order."
               target="_blank"

@@ -24,10 +24,31 @@ export default function MenuPage() {
   // Cart state
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [modalStep, setModalStep] = useState<'CART' | 'CHECKOUT'>('CART');
   const [orderSubmitting, setOrderSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<{ orderNumber: string; paymentMode?: string } | null>(null);
   const [upiConfig, setUpiConfig] = useState<UpiConfigDto | null>(null);
   const [copiedUpi, setCopiedUpi] = useState(false);
+
+  // Load saved cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('cw_cart');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          setCart(parsed);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Sync cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('cw_cart', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
 
   // Category horizontal scroll controls
   const categoryScrollRef = useRef<HTMLDivElement>(null);
@@ -118,6 +139,38 @@ export default function MenuPage() {
     });
   };
 
+  const handleUpdateCartQty = (id: string, delta: number) => {
+    setCart((prev) => {
+      const existing = prev[id];
+      if (!existing) return prev;
+      const nextQty = existing.qty + delta;
+      const updated = { ...prev };
+      if (nextQty <= 0) {
+        delete updated[id];
+      } else {
+        updated[id] = { ...existing, qty: nextQty };
+      }
+      return updated;
+    });
+  };
+
+  const handleRemoveCartItem = (id: string) => {
+    setCart((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
+  };
+
+  const handleClearCart = () => {
+    if (confirm('Are you sure you want to clear your cart?')) {
+      setCart({});
+      try {
+        localStorage.removeItem('cw_cart');
+      } catch {}
+    }
+  };
+
   const totalCartCount = useMemo(() => {
     return Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
   }, [cart]);
@@ -182,6 +235,9 @@ export default function MenuPage() {
 
       setOrderSuccess({ orderNumber: res.orderNumber, paymentMode: checkoutForm.paymentMode });
       setCart({});
+      try {
+        localStorage.removeItem('cw_cart');
+      } catch {}
     } catch (err: any) {
       alert(`Order placement failed: ${err.message}`);
     } finally {
@@ -223,7 +279,10 @@ export default function MenuPage() {
             </div>
             {totalCartCount > 0 && (
               <button
-                onClick={() => setIsCheckoutOpen(true)}
+                onClick={() => {
+                  setModalStep('CART');
+                  setIsCheckoutOpen(true);
+                }}
                 style={{
                   backgroundColor: 'var(--cw-color-primary)',
                   color: '#FFFFFF',
@@ -235,7 +294,8 @@ export default function MenuPage() {
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px'
+                  gap: '8px',
+                  boxShadow: '0 2px 6px rgba(111, 67, 42, 0.2)'
                 }}
               >
                 🛒 Cart ({totalCartCount}) • ₹{totalCartPrice}
@@ -471,6 +531,7 @@ export default function MenuPage() {
                     variants={item.variants}
                     description={item.description || undefined}
                     imageSrc={item.image_path || undefined}
+                    currentQty={cart[item.id]?.qty || 0}
                     onAddToCart={handleAddToCart}
                   />
                 ))}
@@ -498,11 +559,19 @@ export default function MenuPage() {
             zIndex: 1000
           }}
         >
-          <span style={{ fontSize: '14px', fontWeight: 700 }}>
-            {totalCartCount} item{totalCartCount > 1 ? 's' : ''} added
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '13px', fontWeight: 800 }}>
+              {totalCartCount} item{totalCartCount > 1 ? 's' : ''} added
+            </span>
+            <span style={{ fontSize: '12px', opacity: 0.95, fontWeight: 700 }}>
+              Total: ₹{totalCartPrice}
+            </span>
+          </div>
           <button
-            onClick={() => setIsCheckoutOpen(true)}
+            onClick={() => {
+              setModalStep('CART');
+              setIsCheckoutOpen(true);
+            }}
             style={{
               backgroundColor: '#FFFFFF',
               color: 'var(--cw-color-primary)',
@@ -511,15 +580,18 @@ export default function MenuPage() {
               fontWeight: 800,
               fontSize: '13px',
               border: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}
           >
-            Review & Order →
+            🛒 View Cart ({totalCartCount}) →
           </button>
         </div>
       )}
 
-      {/* Checkout Drawer / Modal */}
+      {/* Cart & Checkout Drawer / Modal */}
       {isCheckoutOpen && (
         <div
           style={{
@@ -537,7 +609,7 @@ export default function MenuPage() {
             style={{
               backgroundColor: '#FFFFFF',
               borderRadius: 'var(--cw-radius-xl)',
-              maxWidth: '480px',
+              maxWidth: '490px',
               width: '100%',
               maxHeight: '90vh',
               overflowY: 'auto',
@@ -556,11 +628,18 @@ export default function MenuPage() {
                 position: 'absolute',
                 top: '16px',
                 right: '16px',
-                background: 'transparent',
+                background: '#F1F5F9',
                 border: 'none',
-                fontSize: '20px',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                fontSize: '16px',
                 cursor: 'pointer',
-                color: '#64748B'
+                color: '#64748B',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 10
               }}
             >
               ✕
@@ -626,28 +705,266 @@ export default function MenuPage() {
                   </button>
                 </div>
               </div>
+            ) : modalStep === 'CART' ? (
+              /* ================= STEP 1: CART VIEW ================= */
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '14px', borderBottom: '1px solid #E2E8F0', marginBottom: '16px', paddingRight: '36px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--cw-color-dark)', margin: 0 }}>
+                      🛒 Your Order Cart
+                    </h3>
+                    <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 600 }}>
+                      {totalCartCount} item{totalCartCount > 1 ? 's' : ''} in cart
+                    </span>
+                  </div>
+                  {totalCartCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearCart}
+                      style={{
+                        background: '#FEF2F2',
+                        border: '1px solid #FECACA',
+                        color: '#DC2626',
+                        borderRadius: 'var(--cw-radius-pill)',
+                        padding: '5px 12px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      🗑️ Clear Cart
+                    </button>
+                  )}
+                </div>
+
+                {totalCartCount === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '36px 12px' }}>
+                    <span style={{ fontSize: '48px', display: 'block', marginBottom: '8px' }}>☕</span>
+                    <h4 style={{ fontSize: '18px', fontWeight: 700, color: '#0F172A', marginBottom: '6px' }}>
+                      Your Cart is Empty
+                    </h4>
+                    <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '20px' }}>
+                      Add piping hot kulhad chai, butter toast, samosas, or lunch combos from our Rohini kitchen!
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsCheckoutOpen(false)}
+                      style={{
+                        backgroundColor: 'var(--cw-color-primary)',
+                        color: '#FFFFFF',
+                        padding: '10px 24px',
+                        borderRadius: 'var(--cw-radius-pill)',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        border: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Browse Menu Items →
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {/* Cart Items List */}
+                    <div style={{ maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px', paddingRight: '4px' }}>
+                      {Object.values(cart).map((it) => (
+                        <div
+                          key={it.id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '10px 12px',
+                            backgroundColor: '#FAF5EE',
+                            borderRadius: 'var(--cw-radius-md)',
+                            border: '1px solid #EAE0D2'
+                          }}
+                        >
+                          <div style={{ flex: 1, minWidth: 0, marginRight: '10px' }}>
+                            <div style={{ fontWeight: 700, fontSize: '14px', color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {it.name}
+                            </div>
+                            <div style={{ fontSize: '12px', color: '#64748B' }}>
+                              ₹{it.price} each
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            {/* Quantity Controls */}
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                backgroundColor: 'var(--cw-color-primary)',
+                                borderRadius: 'var(--cw-radius-pill)',
+                                padding: '3px 8px',
+                                color: '#FFFFFF',
+                                boxShadow: '0 1px 4px rgba(111, 67, 42, 0.2)'
+                              }}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateCartQty(it.id, -1)}
+                                style={{
+                                  background: 'transparent',
+                                  border: 'none',
+                                  color: '#FFFFFF',
+                                  fontSize: '16px',
+                                  fontWeight: 800,
+                                  cursor: 'pointer',
+                                  padding: '0 4px',
+                                  lineHeight: 1
+                                }}
+                              >
+                                -
+                              </button>
+                              <span style={{ fontSize: '13px', fontWeight: 700, minWidth: '18px', textAlign: 'center' }}>
+                                {it.qty}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateCartQty(it.id, 1)}
+                                style={{
+                                  background: 'transparent',
+                                  border: 'none',
+                                  color: '#FFFFFF',
+                                  fontSize: '16px',
+                                  fontWeight: 800,
+                                  cursor: 'pointer',
+                                  padding: '0 4px',
+                                  lineHeight: 1
+                                }}
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            {/* Line Total */}
+                            <div style={{ fontWeight: 700, fontSize: '14px', color: '#0F172A', minWidth: '50px', textAlign: 'right' }}>
+                              ₹{it.price * it.qty}
+                            </div>
+
+                            {/* Remove button */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveCartItem(it.id)}
+                              title="Remove item"
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#94A3B8',
+                                fontSize: '16px',
+                                cursor: 'pointer',
+                                padding: '2px 4px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Bill Breakdown */}
+                    <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 'var(--cw-radius-md)', padding: '12px 14px', marginBottom: '18px', fontSize: '13px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: '#475569' }}>
+                        <span>Items Subtotal</span>
+                        <span style={{ fontWeight: 600 }}>₹{totalCartPrice}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: '#16A34A', fontSize: '12px' }}>
+                        <span>Restaurant GST (Zero-Tax)</span>
+                        <span>₹0 (Included)</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#16A34A', fontSize: '12px' }}>
+                        <span>Delivery (Rohini Hub)</span>
+                        <span>FREE</span>
+                      </div>
+                      <div style={{ borderTop: '1px solid #CBD5E1', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '16px', color: '#0F172A' }}>
+                        <span>To Pay</span>
+                        <span style={{ color: 'var(--cw-color-primary)' }}>₹{totalCartPrice}</span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Cart Actions */}
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setIsCheckoutOpen(false)}
+                        style={{
+                          flex: 1,
+                          padding: '12px',
+                          backgroundColor: '#FFFFFF',
+                          border: '1.5px solid var(--cw-color-border)',
+                          borderRadius: 'var(--cw-radius-md)',
+                          fontWeight: 700,
+                          fontSize: '13px',
+                          color: '#475569',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        + Add More Items
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setModalStep('CHECKOUT')}
+                        style={{
+                          flex: 1.6,
+                          padding: '12px',
+                          backgroundColor: 'var(--cw-color-primary)',
+                          border: 'none',
+                          borderRadius: 'var(--cw-radius-md)',
+                          fontWeight: 800,
+                          fontSize: '14px',
+                          color: '#FFFFFF',
+                          cursor: 'pointer',
+                          boxShadow: '0 4px 12px rgba(111, 67, 42, 0.25)'
+                        }}
+                      >
+                        Checkout (₹{totalCartPrice}) →
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             ) : (
+              /* ================= STEP 2: CHECKOUT FORM ================= */
               <form onSubmit={handlePlaceOrder}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setModalStep('CART')}
+                    style={{
+                      background: '#F1F5F9',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: 'var(--cw-radius-pill)',
+                      padding: '5px 12px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      color: '#334155',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    ← Back to Cart
+                  </button>
+                  <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 600 }}>
+                    {totalCartCount} items • Total: ₹{totalCartPrice}
+                  </span>
+                </div>
+
                 <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--cw-color-dark)', marginBottom: '4px' }}>
-                  Complete Your Order
+                  Delivery & Payment Details
                 </h3>
                 <p style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', marginBottom: '16px' }}>
                   Freshly prepared at Chaiwale Rohini. Transparent zero-tax pricing.
                 </p>
-
-                {/* Items Summary */}
-                <div style={{ maxHeight: '140px', overflowY: 'auto', border: '1px solid #E2E8F0', borderRadius: 'var(--cw-radius-md)', padding: '10px', marginBottom: '16px', fontSize: '13px' }}>
-                  {Object.values(cart).map((it) => (
-                    <div key={it.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
-                      <span>{it.qty}x {it.name}</span>
-                      <span style={{ fontWeight: 600 }}>₹{it.price * it.qty}</span>
-                    </div>
-                  ))}
-                  <div style={{ borderTop: '1px solid #E2E8F0', marginTop: '6px', paddingTop: '6px', display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
-                    <span>Total Amount</span>
-                    <span style={{ color: 'var(--cw-color-primary)' }}>₹{totalCartPrice}</span>
-                  </div>
-                </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div>
@@ -832,7 +1149,8 @@ export default function MenuPage() {
                     fontSize: '15px',
                     borderRadius: 'var(--cw-radius-md)',
                     border: 'none',
-                    cursor: orderSubmitting ? 'not-allowed' : 'pointer'
+                    cursor: orderSubmitting ? 'not-allowed' : 'pointer',
+                    boxShadow: '0 4px 12px rgba(111, 67, 42, 0.25)'
                   }}
                 >
                   {orderSubmitting ? 'Transmitting to Kitchen...' : `Confirm & Place Order (₹${totalCartPrice}) →`}

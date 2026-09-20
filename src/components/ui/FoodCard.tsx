@@ -16,6 +16,7 @@ export interface FoodCardProps {
   description?: string;
   imageSrc?: string;
   variants?: MenuItemVariantDto[];
+  currentQty?: number;
   onAddToCart?: (id: string, qty: number) => void;
 }
 
@@ -31,21 +32,23 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   description,
   imageSrc,
   variants,
+  currentQty,
   onAddToCart
 }) => {
-  const [qty, setQty] = useState(0);
+  const [localQty, setLocalQty] = useState(0);
+  const qty = currentQty !== undefined ? currentQty : localQty;
   const resolvedImage = resolveMediaUrl(imageSrc);
 
   const handleAdd = () => {
     const nextQty = qty + 1;
-    setQty(nextQty);
+    setLocalQty(nextQty);
     if (onAddToCart) onAddToCart(id, nextQty);
   };
 
   const handleSubtract = () => {
     if (qty > 0) {
       const nextQty = qty - 1;
-      setQty(nextQty);
+      setLocalQty(nextQty);
       if (onAddToCart) onAddToCart(id, nextQty);
     }
   };
