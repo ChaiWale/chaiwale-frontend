@@ -1,0 +1,134 @@
+/* ==========================================================================
+   CHAIWALE DESIGN SYSTEM TOKENS
+   Art-directed typography, warm stoneware palette, and layout scales.
+   ========================================================================== */
+
+:root {
+  /* Brand Palette - Roasted Chai & Warm Clay */
+  --cw-color-primary: #6F432A;
+  --cw-color-primary-hover: #5A3520;
+  --cw-color-primary-light: #8C593B;
+  --cw-color-primary-subtle: #F3ECE5;
+
+  --cw-color-dark: #211510;
+  --cw-color-dark-surface: #2E1F18;
+  --cw-color-canvas: #FAF6F0;
+  --cw-color-surface: #FFFFFF;
+  --cw-color-surface-muted: #F5EFE6;
+
+  --cw-color-border: #E8DCCB;
+  --cw-color-border-light: #F0E6D8;
+
+  --cw-color-text-main: #211510;
+  --cw-color-text-muted: #705F55;
+  --cw-color-text-subtle: #98877D;
+
+  --cw-color-accent: #D96B27;
+  --cw-color-accent-hover: #C05818;
+  --cw-color-accent-subtle: #FDF1EA;
+
+  --cw-color-veg: #1F8844;
+  --cw-color-veg-bg: #EAF6EE;
+  --cw-color-nonveg: #BA2525;
+  --cw-color-nonveg-bg: #FBEBEB;
+
+  --cw-color-whatsapp: #25D366;
+  --cw-color-whatsapp-hover: #1EBE5D;
+
+  /* Typography */
+  --cw-font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --cw-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Spacing Scale */
+  --cw-space-1: 0.25rem;  /* 4px */
+  --cw-space-2: 0.5rem;   /* 8px */
+  --cw-space-3: 0.75rem;  /* 12px */
+  --cw-space-4: 1rem;     /* 16px */
+  --cw-space-5: 1.25rem;  /* 20px */
+  --cw-space-6: 1.5rem;   /* 24px */
+  --cw-space-8: 2rem;     /* 32px */
+  --cw-space-10: 2.5rem;  /* 40px */
+  --cw-space-12: 3rem;    /* 48px */
+  --cw-space-16: 4rem;    /* 64px */
+  --cw-space-20: 5rem;    /* 80px */
+
+  /* Border Radii */
+  --cw-radius-sm: 6px;
+  --cw-radius-md: 10px;
+  --cw-radius-lg: 16px;
+  --cw-radius-xl: 24px;
+  --cw-radius-pill: 9999px;
+
+  /* Shadows */
+  --cw-shadow-sm: 0 2px 4px rgba(33, 21, 16, 0.04);
+  --cw-shadow-md: 0 6px 16px rgba(33, 21, 16, 0.08);
+  --cw-shadow-lg: 0 16px 32px rgba(33, 21, 16, 0.12);
+  --cw-shadow-elevated: 0 24px 48px rgba(33, 21, 16, 0.16);
+
+  /* Layout */
+  --cw-max-width: 1200px;
+  --cw-header-height: 76px;
+  --cw-transition-fast: 0.15s ease;
+  --cw-transition-normal: 0.25s ease;
+}
+
+/* Global Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--cw-font-body);
+  background-color: var(--cw-color-canvas);
+  color: var(--cw-color-text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--cw-font-heading);
+  color: var(--cw-color-text-main);
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Utility Layout Classes */
+.cw-container {
+  width: 100%;
+  max-width: var(--cw-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--cw-space-4);
+  padding-right: var(--cw-space-4);
+}
+
+@media (min-width: 768px) {
+  .cw-container {
+    padding-left: var(--cw-space-6);
+    padding-right: var(--cw-space-6);
+  }
+}
