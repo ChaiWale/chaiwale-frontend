@@ -447,11 +447,29 @@ export default async function HomePage() {
                   {mealsBanner.ctaText || 'WhatsApp "TRIAL" to 88004 10441'}
                 </a>
               </div>
-              <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '340px' }}>
+              <div
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#FFFDF9',
+                  padding: '24px'
+                }}
+              >
                 <img
                   src={resolveImg(mealsBanner.image)}
                   alt={mealsBanner.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                  style={{
+                    width: '100%',
+                    maxWidth: '460px',
+                    height: 'auto',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'contain',
+                    borderRadius: '16px',
+                    boxShadow: '0 8px 24px rgba(217, 119, 6, 0.12)',
+                    display: 'block'
+                  }}
                 />
               </div>
             </div>
@@ -515,11 +533,31 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)' }}>
+              <div
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '20px',
+                  backgroundColor: '#262220',
+                  padding: '20px',
+                  border: '1px solid rgba(255,255,255,0.15)'
+                }}
+              >
                 <img
                   src={resolveImg(daawatBanner.image)}
                   alt={daawatBanner.title}
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                  style={{
+                    width: '100%',
+                    maxWidth: '480px',
+                    height: 'auto',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'contain',
+                    borderRadius: '14px',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                    display: 'block'
+                  }}
                 />
               </div>
             </div>
@@ -592,11 +630,29 @@ export default async function HomePage() {
                   )}
                 </div>
               </div>
-              <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '300px' }}>
+              <div
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#FFFDF9',
+                  padding: '24px'
+                }}
+              >
                 <img
                   src={resolveImg(cb.image)}
                   alt={cb.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    maxWidth: '460px',
+                    height: 'auto',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'contain',
+                    borderRadius: '16px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                    display: 'block'
+                  }}
                 />
               </div>
             </div>

@@ -32,7 +32,15 @@ export const DynamicBhandaraSection: React.FC<DynamicBhandaraSectionProps> = ({ 
     : `Hello Chaiwale, I want to inquire about Bhandara & Religious Feast Catering for ${selectedPax}. Please share custom menu options and quote.`;
   const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(customMsg)}`;
 
-  const bannerImg = bannerData?.image || '/assets/bhandara-banner.jpg';
+  const resolveImgSrc = (src?: string) => {
+    if (!src) return '/assets/bhandara-banner.jpg';
+    if (src.startsWith('http://') || src.startsWith('https://')) return src;
+    if (src.startsWith('/assets/')) return src;
+    const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    if (src.startsWith('/')) return `${BACKEND}${src}`;
+    return `${BACKEND}/api/v1/media/${src}`;
+  };
+  const bannerImg = resolveImgSrc(bannerData?.image);
   const bannerTitle = bannerData?.title || 'Bhandara Hai? Khana Hum Sambhal Lenge.';
   const bannerBadge = bannerData?.badge || 'Bhandara & Mass Feasts Catering';
   const bannerDesc = bannerData?.description || 'Satvik ho ya special prasad, har bhog banega shuddh, swadisht aur poori pavitrata ke saath. Perfect for Puja, Jagran, Kirtan, Mandir Langar & Community Feasts across Delhi NCR.';
@@ -50,56 +58,37 @@ export const DynamicBhandaraSection: React.FC<DynamicBhandaraSectionProps> = ({ 
             boxShadow: '0 12px 36px rgba(111, 67, 42, 0.09)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            alignItems: 'stretch',
+            alignItems: 'center',
             position: 'relative',
             transition: 'all 0.3s ease'
           }}
         >
-          {/* Left Column: Authentic Feast Image */}
-          <div style={{ position: 'relative', overflow: 'hidden', minHeight: '340px' }}>
+          {/* Left Column: Authentic Feast Poster (Clean 1:1 Aspect Ratio) */}
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#FFFDF9',
+              padding: '24px'
+            }}
+          >
             <img
               src={bannerImg}
               alt={bannerTitle}
               style={{
                 width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 30%',
-                transition: 'transform 0.4s ease'
+                maxWidth: '460px',
+                height: 'auto',
+                aspectRatio: '1 / 1',
+                objectFit: 'contain',
+                borderRadius: '16px',
+                boxShadow: '0 8px 24px rgba(111, 67, 42, 0.12)',
+                display: 'block'
               }}
               className="cw-bhandara-img"
             />
-            {/* Subtle Gradient Overlay */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(to top, rgba(33, 21, 16, 0.4) 0%, transparent 60%)'
-              }}
-            />
-            {/* Floating Trust Badge */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '18px',
-                left: '18px',
-                backgroundColor: 'rgba(255, 255, 255, 0.96)',
-                backdropFilter: 'blur(8px)',
-                padding: '8px 16px',
-                borderRadius: '12px',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                border: '1px solid #EEDFCF'
-              }}
-            >
-              <span style={{ fontSize: '18px' }}>🪔</span>
-              <div>
-                <div style={{ fontSize: '12px', fontWeight: 800, color: '#211510' }}>Shuddh Satvik Rasoi</div>
-                <div style={{ fontSize: '10px', color: '#7C6D67', fontWeight: 600 }}>Pure Desi Ghee & Fresh Preparation</div>
-              </div>
-            </div>
           </div>
 
           {/* Right Column: Dynamic Feast Details */}
