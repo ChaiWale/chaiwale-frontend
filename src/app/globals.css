@@ -1,3 +1,5 @@
+@import './hero.css';
+
 /* ==========================================================================
    CHAIWALE DESIGN SYSTEM TOKENS
    Art-directed typography, warm stoneware palette, and layout scales.
@@ -131,4 +133,33 @@ button, input, select, textarea {
     padding-left: var(--cw-space-6);
     padding-right: var(--cw-space-6);
   }
+}
+
+/* ==========================================================================
+   Hero Critical Containment (Eliminates FOUC & Initial Image Explosion)
+   ========================================================================== */
+.cw-hero-cinematic-root {
+  position: relative;
+  width: 100%;
+  min-height: 540px;
+  overflow: hidden;
+  background-color: #0F0804;
+}
+
+.cw-hero-bg-layer {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  pointer-events: none;
+}
+
+.cw-hero-bg-img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  pointer-events: none;
 }

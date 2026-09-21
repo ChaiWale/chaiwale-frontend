@@ -2,8 +2,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FoodCard } from '../components/ui/FoodCard';
-import { ServicePillars } from '../components/ui/ServicePillars';
 import { DynamicBhandaraSection } from '../components/home/DynamicBhandaraSection';
+import { RotatingHeroSection } from '../components/home/RotatingHeroSection';
 
 export const metadata: Metadata = {
   title: 'Chaiwale | Authentic Kulhad Chai, Snacks & Institutional Catering Delhi NCR',
@@ -88,238 +88,9 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* 1. Warm Cream / Airy Hero Section matching Storyboard Panel 2 */}
-      <section
-        style={{
-          backgroundColor: '#FAF5EE',
-          borderBottom: '1px solid #EAE0D2',
-          paddingTop: 'var(--cw-space-12)',
-          paddingBottom: 'var(--cw-space-16)',
-          position: 'relative'
-        }}
-      >
-        <div className="cw-container">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              alignItems: 'center',
-              gap: 'var(--cw-space-8)'
-            }}
-          >
-            {/* Left Hero Column */}
-            <div>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '5px 12px',
-                  borderRadius: 'var(--cw-radius-pill)',
-                  backgroundColor: '#F3E9DD',
-                  border: '1px solid #E5D5C3',
-                  color: 'var(--cw-color-primary)',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                  marginBottom: '16px'
-                }}
-              >
-                Rohini's Favourite Cafe
-              </div>
+      {/* 1. Rotating Match & Move Hero Section */}
+      <RotatingHeroSection />
 
-              <h1
-                style={{
-                  fontSize: 'clamp(36px, 4.5vw, 54px)',
-                  fontWeight: 800,
-                  color: 'var(--cw-color-dark)',
-                  lineHeight: 1.15,
-                  letterSpacing: '-0.02em',
-                  marginBottom: '16px'
-                }}
-              >
-                Good Food For Every Occasion
-              </h1>
-
-              <p
-                style={{
-                  fontSize: 'clamp(17px, 2vw, 20px)',
-                  color: 'var(--cw-color-text-muted)',
-                  lineHeight: 1.5,
-                  marginBottom: '28px',
-                  maxWidth: '520px'
-                }}
-              >
-                From a cup of chai to a feast for hundreds.
-              </p>
-
-              {/* Approved Dual CTAs */}
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '28px' }}>
-                <Link
-                  href="/menu"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    backgroundColor: 'var(--cw-color-primary)',
-                    color: '#FFFFFF',
-                    padding: '14px 28px',
-                    borderRadius: 'var(--cw-radius-md)',
-                    fontFamily: 'var(--cw-font-heading)',
-                    fontSize: '16px',
-                    fontWeight: 700,
-                    boxShadow: '0 4px 12px rgba(111, 67, 42, 0.25)',
-                    transition: 'all 0.15s ease'
-                  }}
-                >
-                  Order Online →
-                </Link>
-
-                <Link
-                  href="/catering"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    backgroundColor: '#FFFFFF',
-                    color: 'var(--cw-color-primary)',
-                    border: '1.5px solid var(--cw-color-primary)',
-                    padding: '14px 24px',
-                    borderRadius: 'var(--cw-radius-md)',
-                    fontFamily: 'var(--cw-font-heading)',
-                    fontSize: '16px',
-                    fontWeight: 700,
-                    transition: 'all 0.15s ease'
-                  }}
-                >
-                  Get Catering Quote
-                </Link>
-              </div>
-
-              {/* Bullet Proof Points */}
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '16px',
-                  flexWrap: 'wrap',
-                  fontSize: '13px',
-                  color: 'var(--cw-color-text-muted)',
-                  fontWeight: 500
-                }}
-              >
-                <span>✓ Pure Veg & Egg Delicacies</span>
-                <span>✓ Direct Rohini Delivery</span>
-                <span>✓ Scalable Mass Feasts</span>
-              </div>
-            </div>
-
-            {/* Right Hero Column: Organic Circular Food Composition */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-                minHeight: '340px'
-              }}
-            >
-              {/* Primary Circular Hero Plate (Chai) */}
-              <div
-                style={{
-                  width: '260px',
-                  height: '260px',
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: '6px solid #FFFFFF',
-                  boxShadow: '0 16px 36px rgba(111, 67, 42, 0.16)',
-                  position: 'relative',
-                  zIndex: 2
-                }}
-              >
-                <img
-                  src="/assets/images/chai.jpg"
-                  alt="Chaiwale Authentic Kulhad Chai"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-
-              {/* Secondary Floating Circular Plate (Samosa) */}
-              <div
-                style={{
-                  width: '150px',
-                  height: '150px',
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: '5px solid #FFFFFF',
-                  boxShadow: '0 12px 28px rgba(0, 0, 0, 0.12)',
-                  position: 'absolute',
-                  bottom: '10px',
-                  left: '20px',
-                  zIndex: 3
-                }}
-              >
-                <img
-                  src="/assets/images/samosa.jpg"
-                  alt="Crisp Hot Samosas"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-
-              {/* Tertiary Floating Circular Plate (Bun Maska) */}
-              <div
-                style={{
-                  width: '130px',
-                  height: '130px',
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: '4px solid #FFFFFF',
-                  boxShadow: '0 10px 24px rgba(0, 0, 0, 0.1)',
-                  position: 'absolute',
-                  top: '10px',
-                  right: '20px',
-                  zIndex: 1
-                }}
-              >
-                <img
-                  src="/assets/images/bun-maska.jpg"
-                  alt="Fresh Bun Maska"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </div>
-
-              {/* Warm decorative badge */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '15px',
-                  right: '30px',
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid var(--cw-color-border)',
-                  borderRadius: 'var(--cw-radius-pill)',
-                  padding: '8px 16px',
-                  boxShadow: 'var(--cw-shadow-sm)',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  color: 'var(--cw-color-primary)',
-                  zIndex: 4
-                }}
-              >
-                100% Fresh Ingredients
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Four Primary Service Pillars (Panel 2) */}
-      <section style={{ backgroundColor: 'var(--cw-color-canvas)', paddingBottom: 'var(--cw-space-12)' }}>
-        <div className="cw-container">
-          <ServicePillars />
-        </div>
-      </section>
 
       {/* 3. Favorite Dishes - Horizontal Row Ordering (Panel 3) */}
       <section style={{ padding: 'var(--cw-space-12) 0', backgroundColor: '#FFFFFF', borderTop: '1px solid var(--cw-color-border-light)' }}>
@@ -382,7 +153,7 @@ export default async function HomePage() {
 
       {/* 5. Monthly Meal Plans & PG Tiffin Section */}
       {mealsBanner && mealsBanner.isActive !== false && (
-        <section style={{ padding: '60px 0', backgroundColor: '#FAF5EE' }}>
+        <section id="meal-plans" style={{ padding: '60px 0', backgroundColor: '#FAF5EE' }}>
           <div className="cw-container">
             <div
               style={{

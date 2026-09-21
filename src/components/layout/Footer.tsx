@@ -79,7 +79,7 @@ export const Footer: React.FC = () => {
               <li><Link href="/menu" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Full Cafe &amp; Shakes Menu</Link></li>
               <li><Link href="/menu#moms-daawat" style={{ color: '#F87171', fontSize: '14px', textDecoration: 'none', fontWeight: 600 }}>Mom&apos;s Daawat Specialities</Link></li>
               <li><Link href="/catering#bhandara" style={{ color: '#FBBF24', fontSize: '14px', textDecoration: 'none', fontWeight: 600 }}>Bhandara &amp; Mass Feasts (50 - 2000+ Pax)</Link></li>
-              <li><Link href="/catering#meal-plans" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Monthly Meal Plans &amp; PG Tiffin</Link></li>
+              <li><Link href="/meal-plans" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Monthly Meal Plans &amp; PG Tiffin</Link></li>
               <li><Link href="/catering" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Corporate Office Catering</Link></li>
               <li><Link href="/quote" style={{ color: '#B5ADA8', fontSize: '14px', textDecoration: 'none', fontWeight: 500 }}>Request a Catering Quote</Link></li>
             </ul>

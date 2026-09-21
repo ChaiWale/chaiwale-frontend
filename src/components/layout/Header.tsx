@@ -139,6 +139,7 @@ export const Header: React.FC = () => {
                   zIndex: 100
                 }}>
                   {[
+                    { href: '/meal-plans', label: 'Monthly Meal Plans & PG', sub: 'Homestyle daily meals & ₹79 trial' },
                     { href: '/catering#bhandara', label: 'Bhandara Catering', sub: 'Religious & community feasts' },
                     { href: '/catering', label: 'Corporate / Office', sub: 'Team meals & office catering' },
                     { href: '/catering#event', label: 'Party & Events', sub: 'Birthdays, functions & more' },
@@ -297,6 +298,7 @@ export const Header: React.FC = () => {
             {[
               { href: '/', label: 'Home' },
               { href: '/menu', label: 'Menu' },
+              { href: '/meal-plans', label: '🍱 Monthly Meal Plans & PG' },
               { href: '/catering#bhandara', label: 'Bhandara Catering' },
               { href: '/catering', label: 'Corporate & Office Catering' },
               { href: '/quote', label: 'Request a Quote' },

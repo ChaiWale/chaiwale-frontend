@@ -142,6 +142,27 @@ export default function MenuPage() {
     loadData();
   }, []);
 
+  // Auto-select category from URL hash or ?category= query param (e.g. #moms-daawat, #thali)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && categories.length > 0) {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      const searchParams = new URLSearchParams(window.location.search);
+      const query = (searchParams.get('category') || hash).toLowerCase();
+      if (query) {
+        const matched = categories.find(
+          (c) =>
+            c.slug.toLowerCase() === query ||
+            c.name.toLowerCase().includes(query) ||
+            (query === 'moms-daawat' && c.name.toLowerCase().includes('mom')) ||
+            (query === 'thali' && c.name.toLowerCase().includes('thali'))
+        );
+        if (matched) {
+          setSelectedCategory(matched.name);
+        }
+      }
+    }
+  }, [categories]);
+
   const handleAddToCart = (id: string, qty: number) => {
     const item = items.find((it) => it.id === id);
     if (!item) return;
