@@ -98,7 +98,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
   },
 ];
 
-const AUTOPLAY_INTERVAL = 5500;
+const AUTOPLAY_INTERVAL = 3000;
 
 export const RotatingHeroSection: React.FC = () => {
   const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
