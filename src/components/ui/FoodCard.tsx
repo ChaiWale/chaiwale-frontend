@@ -89,11 +89,21 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             alt={name}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             loading="lazy"
+            onError={(e) => {
+              // Fallback to official brand logo if image URL fails to load
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/assets/chaiwale-logo.jpeg';
+              e.currentTarget.style.objectFit = 'contain';
+              e.currentTarget.style.padding = '8px';
+            }}
           />
         ) : (
-          <span style={{ fontSize: '26px' }}>
-            {category === 'Tea' ? '☕' : category === 'Snacks' ? '🥟' : category === 'Momos' ? '🥟' : '🍲'}
-          </span>
+          <img
+            src="/assets/chaiwale-logo.jpeg"
+            alt="Chaiwale"
+            style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '8px' }}
+            loading="lazy"
+          />
         )}
       </div>
 

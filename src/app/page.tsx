@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FoodCard } from '../components/ui/FoodCard';
 import { ServicePillars } from '../components/ui/ServicePillars';
+import { DynamicBhandaraSection } from '../components/home/DynamicBhandaraSection';
 
 export const metadata: Metadata = {
   title: 'Chaiwale | Authentic Kulhad Chai, Snacks & Institutional Catering Delhi NCR',
@@ -338,78 +339,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 4. Bhandara & Seva Meals Section */}
-      <section style={{ padding: '60px 0', backgroundColor: '#FFFDF9', borderTop: '1px solid #EAE0D2' }}>
-        <div className="cw-container">
-          <div
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #F59E0B',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 8px 30px rgba(245, 158, 11, 0.12)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              alignItems: 'center'
-            }}
-          >
-            <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '340px' }}>
-              <img
-                src="/assets/bhandara-banner.jpg"
-                alt="Bhandara Hai? Khana Hum Sambhal Lenge - Chaiwale Catering"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
-              />
-            </div>
-            <div style={{ padding: '36px 32px' }}>
-              <div style={{ display: 'inline-block', backgroundColor: '#DC2626', color: '#FFFFFF', padding: '6px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', marginBottom: '12px' }}>
-                51 Plates Starting at ₹3,999
-              </div>
-              <h2 style={{ fontSize: '32px', fontWeight: 900, color: '#1E2328', lineHeight: 1.2, margin: '0 0 12px' }}>
-                Bhandara Hai? Khana Hum Sambhal Lenge.
-              </h2>
-              <p style={{ color: '#6B7280', fontSize: '15px', lineHeight: 1.6, margin: '0 0 16px' }}>
-                Satvik ho ya special, har bhog banega shuddh, swadisht aur poori zimmedari ke saath. For Puja, Jagran, Community Gatherings & Religious Events.
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
-                <span style={{ background: '#FEF3C7', color: '#92400E', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700 }}>
-                  ✓ Puri + Aloo Sabzi
-                </span>
-                <span style={{ background: '#FEF3C7', color: '#92400E', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700 }}>
-                  ✓ Kadhi Chawal
-                </span>
-                <span style={{ background: '#FEF3C7', color: '#92400E', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700 }}>
-                  ✓ Chole Chawal
-                </span>
-                <span style={{ background: '#FEF3C7', color: '#92400E', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700 }}>
-                  ✓ Fresh & Pure Satvik
-                </span>
-              </div>
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
-                <a
-                  href="https://wa.me/918800410441?text=Hello%20Chaiwale,%20I%20want%20to%20book%20Bhandara%20Catering%20(51%20Plates%20@%20Rs%203999).%20Please%20share%20details."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    backgroundColor: '#25D366',
-                    color: '#FFFFFF',
-                    padding: '14px 28px',
-                    borderRadius: '10px',
-                    fontWeight: 800,
-                    fontSize: '15px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    textDecoration: 'none',
-                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)'
-                  }}
-                >
-                  Book Bhandara — WhatsApp 88004 10441
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 4. Bhandara & Seva Meals Section (Dynamic & Interactive) */}
+      <DynamicBhandaraSection />
 
       {/* 5. Monthly Meal Plans & PG Tiffin Section */}
       <section style={{ padding: '60px 0', backgroundColor: '#FAF5EE' }}>

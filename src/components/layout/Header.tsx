@@ -1,13 +1,51 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [eventsOpen, setEventsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
+
+  const updateCartCount = () => {
+    try {
+      const saved = localStorage.getItem('cw_cart');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          const count = Object.values(parsed).reduce(
+            (sum: number, item: any) => sum + (Number(item?.qty) || 0),
+            0
+          );
+          setCartCount(count);
+          return;
+        }
+      }
+      setCartCount(0);
+    } catch {
+      setCartCount(0);
+    }
+  };
+
+  useEffect(() => {
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+    window.addEventListener('cart-updated', updateCartCount);
+    return () => {
+      window.removeEventListener('storage', updateCartCount);
+      window.removeEventListener('cart-updated', updateCartCount);
+    };
+  }, []);
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    if (pathname === '/menu') {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('open-cart'));
+    }
+  };
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -137,23 +175,41 @@ export const Header: React.FC = () => {
           {/* Right CTA */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <Link
-              href="/menu"
+              href="/menu?cart=open"
+              onClick={handleCartClick}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                backgroundColor: '#FAF5EE',
-                border: '1px solid #EAE0D2',
-                color: '#6F432A',
+                backgroundColor: cartCount > 0 ? '#6F432A' : '#FAF5EE',
+                border: '1px solid ' + (cartCount > 0 ? '#6F432A' : '#EAE0D2'),
+                color: cartCount > 0 ? '#FFFFFF' : '#6F432A',
                 padding: '8px 14px',
                 borderRadius: '8px',
                 fontSize: '14px',
                 fontWeight: 700,
                 textDecoration: 'none',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease',
+                cursor: 'pointer'
               }}
             >
-              🛒 Cart
+              <span>🛒 Cart</span>
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    backgroundColor: '#E65100',
+                    color: '#FFFFFF',
+                    borderRadius: '10px',
+                    padding: '1px 6px',
+                    fontSize: '11px',
+                    fontWeight: 800,
+                    lineHeight: '14px'
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             <a
@@ -200,6 +256,44 @@ export const Header: React.FC = () => {
         {/* Mobile Menu */}
         {mobileOpen && (
           <div style={{ backgroundColor: '#FFFFFF', borderTop: '1px solid #EAE0D2', padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {/* View Cart in Mobile Menu */}
+            <Link
+              href="/menu?cart=open"
+              onClick={(e) => {
+                setMobileOpen(false);
+                handleCartClick(e);
+              }}
+              style={{
+                fontSize: '15px',
+                fontWeight: 700,
+                color: '#6F432A',
+                backgroundColor: '#FAF5EE',
+                padding: '11px 12px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '4px'
+              }}
+            >
+              <span>🛒 View Cart</span>
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    backgroundColor: '#6F432A',
+                    color: '#FFFFFF',
+                    borderRadius: '10px',
+                    padding: '2px 8px',
+                    fontSize: '12px',
+                    fontWeight: 800
+                  }}
+                >
+                  {cartCount} items
+                </span>
+              )}
+            </Link>
+
             {[
               { href: '/', label: 'Home' },
               { href: '/menu', label: 'Menu' },

@@ -37,7 +37,7 @@ export default function TermsPage() {
               2. Bhandara & Bulk Catering Bookings
             </h2>
             <p>
-              Bhandara packages (starting at 51 plates @ ₹3,999) and custom bulk catering require prior booking confirmation via WhatsApp (+91 88004 10441). Food is freshly prepared with 100% hygienic and satvik standards. Advance booking deposits are adjusted towards the final invoice.
+              Bhandara packages (custom headcount from 50 to 2000+ pax) and custom bulk catering require prior booking confirmation via WhatsApp (+91 88004 10441). Food is freshly prepared with 100% hygienic and satvik standards. Advance booking deposits are adjusted towards the final invoice.
             </p>
           </section>
 

@@ -62,9 +62,16 @@ export const metadata: Metadata = {
     images: ['/assets/chaiwale-logo.jpeg']
   },
   icons: {
-    icon: '/assets/chaiwale-logo.jpeg',
-    shortcut: '/assets/chaiwale-logo.jpeg',
-    apple: '/assets/chaiwale-logo.jpeg'
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
+      { url: '/assets/chaiwale-logo.jpeg', sizes: '512x512', type: 'image/jpeg' }
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/assets/chaiwale-logo.jpeg' }
+    ],
+    shortcut: '/favicon.ico'
   },
   robots: {
     index: true,

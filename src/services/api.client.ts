@@ -30,6 +30,8 @@ export interface MenuItemDto {
   variants?: MenuItemVariantDto[];
 }
 
+const SUPABASE_STORAGE_URL = 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public';
+
 export function resolveMediaUrl(path: string | null | undefined): string {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
@@ -37,6 +39,10 @@ export function resolveMediaUrl(path: string | null | undefined): string {
   }
   if (path.startsWith('/')) {
     return `${BACKEND_URL}${path}`;
+  }
+  // Direct Supabase storage bucket references (e.g. menu/tea/chai.webp or branding/qr/chaiwale-upi-qr.jpeg)
+  if (path.startsWith('menu/') || path.startsWith('branding/') || path.startsWith('catering/')) {
+    return `${SUPABASE_STORAGE_URL}/${path}`;
   }
   return `${BACKEND_URL}/api/v1/media/${path}`;
 }

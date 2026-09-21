@@ -47,8 +47,31 @@ export default function MenuPage() {
   useEffect(() => {
     try {
       localStorage.setItem('cw_cart', JSON.stringify(cart));
+      window.dispatchEvent(new CustomEvent('cart-updated'));
     } catch {}
   }, [cart]);
+
+  // Listen for open-cart event or ?cart=open URL parameter
+  useEffect(() => {
+    const handleOpenCart = () => {
+      setIsCheckoutOpen(true);
+      setModalStep('CART');
+    };
+
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.get('cart') === 'open') {
+        handleOpenCart();
+      }
+      window.addEventListener('open-cart', handleOpenCart);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('open-cart', handleOpenCart);
+      }
+    };
+  }, []);
 
   // Category horizontal scroll controls
   const categoryScrollRef = useRef<HTMLDivElement>(null);

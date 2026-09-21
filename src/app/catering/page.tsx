@@ -19,6 +19,16 @@ export default function CateringPage() {
     setSelectedService(id);
     setForm((prev) => ({ ...prev, eventType: serviceEventTypeMap[id] as any }));
   };
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && serviceEventTypeMap[hash]) {
+        handleSelectService(hash);
+      }
+    }
+  }, []);
+
   const [submitted, setSubmitted] = useState<{ leadNumber: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
