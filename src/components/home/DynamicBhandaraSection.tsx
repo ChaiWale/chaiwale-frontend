@@ -3,7 +3,20 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-export const DynamicBhandaraSection: React.FC = () => {
+export interface DynamicBhandaraSectionProps {
+  bannerData?: {
+    image?: string;
+    badge?: string;
+    title?: string;
+    description?: string;
+    ctaText?: string;
+    ctaLink?: string;
+    whatsappNumber?: string;
+    whatsappText?: string;
+  };
+}
+
+export const DynamicBhandaraSection: React.FC<DynamicBhandaraSectionProps> = ({ bannerData }) => {
   const [selectedPax, setSelectedPax] = useState('100 - 250 Pax');
 
   const paxOptions = [
@@ -13,9 +26,16 @@ export const DynamicBhandaraSection: React.FC = () => {
     { label: '500 - 1000+ Pax', value: '500 - 1000+ guests' }
   ];
 
-  const waUrl = `https://wa.me/918800410441?text=${encodeURIComponent(
-    `Hello Chaiwale, I want to inquire about Bhandara & Religious Feast Catering for ${selectedPax}. Please share custom menu options and quote.`
-  )}`;
+  const waNum = bannerData?.whatsappNumber || '918800410441';
+  const customMsg = bannerData?.whatsappText
+    ? `${bannerData.whatsappText} for ${selectedPax}`
+    : `Hello Chaiwale, I want to inquire about Bhandara & Religious Feast Catering for ${selectedPax}. Please share custom menu options and quote.`;
+  const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(customMsg)}`;
+
+  const bannerImg = bannerData?.image || '/assets/bhandara-banner.jpg';
+  const bannerTitle = bannerData?.title || 'Bhandara Hai? Khana Hum Sambhal Lenge.';
+  const bannerBadge = bannerData?.badge || 'Bhandara & Mass Feasts Catering';
+  const bannerDesc = bannerData?.description || 'Satvik ho ya special prasad, har bhog banega shuddh, swadisht aur poori pavitrata ke saath. Perfect for Puja, Jagran, Kirtan, Mandir Langar & Community Feasts across Delhi NCR.';
 
   return (
     <section style={{ padding: '60px 0', backgroundColor: '#FAF5EE', borderTop: '1px solid #EAE0D2' }}>
@@ -38,8 +58,8 @@ export const DynamicBhandaraSection: React.FC = () => {
           {/* Left Column: Authentic Feast Image */}
           <div style={{ position: 'relative', overflow: 'hidden', minHeight: '340px' }}>
             <img
-              src="/assets/bhandara-banner.jpg"
-              alt="Bhandara & Religious Feast Catering by Chaiwale"
+              src={bannerImg}
+              alt={bannerTitle}
               style={{
                 width: '100%',
                 height: '100%',
@@ -102,7 +122,7 @@ export const DynamicBhandaraSection: React.FC = () => {
                 }}
               >
                 <span>🪔</span>
-                <span>Bhandara &amp; Mass Feasts Catering</span>
+                <span>{bannerBadge}</span>
               </span>
               <span
                 style={{
@@ -128,11 +148,11 @@ export const DynamicBhandaraSection: React.FC = () => {
                 fontFamily: 'var(--cw-font-heading)'
               }}
             >
-              Bhandara Hai? Khana Hum Sambhal Lenge.
+              {bannerTitle}
             </h2>
 
             <p style={{ color: '#6F6058', fontSize: '15px', lineHeight: 1.6, margin: '0 0 20px' }}>
-              Satvik ho ya special prasad, har bhog banega shuddh, swadisht aur poori pavitrata ke saath. Perfect for Puja, Jagran, Kirtan, Mandir Langar &amp; Community Feasts across Delhi NCR.
+              {bannerDesc}
             </p>
 
             {/* Menu Highlights */}
@@ -218,11 +238,11 @@ export const DynamicBhandaraSection: React.FC = () => {
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
                   <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.197-1.625A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.954a9.93 9.93 0 01-5.065-1.381l-.361-.215-3.759.986.999-3.658-.238-.374A9.93 9.93 0 012.046 12C2.046 6.508 6.508 2.046 12 2.046S21.954 6.508 21.954 12 17.492 21.954 12 21.954z"/>
                 </svg>
-                <span>Get Bhandara Quote ({selectedPax})</span>
+                <span>{bannerData?.ctaText ? `${bannerData.ctaText} (${selectedPax})` : `Get Bhandara Quote (${selectedPax})`}</span>
               </a>
 
               <Link
-                href="/catering#bhandara"
+                href={bannerData?.ctaLink || '/catering#bhandara'}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

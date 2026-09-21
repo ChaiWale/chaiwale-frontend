@@ -42,6 +42,20 @@ async function fetchCategories() {
   }
 }
 
+async function fetchPromoBanners() {
+  const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+  try {
+    const res = await fetch(`${BACKEND}/api/v1/config/banners`, {
+      next: { revalidate: 60 }
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return Array.isArray(json.data) ? json.data : [];
+  } catch {
+    return [];
+  }
+}
+
 export default async function HomePage() {
   const rawFeaturedItems = await fetchFeaturedItems();
   const featuredItems = Array.isArray(rawFeaturedItems) ? rawFeaturedItems : [];
@@ -49,6 +63,28 @@ export default async function HomePage() {
   const categories = Array.isArray(rawCategories) ? rawCategories : [];
   // Build a category id → name map for display
   const catMap = Object.fromEntries(categories.map((c) => [c.id, c.name]));
+
+  // Dynamic Homepage Promo Banners & Ads from Settings
+  const rawBanners = await fetchPromoBanners();
+  const allBanners = Array.isArray(rawBanners) && rawBanners.length > 0 ? rawBanners : [];
+  const activeBanners = allBanners.filter((b: any) => b.isActive !== false);
+
+  const bhandaraBanner = activeBanners.find((b: any) => b.id === 'bhandara') || allBanners.find((b: any) => b.id === 'bhandara');
+  const mealsBanner = activeBanners.find((b: any) => b.id === 'monthly-meals') || allBanners.find((b: any) => b.id === 'monthly-meals');
+  const daawatBanner = activeBanners.find((b: any) => b.id === 'moms-daawat') || allBanners.find((b: any) => b.id === 'moms-daawat');
+
+  const customBanners = activeBanners.filter(
+    (b: any) => b.id !== 'bhandara' && b.id !== 'monthly-meals' && b.id !== 'moms-daawat'
+  );
+
+  const resolveImg = (src?: string) => {
+    if (!src) return '/assets/images/chai.jpg';
+    if (src.startsWith('http://') || src.startsWith('https://')) return src;
+    if (src.startsWith('/assets/')) return src;
+    const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    if (src.startsWith('/')) return `${BACKEND}${src}`;
+    return `${BACKEND}/api/v1/media/${src}`;
+  };
 
   return (
     <div>
@@ -340,150 +376,233 @@ export default async function HomePage() {
       </section>
 
       {/* 4. Bhandara & Seva Meals Section (Dynamic & Interactive) */}
-      <DynamicBhandaraSection />
+      {bhandaraBanner && bhandaraBanner.isActive !== false && (
+        <DynamicBhandaraSection bannerData={bhandaraBanner} />
+      )}
 
       {/* 5. Monthly Meal Plans & PG Tiffin Section */}
-      <section style={{ padding: '60px 0', backgroundColor: '#FAF5EE' }}>
-        <div className="cw-container">
-          <div
-            style={{
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #E5E7EB',
-              borderRadius: '20px',
-              overflow: 'hidden',
-              boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              alignItems: 'center'
-            }}
-          >
-            <div style={{ padding: '36px 32px' }}>
-              <div style={{ display: 'inline-block', backgroundColor: '#D97706', color: '#FFFFFF', padding: '6px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', marginBottom: '12px' }}>
-                3-Day Trial Meal @ ₹79 Only!
-              </div>
-              <h2 style={{ fontSize: '30px', fontWeight: 900, color: '#1E2328', lineHeight: 1.2, margin: '0 0 12px' }}>
-                Good Food For A Better You
-              </h2>
-              <p style={{ color: '#6B7280', fontSize: '15px', lineHeight: 1.6, margin: '0 0 20px' }}>
-                Ghar jaisa khana, ab door nahi. For PGs, Working Professionals, Bachelors and Anyone Living Away from Home in Delhi NCR.
-              </p>
-
-              {/* 3 Plans Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '24px' }}>
-                <div style={{ border: '1px solid #E5E7EB', borderRadius: '10px', padding: '12px', textAlign: 'center', background: '#F9FAFB' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#6B7280' }}>BASIC PLAN</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#111827', margin: '4px 0' }}>₹3,499<span style={{ fontSize: '11px', fontWeight: 500 }}>/mo</span></div>
-                  <div style={{ fontSize: '11px', color: '#059669', fontWeight: 600 }}>Lunch + Dinner</div>
+      {mealsBanner && mealsBanner.isActive !== false && (
+        <section style={{ padding: '60px 0', backgroundColor: '#FAF5EE' }}>
+          <div className="cw-container">
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E5E7EB',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                alignItems: 'center'
+              }}
+            >
+              <div style={{ padding: '36px 32px' }}>
+                <div style={{ display: 'inline-block', backgroundColor: '#D97706', color: '#FFFFFF', padding: '6px 14px', borderRadius: '8px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', marginBottom: '12px' }}>
+                  {mealsBanner.badge || '3-Day Trial Meal @ ₹79 Only!'}
                 </div>
-                <div style={{ border: '2px solid #D97706', borderRadius: '10px', padding: '12px', textAlign: 'center', background: '#FFFBEB' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#D97706' }}>MOST POPULAR</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#B45309', margin: '4px 0' }}>₹5,499<span style={{ fontSize: '11px', fontWeight: 500 }}>/mo</span></div>
-                  <div style={{ fontSize: '11px', color: '#B45309', fontWeight: 600 }}>B'fast + Lunch + Dinner</div>
-                </div>
-                <div style={{ border: '1px solid #E5E7EB', borderRadius: '10px', padding: '12px', textAlign: 'center', background: '#F9FAFB' }}>
-                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#6B7280' }}>PREMIUM PLAN</div>
-                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#111827', margin: '4px 0' }}>₹6,999<span style={{ fontSize: '11px', fontWeight: 500 }}>/mo</span></div>
-                  <div style={{ fontSize: '11px', color: '#059669', fontWeight: 600 }}>Full Day + Specials</div>
-                </div>
-              </div>
+                <h2 style={{ fontSize: '30px', fontWeight: 900, color: '#1E2328', lineHeight: 1.2, margin: '0 0 12px' }}>
+                  {mealsBanner.title || 'Good Food For A Better You'}
+                </h2>
+                <p style={{ color: '#6B7280', fontSize: '15px', lineHeight: 1.6, margin: '0 0 20px' }}>
+                  {mealsBanner.description || 'Ghar jaisa khana, ab door nahi. For PGs, Working Professionals, Bachelors and Anyone Living Away from Home in Delhi NCR.'}
+                </p>
 
-              <a
-                href="https://wa.me/918800410441?text=TRIAL"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  backgroundColor: '#25D366',
-                  color: '#FFFFFF',
-                  padding: '14px 28px',
-                  borderRadius: '10px',
-                  fontWeight: 800,
-                  fontSize: '15px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  textDecoration: 'none',
-                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)'
-                }}
-              >
-                WhatsApp "TRIAL" to 88004 10441
-              </a>
-            </div>
-            <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '340px' }}>
-              <img
-                src="/assets/monthly-meals-banner.jpg"
-                alt="Good Food For A Better You - Monthly Meal Plans"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+                {/* 3 Plans Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '24px' }}>
+                  <div style={{ border: '1px solid #E5E7EB', borderRadius: '10px', padding: '12px', textAlign: 'center', background: '#F9FAFB' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#6B7280' }}>BASIC PLAN</div>
+                    <div style={{ fontSize: '18px', fontWeight: 900, color: '#111827', margin: '4px 0' }}>₹3,499<span style={{ fontSize: '11px', fontWeight: 500 }}>/mo</span></div>
+                    <div style={{ fontSize: '11px', color: '#059669', fontWeight: 600 }}>Lunch + Dinner</div>
+                  </div>
+                  <div style={{ border: '2px solid #D97706', borderRadius: '10px', padding: '12px', textAlign: 'center', background: '#FFFBEB' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 800, color: '#D97706' }}>MOST POPULAR</div>
+                    <div style={{ fontSize: '18px', fontWeight: 900, color: '#B45309', margin: '4px 0' }}>₹5,499<span style={{ fontSize: '11px', fontWeight: 500 }}>/mo</span></div>
+                    <div style={{ fontSize: '11px', color: '#B45309', fontWeight: 600 }}>B'fast + Lunch + Dinner</div>
+                  </div>
+                  <div style={{ border: '1px solid #E5E7EB', borderRadius: '10px', padding: '12px', textAlign: 'center', background: '#F9FAFB' }}>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#6B7280' }}>PREMIUM PLAN</div>
+                    <div style={{ fontSize: '18px', fontWeight: 900, color: '#111827', margin: '4px 0' }}>₹6,999<span style={{ fontSize: '11px', fontWeight: 500 }}>/mo</span></div>
+                    <div style={{ fontSize: '11px', color: '#059669', fontWeight: 600 }}>Full Day + Specials</div>
+                  </div>
+                </div>
 
-      {/* 6. Mom's Daawat Chicken & Mutton Spotlight */}
-      <section style={{ padding: '60px 0', backgroundColor: '#1C1917', color: '#FFFFFF' }}>
-        <div className="cw-container">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '36px',
-              alignItems: 'center'
-            }}
-          >
-            <div>
-              <span style={{ fontSize: '12px', fontWeight: 800, color: '#F59E0B', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                A Unit of Chaiwale
-              </span>
-              <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.15, margin: '8px 0 16px' }}>
-                MOM’S DAAWAT
-              </h2>
-              <p style={{ color: '#D6D3D1', fontSize: '16px', lineHeight: 1.6, marginBottom: '20px' }}>
-                Ghar Jaisa Swad • Dil Se Pakaya. Authentic Bihari Chicken & Mutton, Champaran Ahuna Handi, Cream Chicken, Lemon Chicken, Butter Chicken, and sizzling kebabs slow cooked in authentic earthen pots.
-              </p>
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '28px' }}>
-                <Link
-                  href="/menu#moms-daawat"
-                  style={{
-                    backgroundColor: '#DC2626',
-                    color: '#FFFFFF',
-                    padding: '12px 24px',
-                    borderRadius: '8px',
-                    fontWeight: 700,
-                    fontSize: '15px',
-                    textDecoration: 'none'
-                  }}
-                >
-                  View Mom's Daawat Menu →
-                </Link>
                 <a
-                  href="https://wa.me/918860909441"
+                  href={mealsBanner.ctaLink?.startsWith('http') ? mealsBanner.ctaLink : `https://wa.me/${mealsBanner.whatsappNumber || '918800410441'}?text=${encodeURIComponent(mealsBanner.whatsappText || 'TRIAL')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
                     backgroundColor: '#25D366',
                     color: '#FFFFFF',
-                    padding: '12px 20px',
-                    borderRadius: '8px',
-                    fontWeight: 700,
+                    padding: '14px 28px',
+                    borderRadius: '10px',
+                    fontWeight: 800,
                     fontSize: '15px',
-                    textDecoration: 'none'
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    textDecoration: 'none',
+                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)'
                   }}
                 >
-                  WhatsApp: 8860909441
+                  {mealsBanner.ctaText || 'WhatsApp "TRIAL" to 88004 10441'}
                 </a>
               </div>
-            </div>
-
-            <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)' }}>
-              <img
-                src="/assets/moms-daawat-banner.jpg"
-                alt="Mom's Daawat Chicken and Mutton Specialities"
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-              />
+              <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '340px' }}>
+                <img
+                  src={resolveImg(mealsBanner.image)}
+                  alt={mealsBanner.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* 6. Mom's Daawat Chicken & Mutton Spotlight */}
+      {daawatBanner && daawatBanner.isActive !== false && (
+        <section style={{ padding: '60px 0', backgroundColor: '#1C1917', color: '#FFFFFF' }}>
+          <div className="cw-container">
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                gap: '36px',
+                alignItems: 'center'
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#F59E0B', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  {daawatBanner.badge || 'A Unit of Chaiwale'}
+                </span>
+                <h2 style={{ fontSize: '36px', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.15, margin: '8px 0 16px' }}>
+                  {daawatBanner.title || 'MOM’S DAAWAT'}
+                </h2>
+                <p style={{ color: '#D6D3D1', fontSize: '16px', lineHeight: 1.6, marginBottom: '20px' }}>
+                  {daawatBanner.description || 'Ghar Jaisa Swad • Dil Se Pakaya. Authentic Bihari Chicken & Mutton, Champaran Ahuna Handi, Cream Chicken, Lemon Chicken, Butter Chicken, and sizzling kebabs slow cooked in authentic earthen pots.'}
+                </p>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '28px' }}>
+                  <Link
+                    href={daawatBanner.ctaLink || '/menu#moms-daawat'}
+                    style={{
+                      backgroundColor: '#DC2626',
+                      color: '#FFFFFF',
+                      padding: '12px 24px',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '15px',
+                      textDecoration: 'none'
+                    }}
+                  >
+                    {daawatBanner.ctaText || "View Mom's Daawat Menu →"}
+                  </Link>
+                  <a
+                    href={`https://wa.me/${daawatBanner.whatsappNumber || '918860909441'}?text=${encodeURIComponent(daawatBanner.whatsappText || "Hello, I want to order from Mom's Daawat")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      backgroundColor: '#25D366',
+                      color: '#FFFFFF',
+                      padding: '12px 20px',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '15px',
+                      textDecoration: 'none'
+                    }}
+                  >
+                    WhatsApp: {daawatBanner.whatsappNumber || '8860909441'}
+                  </a>
+                </div>
+              </div>
+
+              <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.1)' }}>
+                <img
+                  src={resolveImg(daawatBanner.image)}
+                  alt={daawatBanner.title}
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 7. Additional Custom Promotional Banners from Admin Settings */}
+      {customBanners.length > 0 && customBanners.map((cb: any) => (
+        <section key={cb.id} style={{ padding: '60px 0', backgroundColor: '#FAF5EE', borderTop: '1px solid #EAE0D2' }}>
+          <div className="cw-container">
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                borderRadius: '20px',
+                border: '1px solid #E5E7EB',
+                overflow: 'hidden',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                alignItems: 'center'
+              }}
+            >
+              <div style={{ padding: '36px 32px' }}>
+                {cb.badge && (
+                  <div style={{ display: 'inline-block', backgroundColor: '#D97706', color: '#FFFFFF', padding: '5px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', marginBottom: '12px' }}>
+                    {cb.badge}
+                  </div>
+                )}
+                <h2 style={{ fontSize: '28px', fontWeight: 900, color: '#1E2328', margin: '0 0 12px' }}>
+                  {cb.title}
+                </h2>
+                <p style={{ color: '#6B7280', fontSize: '15px', lineHeight: 1.6, margin: '0 0 24px' }}>
+                  {cb.description}
+                </p>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  {cb.ctaLink && (
+                    <Link
+                      href={cb.ctaLink}
+                      style={{
+                        backgroundColor: 'var(--cw-color-primary)',
+                        color: '#FFFFFF',
+                        padding: '12px 24px',
+                        borderRadius: '8px',
+                        fontWeight: 700,
+                        fontSize: '14px',
+                        textDecoration: 'none'
+                      }}
+                    >
+                      {cb.ctaText || 'Learn More →'}
+                    </Link>
+                  )}
+                  {cb.whatsappNumber && (
+                    <a
+                      href={`https://wa.me/${cb.whatsappNumber}?text=${encodeURIComponent(cb.whatsappText || 'Hello')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        backgroundColor: '#25D366',
+                        color: '#FFFFFF',
+                        padding: '12px 20px',
+                        borderRadius: '8px',
+                        fontWeight: 700,
+                        fontSize: '14px',
+                        textDecoration: 'none'
+                      }}
+                    >
+                      WhatsApp Us
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div style={{ position: 'relative', overflow: 'hidden', height: '100%', minHeight: '300px' }}>
+                <img
+                  src={resolveImg(cb.image)}
+                  alt={cb.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      ))}
     </div>
   );
 }
