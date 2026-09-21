@@ -727,7 +727,7 @@ export default function MealPlansPage() {
                     transition: 'background 0.15s ease'
                   }}
                 >
-                  {submitting ? 'Submitting & Alerting Operations...' : 'Confirm Meal Plan Reservation &rarr;'}
+                  {submitting ? 'Submitting & Alerting Operations...' : 'Confirm Meal Plan Reservation →'}
                 </button>
               </div>
 
