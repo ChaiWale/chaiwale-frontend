@@ -26,7 +26,7 @@ export default function MenuPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [modalStep, setModalStep] = useState<'CART' | 'CHECKOUT'>('CART');
   const [orderSubmitting, setOrderSubmitting] = useState(false);
-  const [orderSuccess, setOrderSuccess] = useState<{ orderNumber: string; paymentMode?: string } | null>(null);
+  const [orderSuccess, setOrderSuccess] = useState<{ orderNumber: string; paymentMode?: string; whatsAppUrl?: string | null } | null>(null);
   const [upiConfig, setUpiConfig] = useState<UpiConfigDto | null>(null);
   const [copiedUpi, setCopiedUpi] = useState(false);
 
@@ -277,7 +277,7 @@ export default function MenuPage() {
         items: orderPayloadItems
       });
 
-      setOrderSuccess({ orderNumber: res.orderNumber, paymentMode: checkoutForm.paymentMode });
+      setOrderSuccess({ orderNumber: res.orderNumber, paymentMode: checkoutForm.paymentMode, whatsAppUrl: res.whatsAppUrl || null });
       setCart({});
       try {
         localStorage.removeItem('cw_cart');
@@ -713,7 +713,32 @@ export default function MenuPage() {
                 <p style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', marginTop: '4px', lineHeight: 1.5 }}>
                   Your order has been transmitted directly to our Rohini kitchen. Authoritative billing calculations have been stored in the database.
                 </p>
-                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+                  {/* WhatsApp Confirm Button */}
+                  {orderSuccess.whatsAppUrl && (
+                    <a
+                      href={orderSuccess.whatsAppUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        backgroundColor: '#25D366',
+                        color: '#FFFFFF',
+                        padding: '14px',
+                        borderRadius: 'var(--cw-radius-md)',
+                        fontWeight: 800,
+                        fontSize: '15px',
+                        textDecoration: 'none',
+                        boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)'
+                      }}
+                    >
+                      📲 Confirm Order on WhatsApp
+                    </a>
+                  )}
+                  <div style={{ display: 'flex', gap: '10px' }}>
                   <Link
                     href={`/track?order=${orderSuccess.orderNumber}`}
                     style={{
@@ -748,6 +773,7 @@ export default function MenuPage() {
                     Close
                   </button>
                 </div>
+              </div>
               </div>
             ) : modalStep === 'CART' ? (
               /* ================= STEP 1: CART VIEW ================= */

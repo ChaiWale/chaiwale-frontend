@@ -157,7 +157,7 @@ export async function fetchMenuItems(categoryId?: string, search?: string): Prom
 /**
  * Submit order to backend for authoritative price verification and database creation
  */
-export async function submitOrder(payload: CreateOrderPayload): Promise<{ id: string; orderNumber: string }> {
+export async function submitOrder(payload: CreateOrderPayload): Promise<{ id: string; orderNumber: string; whatsAppUrl?: string | null }> {
   const res = await fetch(`${BACKEND_URL}/api/v1/orders/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
