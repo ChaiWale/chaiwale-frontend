@@ -82,7 +82,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
       if (json.data?.verified && json.data?.invoice) {
         setInvoice(json.data.invoice);
         setRequiresAuth(false);
-        // Persist verified phone/pin in session for smooth subsequent viewing
         if (json.data.invoice.phone) {
           localStorage.setItem('cw_customer_phone', json.data.invoice.phone);
         }
@@ -149,7 +148,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
     }
   };
 
-  // Format date helper
   const formatDate = (isoStr: string) => {
     try {
       return new Date(isoStr).toLocaleDateString('en-IN', {
@@ -166,7 +164,15 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
 
   if (loading) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-[#120905]">
+      <div
+        style={{
+          minHeight: '80vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#120905'
+        }}
+      >
         <ChaiLoader
           label="Fetching Tax Invoice..."
           sublabel={`Verifying records for #${invoiceNumber}`}
@@ -176,19 +182,74 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
   }
 
   return (
-    <div className="min-h-screen bg-[#120905] text-[#FAF6F0] py-8 px-4 sm:px-6">
-      <div className="max-w-xl mx-auto">
+    <div
+      style={{
+        minHeight: '90vh',
+        backgroundColor: '#FAF6F0',
+        padding: '32px 16px 64px 16px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '560px',
+          width: '100%',
+          margin: '0 auto'
+        }}
+      >
         {/* Brand Banner */}
-        <div className="text-center mb-6">
-          <Link href="/" className="inline-flex items-center gap-2 mb-2 group">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D96B27] to-[#8C593B] flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <Link
+            href="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              textDecoration: 'none',
+              marginBottom: '6px'
+            }}
+          >
+            <span
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #D96B27 0%, #8C593B 100%)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                boxShadow: '0 4px 12px rgba(217, 107, 39, 0.3)'
+              }}
+            >
               ☕
             </span>
-            <span className="text-2xl font-black font-heading tracking-wide text-[#FAF6F0]">
+            <span
+              style={{
+                fontSize: '24px',
+                fontWeight: 900,
+                letterSpacing: '0.04em',
+                color: '#211510',
+                fontFamily: "'Outfit', sans-serif"
+              }}
+            >
               CHAIWALE
             </span>
           </Link>
-          <p className="text-xs text-[#C5B5A8] tracking-wider uppercase font-semibold">
+          <p
+            style={{
+              fontSize: '12px',
+              color: '#8C593B',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              fontWeight: 700,
+              margin: 0
+            }}
+          >
             Official GST & Retail Tax Invoice
           </p>
         </div>
@@ -197,45 +258,146 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             STATE A: Verification Prompt (When customer hasn't authenticated)
            =================================================================== */}
         {requiresAuth && !invoice ? (
-          <div className="bg-[#1C100A] border border-[#8C593B]/40 rounded-3xl p-6 sm:p-8 shadow-2xl animate-fadeIn">
-            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-[#8C593B]/30">
-              <span className="w-10 h-10 rounded-xl bg-[#D96B27]/20 border border-[#D96B27]/40 flex items-center justify-center text-lg text-[#D96B27]">
+          <div
+            style={{
+              backgroundColor: '#1C100A',
+              border: '1px solid rgba(217, 107, 39, 0.4)',
+              borderRadius: '24px',
+              padding: '32px 28px',
+              boxShadow: '0 24px 60px rgba(33, 21, 16, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04)',
+              color: '#FAF6F0'
+            }}
+          >
+            {/* Header / Security Badge */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                marginBottom: '20px',
+                paddingBottom: '18px',
+                borderBottom: '1px solid rgba(140, 89, 59, 0.35)'
+              }}
+            >
+              <span
+                style={{
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(217, 107, 39, 0.15)',
+                  border: '1px solid rgba(217, 107, 39, 0.45)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '22px',
+                  flexShrink: 0
+                }}
+              >
                 🔒
               </span>
               <div>
-                <h2 className="text-lg font-bold text-[#FAF6F0] font-heading">
+                <h2
+                  style={{
+                    fontSize: '19px',
+                    fontWeight: 800,
+                    color: '#FAF6F0',
+                    margin: '0 0 3px 0',
+                    fontFamily: "'Outfit', sans-serif"
+                  }}
+                >
                   Customer Security Verification
                 </h2>
-                <p className="text-xs text-[#C5B5A8]">
-                  Invoice <span className="text-[#D96B27] font-bold">#{invoiceNumber}</span>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: '#C5B5A8',
+                    margin: 0
+                  }}
+                >
+                  Invoice <span style={{ color: '#D96B27', fontWeight: 800, fontFamily: 'monospace' }}>#{invoiceNumber}</span>
                 </p>
               </div>
             </div>
 
-            <p className="text-sm text-[#D4C5B9] mb-5 leading-relaxed">
-              Customer privacy aur billing protection ke lie, kripya apna{' '}
-              <strong className="text-[#FAF6F0]">Registered 10-digit Mobile Number</strong> ya{' '}
-              <strong className="text-[#FAF6F0]">4-digit Khata PIN</strong> enter karein:
+            <p
+              style={{
+                fontSize: '14px',
+                color: '#D4C5B9',
+                marginBottom: '18px',
+                lineHeight: 1.6
+              }}
+            >
+              Customer privacy aur billing protection ke liye, kripya apna{' '}
+              <strong style={{ color: '#FAF6F0' }}>Registered 10-digit Mobile Number</strong> ya{' '}
+              <strong style={{ color: '#FAF6F0' }}>4-digit Khata PIN</strong> enter karein:
             </p>
 
+            {/* Masked Phone Pill */}
             {maskedPhone && (
-              <div className="mb-4 px-3.5 py-2 rounded-xl bg-[#2D1A10] border border-[#8C593B]/40 flex items-center justify-between text-xs">
-                <span className="text-[#C5B5A8]">Registered Mobile:</span>
-                <span className="font-mono font-bold text-[#D96B27] tracking-wider">{maskedPhone}</span>
+              <div
+                style={{
+                  marginBottom: '18px',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  backgroundColor: '#2D1A10',
+                  border: '1px solid rgba(217, 107, 39, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  fontSize: '13px'
+                }}
+              >
+                <span style={{ color: '#C5B5A8', fontWeight: 500 }}>Registered Mobile:</span>
+                <span
+                  style={{
+                    fontFamily: 'monospace',
+                    fontWeight: 800,
+                    color: '#D96B27',
+                    letterSpacing: '0.12em',
+                    fontSize: '14px'
+                  }}
+                >
+                  {maskedPhone}
+                </span>
               </div>
             )}
 
             {/* Error Banner with High Contrast */}
             {errorMsg && (
-              <div className="mb-5 p-3.5 rounded-xl bg-[#BA2525]/20 border border-[#BA2525]/60 text-[#FFD2D2] text-xs font-semibold flex items-start gap-2 shadow-sm animate-shake">
-                <span className="text-sm mt-0.5">⚠️</span>
-                <span className="leading-snug">{errorMsg}</span>
+              <div
+                style={{
+                  marginBottom: '18px',
+                  padding: '13px 16px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(186, 37, 37, 0.25)',
+                  border: '1.5px solid #BA2525',
+                  color: '#FFD2D2',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                  boxShadow: '0 4px 12px rgba(186, 37, 37, 0.2)'
+                }}
+              >
+                <span style={{ fontSize: '16px', lineHeight: 1 }}>⚠️</span>
+                <span style={{ lineHeight: 1.4 }}>{errorMsg}</span>
               </div>
             )}
 
-            <form onSubmit={handleVerifySubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-[#C5B5A8] uppercase tracking-wider mb-1.5">
+            <form onSubmit={handleVerifySubmit}>
+              <div style={{ marginBottom: '18px' }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '11px',
+                    fontWeight: 800,
+                    color: '#C5B5A8',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    marginBottom: '8px'
+                  }}
+                >
                   Mobile Number / Khata PIN
                 </label>
                 <input
@@ -247,34 +409,103 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
                   }}
                   placeholder="e.g. 9876907553 or 9349"
                   autoFocus
-                  className="w-full px-4 py-3.5 rounded-xl bg-[#120905] border border-[#8C593B]/60 text-[#FAF6F0] placeholder-[#705F55] font-mono text-base focus:outline-none focus:border-[#D96B27] focus:ring-2 focus:ring-[#D96B27]/30 transition-all shadow-inner"
+                  className="cw-invoice-input"
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    borderRadius: '14px',
+                    backgroundColor: '#120905',
+                    border: '1.5px solid rgba(140, 89, 59, 0.6)',
+                    color: '#FAF6F0',
+                    fontFamily: 'monospace',
+                    fontSize: '16px',
+                    letterSpacing: '0.04em',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s, box-shadow 0.2s'
+                  }}
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={verifying}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#D96B27] hover:bg-[#C05818] active:scale-[0.98] text-[#FAF6F0] font-bold text-sm tracking-wide transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                className="cw-invoice-btn"
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  borderRadius: '14px',
+                  background: 'linear-gradient(135deg, #D96B27 0%, #B85316 100%)',
+                  color: '#FAF6F0',
+                  fontWeight: 800,
+                  fontSize: '15px',
+                  letterSpacing: '0.03em',
+                  border: 'none',
+                  cursor: verifying ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  boxShadow: '0 8px 24px rgba(217, 107, 39, 0.35)',
+                  transition: 'transform 0.15s ease, background 0.2s ease, opacity 0.2s ease',
+                  opacity: verifying ? 0.7 : 1
+                }}
               >
                 {verifying ? (
                   <>
-                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Verifying Credentials...
+                    <span
+                      style={{
+                        width: '16px',
+                        height: '16px',
+                        border: '2px solid #FAF6F0',
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        display: 'inline-block',
+                        animation: 'cwSpin 0.8s linear infinite'
+                      }}
+                    />
+                    <span>Verifying Credentials...</span>
                   </>
                 ) : (
                   <>
-                    <span>🔓</span> View Official Tax Invoice
+                    <span style={{ fontSize: '17px' }}>🔓</span>
+                    <span>View Official Tax Invoice</span>
                   </>
                 )}
               </button>
             </form>
 
-            <div className="mt-6 pt-4 border-t border-[#8C593B]/30 flex items-center justify-between text-xs text-[#98877D]">
-              <Link href="/check-bill" className="hover:text-[#D96B27] transition-colors underline">
+            {/* Verification Footer Links */}
+            <div
+              style={{
+                marginTop: '22px',
+                paddingTop: '16px',
+                borderTop: '1px solid rgba(140, 89, 59, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '12px'
+              }}
+            >
+              <Link
+                href="/check-bill"
+                style={{
+                  color: '#D96B27',
+                  textDecoration: 'underline',
+                  fontWeight: 600
+                }}
+              >
                 Know your 4-digit Khata PIN?
               </Link>
-              <Link href="/" className="hover:text-[#FAF6F0] transition-colors">
-                Back to Home
+              <Link
+                href="/"
+                style={{
+                  color: '#C5B5A8',
+                  textDecoration: 'none',
+                  fontWeight: 500
+                }}
+              >
+                Back to Home →
               </Link>
             </div>
           </div>
@@ -284,168 +515,412 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
             STATE B: Verified Invoice Details
            =================================================================== */}
         {invoice ? (
-          <div className="bg-[#1C100A] border border-[#8C593B]/50 rounded-3xl p-6 sm:p-8 shadow-2xl animate-fadeIn">
+          <div
+            style={{
+              backgroundColor: '#1C100A',
+              border: '1px solid rgba(217, 107, 39, 0.45)',
+              borderRadius: '24px',
+              padding: '32px 28px',
+              boxShadow: '0 24px 60px rgba(33, 21, 16, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04)',
+              color: '#FAF6F0'
+            }}
+          >
             {/* Invoice Top Status Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-[#8C593B]/40">
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+                paddingBottom: '20px',
+                borderBottom: '1px solid rgba(140, 89, 59, 0.35)'
+              }}
+            >
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C5B5A8]">
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    color: '#C5B5A8',
+                    display: 'block'
+                  }}
+                >
                   Invoice Reference
                 </span>
-                <h1 className="text-xl sm:text-2xl font-black text-[#FAF6F0] font-mono tracking-tight">
+                <h1
+                  style={{
+                    fontSize: '24px',
+                    fontWeight: 900,
+                    color: '#FAF6F0',
+                    fontFamily: 'monospace',
+                    letterSpacing: '-0.02em',
+                    margin: '2px 0 0 0'
+                  }}
+                >
                   #{invoice.invoiceNumber}
                 </h1>
-                <p className="text-xs text-[#98877D] mt-0.5">
+                <p
+                  style={{
+                    fontSize: '12px',
+                    color: '#98877D',
+                    margin: '4px 0 0 0'
+                  }}
+                >
                   {formatDate(invoice.issuedAt)}
                 </p>
               </div>
 
               {/* Status Pill */}
-              <div className="text-right">
+              <div style={{ textAlign: 'right' }}>
                 {invoice.status === 'PAID' ? (
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#1F8844]/20 border border-[#1F8844]/50 text-[#4ADE80] font-bold text-xs uppercase tracking-wider shadow-sm">
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 14px',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(31, 136, 68, 0.2)',
+                      border: '1px solid rgba(31, 136, 68, 0.55)',
+                      color: '#4ADE80',
+                      fontWeight: 800,
+                      fontSize: '12px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}
+                  >
                     <span>✓</span> Fully Settled (Paid)
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#D96B27]/20 border border-[#D96B27]/50 text-[#FDBA74] font-bold text-xs uppercase tracking-wider shadow-sm">
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '6px 14px',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(217, 107, 39, 0.2)',
+                      border: '1px solid rgba(217, 107, 39, 0.55)',
+                      color: '#FDBA74',
+                      fontWeight: 800,
+                      fontSize: '12px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}
+                  >
                     <span>⚠</span> Balance Outstanding
                   </span>
                 )}
-                <div className="text-[11px] text-[#C5B5A8] mt-1 font-mono">
-                  Mode: <strong className="text-[#FAF6F0]">{invoice.paymentMode}</strong>
+                <div
+                  style={{
+                    fontSize: '11px',
+                    color: '#C5B5A8',
+                    marginTop: '5px',
+                    fontFamily: 'monospace'
+                  }}
+                >
+                  Mode: <strong style={{ color: '#FAF6F0' }}>{invoice.paymentMode}</strong>
                 </div>
               </div>
             </div>
 
             {/* Customer & Outlet Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4 border-b border-[#8C593B]/30 text-xs">
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '16px',
+                padding: '18px 0',
+                borderBottom: '1px solid rgba(140, 89, 59, 0.3)',
+                fontSize: '13px'
+              }}
+            >
               <div>
-                <span className="text-[#98877D] uppercase font-bold text-[10px] tracking-wider block mb-1">
+                <span
+                  style={{
+                    color: '#98877D',
+                    textTransform: 'uppercase',
+                    fontWeight: 800,
+                    fontSize: '10px',
+                    letterSpacing: '0.08em',
+                    display: 'block',
+                    marginBottom: '4px'
+                  }}
+                >
                   Billed To
                 </span>
-                <p className="text-sm font-bold text-[#FAF6F0]">
+                <p style={{ fontWeight: 800, color: '#FAF6F0', margin: '0 0 2px 0' }}>
                   {invoice.customerName || 'Direct Customer'}
                 </p>
                 {invoice.companyName && (
-                  <p className="text-[#C5B5A8]">{invoice.companyName}</p>
+                  <p style={{ color: '#C5B5A8', margin: '0 0 2px 0' }}>{invoice.companyName}</p>
                 )}
                 {invoice.phone && (
-                  <p className="text-[#D96B27] font-mono font-semibold mt-0.5">
+                  <p
+                    style={{
+                      color: '#D96B27',
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      margin: '2px 0 0 0'
+                    }}
+                  >
                     📱 +91 {invoice.phone}
                   </p>
                 )}
               </div>
 
-              <div className="sm:text-right">
-                <span className="text-[#98877D] uppercase font-bold text-[10px] tracking-wider block mb-1">
+              <div>
+                <span
+                  style={{
+                    color: '#98877D',
+                    textTransform: 'uppercase',
+                    fontWeight: 800,
+                    fontSize: '10px',
+                    letterSpacing: '0.08em',
+                    display: 'block',
+                    marginBottom: '4px'
+                  }}
+                >
                   Outlet & Store Desk
                 </span>
-                <p className="text-sm font-bold text-[#FAF6F0]">Chaiwale Cafe</p>
-                <p className="text-[#C5B5A8] leading-tight">
+                <p style={{ fontWeight: 800, color: '#FAF6F0', margin: '0 0 2px 0' }}>
+                  Chaiwale Cafe
+                </p>
+                <p style={{ color: '#C5B5A8', margin: '0 0 2px 0', lineHeight: 1.4 }}>
                   Upper Ground Floor, Vardhman Grand Plaza, Rohini, Delhi
                 </p>
-                <p className="text-[#D96B27] font-mono font-semibold mt-0.5">
+                <p
+                  style={{
+                    color: '#D96B27',
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    margin: '2px 0 0 0'
+                  }}
+                >
                   📞 +91 93101 12564
                 </p>
               </div>
             </div>
 
             {/* Line Items Table */}
-            <div className="py-4 border-b border-[#8C593B]/30">
-              <span className="text-[#98877D] uppercase font-bold text-[10px] tracking-wider block mb-3">
+            <div style={{ padding: '18px 0', borderBottom: '1px solid rgba(140, 89, 59, 0.3)' }}>
+              <span
+                style={{
+                  color: '#98877D',
+                  textTransform: 'uppercase',
+                  fontWeight: 800,
+                  fontSize: '10px',
+                  letterSpacing: '0.08em',
+                  display: 'block',
+                  marginBottom: '12px'
+                }}
+              >
                 Itemized Summary
               </span>
 
-              <div className="space-y-2.5">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {invoice.items && invoice.items.length > 0 ? (
                   invoice.items.map((it, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between text-xs py-1.5 px-3 rounded-xl bg-[#25150E] border border-[#8C593B]/20"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '10px 14px',
+                        borderRadius: '12px',
+                        backgroundColor: '#25150E',
+                        border: '1px solid rgba(140, 89, 59, 0.25)'
+                      }}
                     >
-                      <div className="flex-1 pr-2">
-                        <p className="font-bold text-[#FAF6F0] text-sm leading-tight">
+                      <div style={{ flex: 1, paddingRight: '12px' }}>
+                        <p
+                          style={{
+                            fontWeight: 700,
+                            color: '#FAF6F0',
+                            fontSize: '14px',
+                            margin: '0 0 3px 0'
+                          }}
+                        >
                           {it.name}
                         </p>
-                        <p className="text-[11px] text-[#98877D]">
+                        <p
+                          style={{
+                            fontSize: '11px',
+                            color: '#98877D',
+                            margin: 0
+                          }}
+                        >
                           ₹{it.unitPrice.toFixed(2)} × {it.quantity}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <span className="font-mono font-bold text-[#FAF6F0] text-sm">
+                      <div style={{ textAlign: 'right' }}>
+                        <span
+                          style={{
+                            fontFamily: 'monospace',
+                            fontWeight: 800,
+                            color: '#FAF6F0',
+                            fontSize: '14px'
+                          }}
+                        >
                           ₹{(it.quantity * it.unitPrice).toFixed(2)}
                         </span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-[#98877D] italic">No items detailed</p>
+                  <p style={{ fontSize: '13px', color: '#98877D', fontStyle: 'italic', margin: 0 }}>
+                    No items detailed
+                  </p>
                 )}
               </div>
             </div>
 
             {/* Financials Breakdown */}
-            <div className="py-4 space-y-2 text-xs border-b border-[#8C593B]/40">
-              <div className="flex justify-between text-[#C5B5A8]">
+            <div
+              style={{
+                padding: '18px 0',
+                borderBottom: '1px solid rgba(140, 89, 59, 0.4)',
+                fontSize: '13px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#C5B5A8' }}>
                 <span>Items Subtotal:</span>
-                <span className="font-mono font-semibold text-[#FAF6F0]">₹{invoice.subtotal.toFixed(2)}</span>
+                <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#FAF6F0' }}>
+                  ₹{invoice.subtotal.toFixed(2)}
+                </span>
               </div>
 
               {invoice.discountAmount > 0 && (
-                <div className="flex justify-between text-[#4ADE80]">
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4ADE80' }}>
                   <span>Discount Applied:</span>
-                  <span className="font-mono font-semibold">-₹{invoice.discountAmount.toFixed(2)}</span>
+                  <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                    -₹{invoice.discountAmount.toFixed(2)}
+                  </span>
                 </div>
               )}
 
               {invoice.taxAmount > 0 ? (
-                <div className="flex justify-between text-[#C5B5A8]">
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#C5B5A8' }}>
                   <span>Restaurant GST (5%):</span>
-                  <span className="font-mono font-semibold text-[#FAF6F0]">₹{invoice.taxAmount.toFixed(2)}</span>
+                  <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#FAF6F0' }}>
+                    ₹{invoice.taxAmount.toFixed(2)}
+                  </span>
                 </div>
               ) : (
-                <div className="flex justify-between text-[#98877D]">
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#98877D' }}>
                   <span>GST:</span>
-                  <span className="font-mono">₹0.00 (Exempt/Retail)</span>
+                  <span style={{ fontFamily: 'monospace' }}>₹0.00 (Exempt/Retail)</span>
                 </div>
               )}
 
-              <div className="flex justify-between text-base font-extrabold pt-2 border-t border-[#8C593B]/40 text-[#FAF6F0]">
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '17px',
+                  fontWeight: 900,
+                  paddingTop: '10px',
+                  borderTop: '1px solid rgba(140, 89, 59, 0.4)',
+                  color: '#FAF6F0'
+                }}
+              >
                 <span>Grand Total:</span>
-                <span className="font-mono text-[#D96B27]">₹{invoice.grandTotal.toFixed(2)}</span>
+                <span style={{ fontFamily: 'monospace', color: '#D96B27' }}>
+                  ₹{invoice.grandTotal.toFixed(2)}
+                </span>
               </div>
 
-              <div className="flex justify-between text-xs pt-1 font-semibold text-[#4ADE80]">
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: '#4ADE80'
+                }}
+              >
                 <span>Amount Paid:</span>
-                <span className="font-mono">₹{invoice.paidAmount.toFixed(2)}</span>
+                <span style={{ fontFamily: 'monospace' }}>₹{invoice.paidAmount.toFixed(2)}</span>
               </div>
 
               {invoice.outstandingAmount > 0 && (
-                <div className="flex justify-between text-xs pt-1 font-bold text-[#F87171] border-t border-dashed border-[#F87171]/40">
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    color: '#F87171',
+                    paddingTop: '6px',
+                    borderTop: '1px dashed rgba(248, 113, 113, 0.4)'
+                  }}
+                >
                   <span>Balance Due:</span>
-                  <span className="font-mono">₹{invoice.outstandingAmount.toFixed(2)}</span>
+                  <span style={{ fontFamily: 'monospace' }}>
+                    ₹{invoice.outstandingAmount.toFixed(2)}
+                  </span>
                 </div>
               )}
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-6 space-y-3">
+            <div style={{ paddingTop: '22px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <a
                 href={`/api/pdf/invoice/${encodeURIComponent(invoice.invoiceNumber || invoice.id)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 rounded-xl bg-[#D96B27] hover:bg-[#C05818] active:scale-[0.98] text-[#FAF6F0] font-bold text-sm tracking-wide transition-all shadow-lg flex items-center justify-center gap-2"
+                className="cw-invoice-btn"
+                style={{
+                  width: '100%',
+                  padding: '15px 20px',
+                  borderRadius: '14px',
+                  background: 'linear-gradient(135deg, #D96B27 0%, #B85316 100%)',
+                  color: '#FAF6F0',
+                  fontWeight: 800,
+                  fontSize: '14px',
+                  letterSpacing: '0.03em',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 8px 24px rgba(217, 107, 39, 0.35)',
+                  boxSizing: 'border-box'
+                }}
               >
                 <span>📄</span> Download Tax Invoice (PDF)
               </a>
 
-              <div className="flex flex-col sm:flex-row gap-2.5">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                 <Link
                   href={
                     invoice.phone
                       ? `/check-bill?phone=${encodeURIComponent(invoice.phone)}${invoice.clientPin ? `&pin=${encodeURIComponent(invoice.clientPin)}` : ''}`
                       : '/check-bill'
                   }
-                  className="flex-1 py-3 px-4 rounded-xl bg-[#2D1A10] hover:bg-[#3D2517] active:scale-[0.98] text-[#FAF6F0] font-semibold text-xs transition-all border border-[#8C593B]/50 flex items-center justify-center gap-1.5"
+                  style={{
+                    flex: '1 1 180px',
+                    padding: '13px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: '#2D1A10',
+                    color: '#FAF6F0',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    textDecoration: 'none',
+                    border: '1px solid rgba(140, 89, 59, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    boxSizing: 'border-box'
+                  }}
                 >
                   <span>☕</span> View Full Khata Ledger
                 </Link>
@@ -456,7 +931,22 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
                     const shareText = `Namaste! Here is your official Chaiwale Tax Invoice #${invoice.invoiceNumber} (Total: ₹${invoice.grandTotal.toFixed(2)}). View details: ${window.location.href}`;
                     window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
                   }}
-                  className="flex-1 py-3 px-4 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#4ADE80] border border-[#25D366]/40 font-semibold text-xs transition-all flex items-center justify-center gap-1.5"
+                  style={{
+                    flex: '1 1 180px',
+                    padding: '13px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(37, 211, 102, 0.15)',
+                    color: '#4ADE80',
+                    border: '1px solid rgba(37, 211, 102, 0.4)',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    boxSizing: 'border-box'
+                  }}
                 >
                   <span>💬</span> Share on WhatsApp
                 </button>
@@ -466,10 +956,37 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
         ) : null}
 
         {/* Global Footer */}
-        <p className="text-center text-xs text-[#705F55] mt-8">
+        <p
+          style={{
+            textAlign: 'center',
+            fontSize: '12px',
+            color: '#8C7769',
+            marginTop: '28px',
+            lineHeight: 1.5
+          }}
+        >
           Chaiwale Cafe & Catering Services • Mangalam Place, Sector-3, Rohini, New Delhi
         </p>
       </div>
+
+      {/* Scoped CSS for Interactions */}
+      <style jsx global>{`
+        .cw-invoice-input:focus {
+          border-color: #D96B27 !important;
+          box-shadow: 0 0 0 3px rgba(217, 107, 39, 0.25) !important;
+        }
+        .cw-invoice-btn:hover {
+          transform: translateY(-1px);
+          filter: brightness(1.06);
+        }
+        .cw-invoice-btn:active {
+          transform: translateY(1px);
+        }
+        @keyframes cwSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }

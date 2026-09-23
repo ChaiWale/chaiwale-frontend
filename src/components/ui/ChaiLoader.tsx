@@ -15,65 +15,153 @@ export default function ChaiLoader({
   fullScreen = false
 }: ChaiLoaderProps) {
   const content = (
-    <div className="relative flex flex-col items-center justify-center text-center p-8 select-none">
+    <div
+      style={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        padding: '32px',
+        userSelect: 'none'
+      }}
+    >
       {/* Ambient Warm Golden Halo Glow */}
-      <div className="absolute w-44 h-44 rounded-full bg-gradient-to-tr from-[#D96B27]/30 via-[#8C593B]/20 to-transparent blur-3xl -z-10 animate-pulse" />
+      <div
+        style={{
+          position: 'absolute',
+          width: '180px',
+          height: '180px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(217, 107, 39, 0.35) 0%, rgba(140, 89, 59, 0.15) 50%, transparent 70%)',
+          filter: 'blur(32px)',
+          zIndex: 0,
+          animation: 'cwHaloPulse 2.4s infinite ease-in-out'
+        }}
+      />
 
       {/* Chaiwale Logo Zoom-in / Zoom-out Container */}
-      <div className="relative mb-5 flex items-center justify-center">
+      <div
+        style={{
+          position: 'relative',
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1
+        }}
+      >
         {/* Soft Animated Outer Glow Ring */}
-        <div className="absolute -inset-2.5 rounded-full bg-gradient-to-tr from-[#D96B27]/40 via-[#F5EFE6]/10 to-[#8C593B]/40 blur-md animate-cw-logo-glow" />
+        <div
+          style={{
+            position: 'absolute',
+            inset: '-10px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(217, 107, 39, 0.45) 0%, rgba(245, 239, 230, 0.1) 60%, transparent 80%)',
+            filter: 'blur(12px)',
+            animation: 'cwGlowRing 2.2s infinite ease-in-out'
+          }}
+        />
 
         {/* Circular Logo Card with Zoom-in / Zoom-out Breathing Keyframes */}
-        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden p-1 bg-[#1C100A] border-2 border-[#D96B27]/60 shadow-[0_0_30px_rgba(217,107,39,0.35)] animate-cw-zoom flex items-center justify-center">
+        <div
+          className="cw-zoom-pulse"
+          style={{
+            position: 'relative',
+            width: '104px',
+            height: '104px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            padding: '4px',
+            backgroundColor: '#1C100A',
+            border: '2px solid rgba(217, 107, 39, 0.65)',
+            boxShadow: '0 0 35px rgba(217, 107, 39, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
           <Image
             src="/assets/chaiwale-logo.jpeg"
             alt="Chaiwale"
             width={112}
             height={112}
-            className="w-full h-full object-cover rounded-full"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              borderRadius: '50%'
+            }}
             priority
           />
         </div>
       </div>
 
       {/* Brand Typography */}
-      <h3 className="text-lg font-black text-[#FAF6F0] tracking-wider uppercase mb-1 font-heading">
+      <h3
+        style={{
+          fontSize: '18px',
+          fontWeight: 800,
+          color: '#FAF6F0',
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          marginBottom: '6px',
+          fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
+          zIndex: 1
+        }}
+      >
         {label}
       </h3>
       {sublabel && (
-        <p className="text-xs text-[#C5B5A8] font-medium tracking-normal max-w-xs leading-relaxed">
+        <p
+          style={{
+            fontSize: '13px',
+            color: '#C5B5A8',
+            fontWeight: 500,
+            maxWidth: '300px',
+            lineHeight: 1.5,
+            zIndex: 1
+          }}
+        >
           {sublabel}
         </p>
       )}
 
       {/* Zoom in - Zoom out Smooth Breathing Animation */}
       <style jsx global>{`
-        @keyframes cwZoom {
+        @keyframes cwZoomPulse {
           0%, 100% {
-            transform: scale(0.92);
-            box-shadow: 0 0 20px rgba(217, 107, 39, 0.25);
+            transform: scale(0.93);
+            box-shadow: 0 0 20px rgba(217, 107, 39, 0.3);
           }
           50% {
             transform: scale(1.08);
-            box-shadow: 0 0 45px rgba(217, 107, 39, 0.55);
+            box-shadow: 0 0 45px rgba(217, 107, 39, 0.65);
           }
         }
-        @keyframes cwGlow {
+        @keyframes cwGlowRing {
           0%, 100% {
             opacity: 0.4;
             transform: scale(0.95);
           }
           50% {
-            opacity: 0.9;
-            transform: scale(1.1);
+            opacity: 0.95;
+            transform: scale(1.12);
           }
         }
-        .animate-cw-zoom {
-          animation: cwZoom 2.2s infinite ease-in-out;
+        @keyframes cwHaloPulse {
+          0%, 100% {
+            opacity: 0.35;
+            transform: scale(0.9);
+          }
+          50% {
+            opacity: 0.85;
+            transform: scale(1.15);
+          }
         }
-        .animate-cw-logo-glow {
-          animation: cwGlow 2.2s infinite ease-in-out;
+        .cw-zoom-pulse {
+          animation: cwZoomPulse 2.2s infinite ease-in-out;
         }
       `}</style>
     </div>
@@ -81,14 +169,34 @@ export default function ChaiLoader({
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#120905]/85 backdrop-blur-xl">
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(18, 9, 5, 0.88)',
+          backdropFilter: 'blur(16px)'
+        }}
+      >
         {content}
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center backdrop-blur-md rounded-2xl bg-[#120905]/60">
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backdropFilter: 'blur(8px)',
+        borderRadius: '16px',
+        backgroundColor: 'rgba(18, 9, 5, 0.6)'
+      }}
+    >
       {content}
     </div>
   );

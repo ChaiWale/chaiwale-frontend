@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
+import ChaiLoader from '@/components/ui/ChaiLoader';
 import { FoodCard } from '../../components/ui/FoodCard';
 import { fetchCategories, fetchMenuItems, submitOrder, fetchUpiConfig, CategoryDto, MenuItemDto, UpiConfigDto } from '../../services/api.client';
 
@@ -471,12 +472,11 @@ export default function MenuPage() {
       <div className="cw-container" style={{ marginTop: 'var(--cw-space-8)' }}>
         {/* Loading State */}
         {loading && (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--cw-color-text-muted)' }}>
-            <div style={{ fontSize: '36px', marginBottom: '12px' }}>☕</div>
-            <p style={{ fontSize: '18px', fontWeight: 700, color: 'var(--cw-color-dark)' }}>
-              Loading Chaiwale Menu...
-            </p>
-            <p style={{ fontSize: '14px', marginTop: '4px' }}>Connecting to central database</p>
+          <div style={{ padding: '60px 20px', display: 'flex', justifyContent: 'center' }}>
+            <ChaiLoader
+              label="Brewing Chaiwale Menu..."
+              sublabel="Connecting to central database for authentic fresh specials"
+            />
           </div>
         )}
 
