@@ -50,7 +50,7 @@ interface MealPlansData {
 
 const FALLBACK_CONFIG: MealPlansData = {
   header: {
-    title: 'Chaiwale PG & Monthly Meal Subscriptions',
+    title: 'Chaiwale Monthly Meal Subscriptions',
     subtitle: 'Nutritious, authentic homestyle meals delivered hot to your doorstep daily.',
     targetAudience: 'Tailored for students, working professionals, PG residents, and corporate teams across Rohini & Delhi NCR.',
     bannerImage: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/branding/meal-plans/chaiwale-meal-plan-poster.webp',
@@ -280,19 +280,19 @@ export default function MealPlansPage() {
 
   return (
     <div style={{ backgroundColor: '#FAF5EE', minHeight: '100vh', color: '#211510', fontFamily: 'var(--cw-font-body, "Inter", sans-serif)' }}>
-      
+
       {/* ─── 1. POSTER + 3 SUBSCRIPTION PLANS SHOWCASE ─── */}
       <section style={{ maxWidth: '1240px', margin: '0 auto', padding: '36px 24px 44px' }}>
-        
+
         {/* Clean Breadcrumb Navigation */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
           <Link href="/" style={{ color: '#8A786F', fontSize: '13px', textDecoration: 'none', fontWeight: 600 }}>Home</Link>
           <span style={{ color: '#C5B6AA', fontSize: '13px' }}>/</span>
-          <span style={{ color: '#6F432A', fontSize: '13px', fontWeight: 700 }}>Meal Plans &amp; PG Subscriptions</span>
+          <span style={{ color: '#6F432A', fontSize: '13px', fontWeight: 700 }}>Meal Plans &amp; Subscriptions</span>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '36px', alignItems: 'flex-start', marginBottom: '48px' }}>
-          
+
           {/* Left: Official Printed Poster (Image 1 from Supabase) */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div
@@ -311,7 +311,7 @@ export default function MealPlansPage() {
             >
               <img
                 src={data.header.bannerImage}
-                alt="Chaiwale PG & Monthly Meal Service Official Poster"
+                alt="Chaiwale Monthly Meal Service Official Poster"
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
             </div>
@@ -360,7 +360,7 @@ export default function MealPlansPage() {
                         ★ {p.badge}
                       </span>
                     )}
-                    
+
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                       <div>
                         <h3 style={{ fontSize: '19px', fontWeight: 800, margin: 0, color: '#211510' }}>{p.name}</h3>
@@ -405,7 +405,7 @@ export default function MealPlansPage() {
                       >
                         Select {p.name} &amp; Book Below ↓
                       </button>
-                      
+
                       <a
                         href={`https://wa.me/${data.header.whatsapp}?text=${encodeURIComponent(`Hi Chaiwale, I am interested in booking the ${p.name} (₹${p.price}/month). Please confirm delivery in my area.`)}`}
                         target="_blank"
@@ -440,7 +440,7 @@ export default function MealPlansPage() {
 
         {/* ─── 3. WEEKLY ROTATING MENU TIMETABLE ─── */}
         <div style={{ backgroundColor: '#FFFFFF', borderRadius: '18px', border: '1px solid #EAE0D2', padding: '32px 28px', boxShadow: '0 4px 20px rgba(33, 21, 16, 0.04)', marginBottom: '44px' }}>
-          
+
           <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 24px auto' }}>
             <span style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', color: '#C85A17', letterSpacing: '0.08em' }}>
               Full Weekly Rotation Timetable
@@ -514,7 +514,7 @@ export default function MealPlansPage() {
 
         {/* ─── 4. OPTIONAL ADD-ONS & WHY CHOOSE US ─── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px', marginBottom: '44px' }}>
-          
+
           {/* Add-Ons Table */}
           <div style={{ backgroundColor: '#FFFFFF', borderRadius: '16px', border: '1px solid #EAE0D2', padding: '28px', boxShadow: '0 4px 16px rgba(33, 21, 16, 0.04)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 850, margin: '0 0 6px 0', color: '#211510' }}>
@@ -536,7 +536,7 @@ export default function MealPlansPage() {
           {/* Why Choose Us & Subscriber Privileges */}
           <div style={{ backgroundColor: '#FFFFFF', borderRadius: '16px', border: '1px solid #EAE0D2', padding: '28px', boxShadow: '0 4px 16px rgba(33, 21, 16, 0.04)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 850, margin: '0 0 6px 0', color: '#211510' }}>
-              Why Choose Chaiwale PG Meals?
+              Why Choose Chaiwale Meal Plans?
             </h3>
             <p style={{ fontSize: '13.5px', color: '#6A5B53', margin: '0 0 18px 0' }}>
               Consistent quality, reliable timing, and healthy homestyle cooking:
@@ -616,7 +616,7 @@ export default function MealPlansPage() {
             </div>
           ) : (
             <form onSubmit={handleFormSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-              
+
               <div>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#211510', marginBottom: '6px' }}>Your Full Name *</label>
                 <input
@@ -681,7 +681,7 @@ export default function MealPlansPage() {
               </div>
 
               <div style={{ gridColumn: '1 / -1' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#211510', marginBottom: '6px' }}>Delivery Address / PG Name &amp; Area *</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: '#211510', marginBottom: '6px' }}>Delivery Address &amp; Area *</label>
                 <input
                   type="text"
                   required
