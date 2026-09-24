@@ -1209,14 +1209,14 @@ export default function MenuPage() {
                       <p style={{ fontSize: '11px', color: '#64748B', marginBottom: '10px' }}>
                         Account: {upiConfig?.accountName || 'Shubham Sharma'} • UPI ID: {upiConfig?.upiId || 'chaiwale@ptyes'}
                       </p>
-                      <div style={{ display: 'inline-block', backgroundColor: '#FFFFFF', padding: '8px', borderRadius: '8px', border: '1px solid #CBD5E1', marginBottom: '10px' }}>
+                      <div style={{ display: 'inline-block', backgroundColor: '#FFFFFF', padding: '10px', borderRadius: '12px', border: '1.5px solid #CBD5E1', marginBottom: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
                         <img
-                          src={upiConfig?.qrUrl || 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/branding/chaiwale-upi-qr.jpeg'}
+                          src="/assets/chaiwale-upi-qr.jpeg"
                           alt="Chaiwale Paytm UPI QR"
-                          style={{ width: '160px', height: '160px', objectFit: 'contain', display: 'block' }}
+                          style={{ width: '180px', height: '180px', objectFit: 'contain', display: 'block', borderRadius: '6px' }}
                         />
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '10px' }}>
                         <code style={{ fontSize: '12px', backgroundColor: '#E2E8F0', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>
                           {upiConfig?.upiId || 'chaiwale@ptyes'}
                         </code>
@@ -1241,20 +1241,9 @@ export default function MenuPage() {
                         </button>
                       </div>
 
-                      <div style={{ textAlign: 'left', marginTop: '8px' }}>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>
-                          12-Digit UPI UTR / Reference ID *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={checkoutForm.transactionRef}
-                          onChange={(e) => setCheckoutForm({ ...checkoutForm, transactionRef: e.target.value })}
-                          placeholder="e.g. 423401928312 (From Paytm / GPay / PhonePe)"
-                          style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--cw-radius-md)', border: '1px solid #CBD5E1', fontSize: '13px' }}
-                        />
-                        <p style={{ fontSize: '11px', color: '#B45309', marginTop: '4px' }}>
-                          ⚠️ Orders remain in PENDING status until verified by kitchen/store billing staff against merchant bank records.
+                      <div style={{ marginTop: '10px', padding: '10px 14px', backgroundColor: '#FEF3C7', borderRadius: '8px', border: '1px solid #FCD34D', textAlign: 'left' }}>
+                        <p style={{ fontSize: '12px', color: '#92400E', margin: 0, lineHeight: 1.5, fontWeight: 600 }}>
+                          📱 <strong>Instant Payment:</strong> Scan the QR code using Paytm, Google Pay, PhonePe or BHIM UPI and place your order. Our kitchen team will confirm receipt upon order dispatch.
                         </p>
                       </div>
                     </div>

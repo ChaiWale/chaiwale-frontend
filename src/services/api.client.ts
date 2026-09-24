@@ -78,7 +78,7 @@ export async function fetchUpiConfig(): Promise<UpiConfigDto> {
     return {
       upiId: 'chaiwale@ptyes',
       accountName: 'Shubham Sharma',
-      qrUrl: '/media/branding/qr/chaiwale-upi-qr.jpeg'
+      qrUrl: '/assets/chaiwale-upi-qr.jpeg'
     };
   }
   const data = await res.json();
