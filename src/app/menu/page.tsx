@@ -7,7 +7,10 @@ import { FoodCard } from '../../components/ui/FoodCard';
 import { fetchCategories, fetchMenuItems, submitOrder, fetchUpiConfig, CategoryDto, MenuItemDto, UpiConfigDto } from '../../services/api.client';
 
 interface CartItem {
-  id: string;
+  id: string; // unique cart key: `${itemId}_${variantId || 'base'}`
+  itemId: string;
+  variantId?: string;
+  variantName?: string;
   name: string;
   price: number;
   qty: number;
@@ -164,17 +167,62 @@ export default function MenuPage() {
     }
   }, [categories]);
 
-  const handleAddToCart = (id: string, qty: number) => {
+  const handleAddToCart = (id: string, qty: number, variant?: any) => {
     const item = items.find((it) => it.id === id);
     if (!item) return;
 
     setCart((prev) => {
       const updated = { ...prev };
+
+      // Case 1: Specific variant selected (e.g. from Customisation modal)
+      if (variant) {
+        const cartKey = `${item.id}_${variant.id || variant.name}`;
+        const displayName = `${item.name} (${variant.name})`;
+        const unitPrice = Number(variant.price);
+        const existing = updated[cartKey];
+        const nextQty = existing ? existing.qty + qty : qty;
+
+        if (nextQty <= 0) {
+          delete updated[cartKey];
+        } else {
+          updated[cartKey] = {
+            id: cartKey,
+            itemId: item.id,
+            variantId: variant.id,
+            variantName: variant.name,
+            name: displayName,
+            price: unitPrice,
+            qty: nextQty
+          };
+        }
+        return updated;
+      }
+
+      // Case 2: Action without explicit variant (e.g. clicking - on FoodCard)
+      const matchingItems = Object.values(updated).filter((c) => c.itemId === item.id || c.id === item.id);
+
+      if (matchingItems.length > 0 && matchingItems.some((c) => c.variantId || c.variantName)) {
+        if (qty <= 0) {
+          matchingItems.forEach((c) => delete updated[c.id]);
+        } else {
+          // Decrement the last added variant portion
+          const lastVariant = matchingItems[matchingItems.length - 1];
+          if (lastVariant.qty > 1) {
+            updated[lastVariant.id] = { ...lastVariant, qty: lastVariant.qty - 1 };
+          } else {
+            delete updated[lastVariant.id];
+          }
+        }
+        return updated;
+      }
+
+      // Case 3: Regular dish without variants
       if (qty <= 0) {
-        delete updated[id];
+        delete updated[item.id];
       } else {
-        updated[id] = {
+        updated[item.id] = {
           id: item.id,
+          itemId: item.id,
           name: item.name,
           price: Number(item.base_price),
           qty
@@ -263,7 +311,8 @@ export default function MenuPage() {
     setOrderSubmitting(true);
     try {
       const orderPayloadItems = Object.values(cart).map((it) => ({
-        productId: it.id,
+        productId: it.itemId || it.id,
+        variantId: it.variantId || undefined,
         name: it.name,
         unitPrice: it.price,
         quantity: it.qty
@@ -561,24 +610,30 @@ export default function MenuPage() {
                   gap: '14px'
                 }}
               >
-                {categoryItems.map((item) => (
-                  <FoodCard
-                    key={item.id}
-                    id={item.id}
-                    name={item.name}
-                    price={Number(item.base_price)}
-                    category={category}
-                    isVeg={item.is_veg}
-                    isEgg={item.is_egg}
-                    spiceLevel={item.spice_level}
-                    tags={item.tags}
-                    variants={item.variants}
-                    description={item.description || undefined}
-                    imageSrc={item.image_path || undefined}
-                    currentQty={cart[item.id]?.qty || 0}
-                    onAddToCart={handleAddToCart}
-                  />
-                ))}
+                {categoryItems.map((item) => {
+                  const dishCartQty = Object.values(cart)
+                    .filter((c) => c.itemId === item.id || c.id === item.id)
+                    .reduce((sum, c) => sum + c.qty, 0);
+
+                  return (
+                    <FoodCard
+                      key={item.id}
+                      id={item.id}
+                      name={item.name}
+                      price={Number(item.base_price)}
+                      category={category}
+                      isVeg={item.is_veg}
+                      isEgg={item.is_egg}
+                      spiceLevel={item.spice_level}
+                      tags={item.tags}
+                      variants={item.variants}
+                      description={item.description || undefined}
+                      imageSrc={item.image_path || undefined}
+                      currentQty={dishCartQty}
+                      onAddToCart={handleAddToCart}
+                    />
+                  );
+                })}
               </div>
             </section>
           ))}
