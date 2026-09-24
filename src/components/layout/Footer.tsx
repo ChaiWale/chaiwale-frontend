@@ -102,6 +102,7 @@ export const Footer: React.FC = () => {
                 <p style={{ color: '#7C6D67', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>Phone</p>
                 <a href="tel:+918800410441" style={{ color: '#E8E0D8', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'block' }}>+91 88004 10441</a>
                 <a href="tel:+919310112564" style={{ color: '#E8E0D8', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'block', marginTop: '2px' }}>+91 93101 12564</a>
+                <a href="tel:+919310110414" style={{ color: '#E8E0D8', fontSize: '14px', fontWeight: 600, textDecoration: 'none', display: 'block', marginTop: '2px' }}>+91 93101 10414</a>
               </div>
               <div>
                 <p style={{ color: '#7C6D67', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>WhatsApp</p>

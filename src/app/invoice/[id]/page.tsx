@@ -700,7 +700,7 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
                     margin: '2px 0 0 0'
                   }}
                 >
-                  📞 +91 93101 12564
+                  📞 +91 93101 12564 / +91 93101 10414
                 </p>
               </div>
             </div>

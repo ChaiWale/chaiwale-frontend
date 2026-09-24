@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { FoodCard } from '../ui/FoodCard';
+import ChaiLoader from '../ui/ChaiLoader';
 import { fetchMenuItems, fetchCategories, MenuItemDto, CategoryDto } from '../../services/api.client';
 
 interface CartItem {
@@ -190,9 +191,36 @@ export function HomeFeaturedItems() {
 
   if (isLoading) {
     return (
-      <div style={{ textAlign: 'center', padding: '36px 0', color: 'var(--cw-color-text-muted)' }}>
-        <span style={{ fontSize: '32px', display: 'block', marginBottom: '8px' }}>☕</span>
-        <p style={{ fontSize: '14px', fontWeight: 600 }}>Loading fresh kitchen favorites...</p>
+      <div style={{ padding: '24px 0' }}>
+        <ChaiLoader
+          label="Brewing handpicked favorites..."
+          sublabel="Authentic taste & fresh kitchen picks"
+        />
+      </div>
+    );
+  }
+
+  if (featuredItems.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '36px 12px' }}>
+        <p style={{ color: 'var(--cw-color-text-muted)', fontSize: '14px', marginBottom: '14px' }}>
+          Unable to fetch favorites at the moment.
+        </p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          style={{
+            padding: '9px 20px',
+            backgroundColor: 'var(--cw-color-primary)',
+            color: '#FFFFFF',
+            borderRadius: 'var(--cw-radius-pill)',
+            border: 'none',
+            fontWeight: 700,
+            cursor: 'pointer'
+          }}
+        >
+          🔄 Tap to Refresh
+        </button>
       </div>
     );
   }

@@ -76,8 +76,11 @@ export default function ReachUsPage() {
               <a href="tel:+918800410441" style={{ display: 'block', fontSize: '18px', fontWeight: 800, color: '#6F432A', textDecoration: 'none', marginBottom: '4px' }}>
                 +91 88004 10441
               </a>
-              <a href="tel:+919310112564" style={{ display: 'block', fontSize: '18px', fontWeight: 800, color: '#6F432A', textDecoration: 'none' }}>
+              <a href="tel:+919310112564" style={{ display: 'block', fontSize: '18px', fontWeight: 800, color: '#6F432A', textDecoration: 'none', marginBottom: '4px' }}>
                 +91 93101 12564
+              </a>
+              <a href="tel:+919310110414" style={{ display: 'block', fontSize: '18px', fontWeight: 800, color: '#6F432A', textDecoration: 'none' }}>
+                +91 93101 10414
               </a>
               <p style={{ fontSize: '12px', color: '#98877D', marginTop: '8px' }}>Open Every Day: 08:00 AM – 06:00 PM</p>
             </div>

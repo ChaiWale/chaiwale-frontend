@@ -103,7 +103,7 @@ export async function fetchBrandConfig(): Promise<BrandConfigDto> {
       brandName: 'Chaiwale',
       tagline: 'Sip, Bite, Repeat',
       whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919310112564',
-      phone: '+91 93101 12564',
+      phone: '+91 93101 12564 / +91 93101 10414',
       address: 'Upper Ground Floor, Vardhman Grand Plaza, G-31, M2K Rd, Mangalam Place, Sector 03, Rohini, New Delhi, Delhi 110085',
       email: 'admin@chaiwale.co.in',
       upiId: 'chaiwale@ptyes',

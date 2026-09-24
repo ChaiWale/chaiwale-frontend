@@ -484,7 +484,7 @@ export const ThermalReceiptModal: React.FC<Props> = ({ isOpen, onClose, data }) 
                 {!isKOT && (
                   <div style={{ fontSize: '8.5px', color: '#6B7280', lineHeight: 1.3 }}>
                     {data?.storeAddress || liveStoreProfile?.address || 'G-31, Vardhman Grand Plaza, Mangalam Place, Rohini Sector-3, New Delhi - 110085'}<br />
-                    Tel / WhatsApp: {data?.storePhone || liveStoreProfile?.phone || '+91 93101 12564'} • support@chaiwale.co.in
+                    Tel / WhatsApp: {data?.storePhone || liveStoreProfile?.phone || '+91 93101 12564 / +91 93101 10414'} • support@chaiwale.co.in
                   </div>
                 )}
               </div>
