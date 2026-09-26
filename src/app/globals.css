@@ -163,3 +163,21 @@ button, input, select, textarea {
   object-fit: cover !important;
   pointer-events: none;
 }
+
+/* Modal Smooth Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+

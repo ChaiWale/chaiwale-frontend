@@ -6,6 +6,7 @@ import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { WhatsAppFloat } from '../components/ui/WhatsAppFloat';
 import { ZomatoFloat } from '../components/ui/ZomatoFloat';
+import { QuickOrderModal } from '../components/ui/QuickOrderModal';
 
 export const viewport: Viewport = {
   themeColor: '#6F432A',
@@ -210,6 +211,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
+        <QuickOrderModal />
         <ZomatoFloat />
         <WhatsAppFloat />
       </body>
