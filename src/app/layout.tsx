@@ -5,6 +5,7 @@ import { AnnouncementBar } from '../components/layout/AnnouncementBar';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { WhatsAppFloat } from '../components/ui/WhatsAppFloat';
+import { ZomatoFloat } from '../components/ui/ZomatoFloat';
 
 export const viewport: Viewport = {
   themeColor: '#6F432A',
@@ -15,21 +16,33 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://chaiwale.co.in'),
   title: {
-    default: 'Chaiwale | Authentic Kulhad Chai, North Indian Meals & Catering in Delhi NCR',
-    template: '%s | Chaiwale'
+    default: 'Chaiwale | Best Kulhad Chai & North Indian Food in Rohini, Delhi | Order Online',
+    template: '%s | Chaiwale Rohini'
   },
   description:
-    'Chaiwale - Authentic Kulhad Chai, fresh North Indian meals, snacks, corporate office lunch thalis, and community bhandara catering across Rohini and Delhi NCR.',
+    'Chaiwale Rohini (Sector 3) - Authentic Kulhad Chai, fresh North Indian meals, snacks, thalis, and corporate catering. Order online on Zomato or visit us in Rohini, Delhi NCR!',
   keywords: [
     'Chaiwale',
-    'Kulhad Chai Delhi',
-    'Best Tea Cafe Rohini',
-    'Corporate Lunch Catering',
-    'Office Meal Subscription Rohini',
-    'Bhandara Catering Delhi',
-    'Bulk High-Tea Boxes',
-    'North Indian Thali Rohini',
-    'Snacks Delivery Delhi NCR'
+    'Chaiwale Rohini',
+    'Chaiwale Delhi',
+    'chaiwale.co.in',
+    'food in rohini',
+    'best food in rohini',
+    'food near me rohini',
+    'best chai near me',
+    'chai near me',
+    'tea cafe rohini',
+    'best cafe in rohini',
+    'cafe near me',
+    'restaurants in rohini',
+    'north indian food rohini',
+    'kulhad chai delhi',
+    'order food online rohini',
+    'thali in rohini',
+    'office lunch thali rohini',
+    'bhandara catering delhi',
+    'corporate catering rohini',
+    'chaiwale zomato'
   ],
   authors: [{ name: 'Chaiwale' }],
   creator: 'Chaiwale',
@@ -38,9 +51,9 @@ export const metadata: Metadata = {
     canonical: '/'
   },
   openGraph: {
-    title: 'Chaiwale | Authentic Kulhad Chai, North Indian Meals & Catering',
+    title: 'Chaiwale | Best Kulhad Chai & North Indian Food in Rohini, Delhi',
     description:
-      'Sip, Bite, Repeat. Authentic Kulhad Chai, wholesome North Indian meals, and institutional catering across Delhi NCR.',
+      'Sip, Bite, Repeat. Authentic Kulhad Chai, wholesome North Indian meals, snacks, and catering in Rohini & across Delhi NCR.',
     url: 'https://chaiwale.co.in',
     siteName: 'Chaiwale',
     locale: 'en_IN',
@@ -56,9 +69,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Chaiwale | Authentic Kulhad Chai, North Indian Meals & Catering',
+    title: 'Chaiwale | Best Kulhad Chai & North Indian Food in Rohini, Delhi',
     description:
-      'Sip, Bite, Repeat. Authentic Kulhad Chai, wholesome North Indian meals, and catering across Delhi NCR.',
+      'Authentic Kulhad Chai, wholesome North Indian meals, and catering across Rohini & Delhi NCR.',
     images: ['/assets/chaiwale-logo.jpeg']
   },
   icons: {
@@ -113,6 +126,7 @@ const structuredData = {
         addressCountry: 'IN'
       },
       sameAs: [
+        'https://zomato.onelink.me/xqzv/zmfs3x6y',
         'https://wa.me/919310112564'
       ]
     },
@@ -122,7 +136,7 @@ const structuredData = {
       name: 'Chaiwale',
       image: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
       description:
-        'Authentic Kulhad Chai, fresh North Indian meals, street food snacks, and institutional catering in Delhi NCR.',
+        'Authentic Kulhad Chai, fresh North Indian meals, street food snacks, thalis, and catering in Rohini, Delhi NCR.',
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Upper Ground Floor, Vardhman Grand Plaza, G-31, M2K Rd, Mangalam Place, Sector 03',
@@ -138,8 +152,28 @@ const structuredData = {
       },
       url: 'https://chaiwale.co.in',
       telephone: '+919310112564',
-      servesCuisine: ['North Indian', 'Tea', 'Snacks', 'Street Food', 'Beverages'],
+      servesCuisine: ['North Indian', 'Chai', 'Tea', 'Snacks', 'Street Food', 'Thali', 'Beverages'],
       priceRange: '₹',
+      hasMenu: 'https://chaiwale.co.in/menu',
+      sameAs: [
+        'https://zomato.onelink.me/xqzv/zmfs3x6y',
+        'https://wa.me/919310112564'
+      ],
+      potentialAction: {
+        '@type': 'OrderAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: 'https://zomato.onelink.me/xqzv/zmfs3x6y',
+          inLanguage: 'en-IN',
+          actionPlatform: [
+            'http://schema.org/DesktopWebPlatform',
+            'http://schema.org/MobileWebPlatform',
+            'http://schema.org/IOSPlatform',
+            'http://schema.org/AndroidPlatform'
+          ]
+        },
+        deliveryMethod: 'http://purl.org/goodrelations/v1#DeliveryModeOwnFleet'
+      },
       openingHoursSpecification: [
         {
           '@type': 'OpeningHoursSpecification',
@@ -176,6 +210,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
+        <ZomatoFloat />
         <WhatsAppFloat />
       </body>
     </html>
