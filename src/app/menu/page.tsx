@@ -301,6 +301,35 @@ export default function MenuPage() {
       }
     });
 
+    // Helper: Dietary sorting priority requested by user
+    // 1. Veg (low to high)
+    // 2. Egg (low to high)
+    // 3. Chicken (low to high)
+    // 4. Fish (low to high)
+    // 5. Mutton (low to high)
+    // 6. Prawn (low to high)
+    const getDietaryRank = (item: MenuItemDto): number => {
+      if (item.is_veg && !item.is_egg) return 1;
+      if (item.is_egg) return 2;
+      const name = item.name.toLowerCase();
+      const desc = (item.description || '').toLowerCase();
+      if (name.includes('chicken') || desc.includes('chicken')) return 3;
+      if (name.includes('fish') || name.includes('machhli') || desc.includes('fish') || desc.includes('machhli')) return 4;
+      if (name.includes('mutton') || desc.includes('mutton')) return 5;
+      if (name.includes('prawn') || name.includes('jhinga') || desc.includes('prawn') || desc.includes('jhinga')) return 6;
+      return 7;
+    };
+
+    // Sort items within each category
+    catMap.forEach((group) => {
+      group.items.sort((a, b) => {
+        const rankA = getDietaryRank(a);
+        const rankB = getDietaryRank(b);
+        if (rankA !== rankB) return rankA - rankB;
+        return Number(a.base_price) - Number(b.base_price);
+      });
+    });
+
     return Array.from(catMap.values()).filter((group) => group.items.length > 0);
   }, [categories, items, selectedCategory, searchQuery]);
 
