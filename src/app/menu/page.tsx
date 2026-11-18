@@ -348,6 +348,8 @@ export default function MenuPage() {
       }));
 
       const res = await submitOrder({
+        customerName: checkoutForm.name,
+        customerPhone: checkoutForm.phone,
         orderType: checkoutForm.orderType,
         deliveryAddress: checkoutForm.address,
         specialInstructions: checkoutForm.instructions ? `${checkoutForm.instructions} (Customer: ${checkoutForm.name}, Phone: ${checkoutForm.phone})` : `Customer: ${checkoutForm.name}, Phone: ${checkoutForm.phone}`,

@@ -1,3 +1,5 @@
+
+
 import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import './globals.css';
@@ -17,33 +19,53 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://chaiwale.co.in'),
   title: {
-    default: 'Chaiwale | Best Kulhad Chai & North Indian Food in Rohini, Delhi | Order Online',
-    template: '%s | Chaiwale Rohini'
+    default: 'Chaiwale | Best Kulhad Chai, Biryani & North Indian Food in Rohini, Delhi | Order Online',
+    template: '%s | Chaiwale Rohini, Delhi'
   },
   description:
-    'Chaiwale Rohini (Sector 3) - Authentic Kulhad Chai, fresh North Indian meals, snacks, thalis, and corporate catering. Order online on Zomato or visit us in Rohini, Delhi NCR!',
+    'Chaiwale Rohini Sector 3 — Authentic Kulhad Chai, Dum Biryani, Litti Chokha, North Indian Thali, Momos, Burger, Paratha & more. Order online for fast delivery across Rohini, Pitampura, Shalimar Bagh & North Delhi. Corporate catering, party orders & Bhandara booking available.',
   keywords: [
-    'Chaiwale',
-    'Chaiwale Rohini',
-    'Chaiwale Delhi',
-    'chaiwale.co.in',
-    'food in rohini',
-    'best food in rohini',
-    'food near me rohini',
-    'best chai near me',
-    'chai near me',
-    'tea cafe rohini',
-    'best cafe in rohini',
-    'cafe near me',
-    'restaurants in rohini',
-    'north indian food rohini',
-    'kulhad chai delhi',
-    'order food online rohini',
-    'thali in rohini',
-    'office lunch thali rohini',
-    'bhandara catering delhi',
-    'corporate catering rohini',
-    'chaiwale zomato'
+    // Brand
+    'Chaiwale', 'Chaiwale Rohini', 'Chaiwale Delhi', 'chaiwale.co.in', 'Chaiwale restaurant',
+    // Biryani
+    'biryani in rohini', 'dum biryani rohini', 'chicken biryani rohini', 'mutton biryani rohini',
+    'biryani near me rohini', 'best biryani in rohini delhi', 'dum biryani delhi',
+    'chicken dum biryani rohini', 'mutton dum biryani delhi',
+    // Litti Chokha
+    'litti chokha rohini', 'litti chokha delhi', 'litti chokha near me', 'bihari food rohini',
+    'bihari litti delhi', 'litti near me',
+    // Chai & Beverages
+    'kulhad chai rohini', 'chai near me rohini', 'best chai in rohini', 'tea cafe rohini delhi',
+    'kadak chai rohini', 'kulhad chai delhi',
+    // Thali
+    'thali in rohini', 'north indian thali rohini', 'veg thali rohini', 'chicken thali rohini',
+    'mutton thali delhi', 'fish thali rohini', 'thali near me rohini',
+    // Party & Bulk Orders
+    'party order rohini', 'bulk food order delhi', 'group food order rohini',
+    'office lunch rohini', 'office tiffin rohini', 'corporate lunch delivery rohini',
+    // Catering & Bhandara
+    'bhandara catering delhi', 'bhandara rohini', 'catering rohini', 'catering delhi ncr',
+    'corporate catering rohini', 'event catering delhi',
+    // Street Food
+    'street food rohini', 'chaat rohini', 'vada pav rohini', 'pav bhaji rohini',
+    'samosa chaat rohini', 'momos rohini', 'momos near me rohini',
+    // Snacks & Fast Food
+    'burger rohini', 'sandwich rohini', 'maggi rohini', 'pakoda rohini',
+    'snacks near me rohini', 'fast food rohini',
+    // Meals
+    'rajma chawal rohini', 'chhole chawal rohini', 'dal chawal rohini', 'paneer rohini',
+    'north indian food rohini', 'north indian restaurant rohini',
+    // Non-Veg
+    'chicken near me rohini', 'mutton near me rohini', 'non veg food rohini',
+    'chicken curry rohini', 'butter chicken rohini', 'champaran chicken delhi',
+    'fish curry rohini', 'prawn masala rohini',
+    // Location
+    'food near me rohini', 'restaurants in rohini', 'best restaurant rohini delhi',
+    'food delivery rohini sector 3', 'rohini sector 3 food', 'pitampura food delivery',
+    'shalimar bagh food', 'north delhi restaurant', 'order food online rohini',
+    'food delivery north delhi',
+    // General
+    'zomato rohini', 'chaiwale zomato', 'best cafe in rohini', 'cafe near me rohini'
   ],
   authors: [{ name: 'Chaiwale' }],
   creator: 'Chaiwale',
@@ -52,9 +74,9 @@ export const metadata: Metadata = {
     canonical: '/'
   },
   openGraph: {
-    title: 'Chaiwale | Best Kulhad Chai & North Indian Food in Rohini, Delhi',
+    title: 'Chaiwale | Best Kulhad Chai, Biryani, Litti & North Indian Food in Rohini, Delhi',
     description:
-      'Sip, Bite, Repeat. Authentic Kulhad Chai, wholesome North Indian meals, snacks, and catering in Rohini & across Delhi NCR.',
+      'Sip, Bite, Repeat. Authentic Kulhad Chai, Chicken & Mutton Dum Biryani, Litti Chokha, North Indian Thali, Momos, Burger & Street Food in Rohini, Delhi. Order online — fast delivery across North Delhi. Party orders & catering available.',
     url: 'https://chaiwale.co.in',
     siteName: 'Chaiwale',
     locale: 'en_IN',
@@ -137,7 +159,7 @@ const structuredData = {
       name: 'Chaiwale',
       image: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
       description:
-        'Authentic Kulhad Chai, fresh North Indian meals, street food snacks, thalis, and catering in Rohini, Delhi NCR.',
+        'Chaiwale — Rohini\'s favourite spot for Kulhad Chai, Chicken & Mutton Dum Biryani, Litti Chokha, North Indian Thali, Momos, Burger, Paratha & Street Food. Party orders, corporate catering & Bhandara booking available. Fast delivery across Rohini, Pitampura, Shalimar Bagh & North Delhi.',
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Upper Ground Floor, Vardhman Grand Plaza, G-31, M2K Rd, Mangalam Place, Sector 03',
@@ -153,7 +175,12 @@ const structuredData = {
       },
       url: 'https://chaiwale.co.in',
       telephone: '+919310112564',
-      servesCuisine: ['North Indian', 'Chai', 'Tea', 'Snacks', 'Street Food', 'Thali', 'Beverages'],
+      servesCuisine: [
+        'North Indian', 'Biryani', 'Dum Biryani', 'Chicken Biryani', 'Mutton Biryani',
+        'Litti Chokha', 'Bihari Food', 'Chai', 'Tea', 'Kulhad Chai',
+        'Snacks', 'Street Food', 'Thali', 'Beverages', 'Momos', 'Burgers',
+        'Paratha', 'Catering', 'Party Food'
+      ],
       priceRange: '₹',
       hasMenu: 'https://chaiwale.co.in/menu',
       sameAs: [

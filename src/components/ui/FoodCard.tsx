@@ -36,10 +36,11 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   onAddToCart
 }) => {
   const [localQty, setLocalQty] = useState(0);
+  const [isDescExpanded, setIsDescExpanded] = useState(false);
   const qty = currentQty !== undefined ? currentQty : localQty;
   const resolvedImage = resolveMediaUrl(imageSrc);
 
-  const hasVariants = Boolean(variants && variants.length > 0);
+  const hasVariants = Boolean(variants && variants.length > 1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<MenuItemVariantDto | null>(
     hasVariants && variants ? variants[0] : null
@@ -79,7 +80,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           border: '1px solid var(--cw-color-border-light)',
           padding: '16px',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           gap: '16px',
           boxShadow: 'var(--cw-shadow-sm)',
           transition: 'all var(--cw-transition-fast)',
@@ -153,19 +154,47 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           </h4>
 
           {description && (
-            <p
-              style={{
-                fontSize: '13px',
-                color: 'var(--cw-color-text-muted)',
-                lineHeight: 1.4,
-                marginBottom: '6px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {description}
-            </p>
+            <div style={{ marginBottom: '6px' }}>
+              <p
+                style={{
+                  fontSize: '12.5px',
+                  color: '#475569',
+                  lineHeight: 1.45,
+                  margin: 0,
+                  display: isDescExpanded ? 'block' : '-webkit-box',
+                  WebkitLineClamp: isDescExpanded ? undefined : 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  wordBreak: 'break-word'
+                }}
+              >
+                {description}
+              </p>
+              {description.length > 55 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsDescExpanded(!isDescExpanded);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    marginTop: '2px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: 'var(--cw-color-primary)',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '2px'
+                  }}
+                >
+                  {isDescExpanded ? 'Show less ▲' : 'Read details ▼'}
+                </button>
+              )}
+            </div>
           )}
 
           {tags && tags.length > 0 && (
@@ -198,7 +227,9 @@ export const FoodCard: React.FC<FoodCardProps> = ({
 
             {hasVariants && variants && (
               <span style={{ fontSize: '11.5px', color: 'var(--cw-color-accent)', fontWeight: 700 }}>
-                ({variants.map((v) => `${v.name}: ₹${v.price}`).join(' • ')})
+                {variants.length <= 2 && variants.every((v) => v.name.length < 15)
+                  ? `(${variants.map((v) => `${v.name}: ₹${v.price}`).join(' • ')})`
+                  : `(${variants.length} portions • from ₹${price})`}
               </span>
             )}
           </div>
@@ -320,6 +351,24 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 <p style={{ fontSize: '12px', color: '#64748B', margin: '4px 0 0 0' }}>
                   Choose your preferred portion / size
                 </p>
+                {description && (
+                  <div
+                    style={{
+                      marginTop: '10px',
+                      padding: '10px 12px',
+                      backgroundColor: '#FAF5EE',
+                      borderRadius: '12px',
+                      border: '1px solid #EADBCC'
+                    }}
+                  >
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--cw-color-primary)', display: 'block', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      🍛 What&apos;s Inside:
+                    </span>
+                    <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.45, margin: 0 }}>
+                      {description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <button
