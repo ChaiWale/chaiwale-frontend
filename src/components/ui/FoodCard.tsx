@@ -65,8 +65,14 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   };
 
   const handleConfirmVariant = () => {
-    if (onAddToCart && selectedVariant) {
-      onAddToCart(id, 1, selectedVariant);
+    if (onAddToCart) {
+      if (hasVariants && selectedVariant) {
+        onAddToCart(id, 1, selectedVariant);
+      } else {
+        const nextQty = qty + 1;
+        setLocalQty(nextQty);
+        onAddToCart(id, nextQty);
+      }
     }
     setIsModalOpen(false);
   };
@@ -89,6 +95,8 @@ export const FoodCard: React.FC<FoodCardProps> = ({
       >
         {/* Food Thumbnail on Left */}
         <div
+          onClick={() => setIsModalOpen(true)}
+          title="Click to view full dish details"
           style={{
             width: '84px',
             height: '84px',
@@ -99,7 +107,8 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            border: '1px solid var(--cw-color-border-light)'
+            border: '1px solid var(--cw-color-border-light)',
+            cursor: 'pointer'
           }}
         >
           {resolvedImage ? (
@@ -142,12 +151,15 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           </div>
 
           <h4
+            onClick={() => setIsModalOpen(true)}
+            title="Click to view details"
             style={{
               fontSize: '16px',
               fontWeight: 700,
               color: 'var(--cw-color-text-main)',
               marginBottom: '4px',
-              lineHeight: 1.3
+              lineHeight: 1.3,
+              cursor: 'pointer'
             }}
           >
             {name}
@@ -170,30 +182,28 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               >
                 {description}
               </p>
-              {description.length > 55 && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsDescExpanded(!isDescExpanded);
-                  }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    marginTop: '2px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    color: 'var(--cw-color-primary)',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '2px'
-                  }}
-                >
-                  {isDescExpanded ? 'Show less ▲' : 'Read details ▼'}
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsDescExpanded(!isDescExpanded);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  marginTop: '2px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'var(--cw-color-primary)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '2px'
+                }}
+              >
+                {isDescExpanded ? 'Show less ▲' : 'Read details ▼'}
+              </button>
             </div>
           )}
 
@@ -307,8 +317,8 @@ export const FoodCard: React.FC<FoodCardProps> = ({
         </div>
       </div>
 
-      {/* Smart Variant Selection Modal */}
-      {isModalOpen && hasVariants && variants && (
+      {/* Smart Dish Details & Portion Modal */}
+      {isModalOpen && (
         <div
           style={{
             position: 'fixed',
@@ -328,12 +338,14 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             style={{
               backgroundColor: '#FFFFFF',
               borderRadius: '24px',
-              maxWidth: '420px',
+              maxWidth: '440px',
               width: '100%',
               padding: '24px',
               boxShadow: '0 20px 48px rgba(33, 21, 16, 0.35)',
               position: 'relative',
-              animation: 'cwPop 0.2s ease-out'
+              animation: 'cwPop 0.2s ease-out',
+              maxHeight: '90vh',
+              overflowY: 'auto'
             }}
           >
             {/* Header */}
@@ -345,30 +357,12 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                   </Badge>
                   <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>{category}</span>
                 </div>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--cw-color-dark)', margin: 0 }}>
+                <h3 style={{ fontSize: '19px', fontWeight: 800, color: 'var(--cw-color-dark)', margin: 0 }}>
                   {name}
                 </h3>
                 <p style={{ fontSize: '12px', color: '#64748B', margin: '4px 0 0 0' }}>
-                  Choose your preferred portion / size
+                  {hasVariants ? 'Choose your preferred portion / size' : 'Freshly prepared authentic dish'}
                 </p>
-                {description && (
-                  <div
-                    style={{
-                      marginTop: '10px',
-                      padding: '10px 12px',
-                      backgroundColor: '#FAF5EE',
-                      borderRadius: '12px',
-                      border: '1px solid #EADBCC'
-                    }}
-                  >
-                    <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--cw-color-primary)', display: 'block', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      🍛 What&apos;s Inside:
-                    </span>
-                    <p style={{ fontSize: '12px', color: '#475569', lineHeight: 1.45, margin: 0 }}>
-                      {description}
-                    </p>
-                  </div>
-                )}
               </div>
 
               <button
@@ -392,64 +386,114 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               </button>
             </div>
 
-            {/* Options List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '18px 0' }}>
-              {variants.map((v) => {
-                const isSelected = selectedVariant?.name === v.name;
-                return (
-                  <div
-                    key={v.id || v.name}
-                    onClick={() => setSelectedVariant(v)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '14px 16px',
-                      borderRadius: '16px',
-                      border: isSelected ? '2px solid var(--cw-color-accent)' : '1.5px solid #E2E8F0',
-                      backgroundColor: isSelected ? '#FFF8F3' : '#FFFFFF',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          borderRadius: '50%',
-                          border: isSelected ? '6px solid var(--cw-color-accent)' : '2px solid #CBD5E1',
-                          backgroundColor: '#FFFFFF',
-                          boxSizing: 'border-box',
-                          transition: 'all 0.15s ease'
-                        }}
-                      />
-                      <div>
-                        <div style={{ fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
-                          {v.name}
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#64748B' }}>
-                          Authentic fresh portion
+            {/* What's Inside Box */}
+            {description && (
+              <div
+                style={{
+                  margin: '12px 0 16px 0',
+                  padding: '12px 14px',
+                  backgroundColor: '#FAF5EE',
+                  borderRadius: '14px',
+                  border: '1px solid #EADBCC'
+                }}
+              >
+                <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--cw-color-primary)', display: 'block', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  🍛 What&apos;s Inside / Details:
+                </span>
+                <p style={{ fontSize: '13px', color: '#334155', lineHeight: 1.5, margin: 0 }}>
+                  {description}
+                </p>
+              </div>
+            )}
+
+            {/* Options List for Multi-Variant */}
+            {hasVariants && variants && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '16px 0' }}>
+                {variants.map((v) => {
+                  const isSelected = selectedVariant?.name === v.name;
+                  return (
+                    <div
+                      key={v.id || v.name}
+                      onClick={() => setSelectedVariant(v)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '14px 16px',
+                        borderRadius: '16px',
+                        border: isSelected ? '2px solid var(--cw-color-accent)' : '1.5px solid #E2E8F0',
+                        backgroundColor: isSelected ? '#FFF8F3' : '#FFFFFF',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            border: isSelected ? '6px solid var(--cw-color-accent)' : '2px solid #CBD5E1',
+                            backgroundColor: '#FFFFFF',
+                            boxSizing: 'border-box',
+                            transition: 'all 0.15s ease'
+                          }}
+                        />
+                        <div>
+                          <div style={{ fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
+                            {v.name}
+                          </div>
+                          <div style={{ fontSize: '11px', color: '#64748B' }}>
+                            Authentic fresh portion
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div style={{ textAlign: 'right' }}>
-                      <span
-                        style={{
-                          fontWeight: 900,
-                          fontSize: '16px',
-                          color: 'var(--cw-color-primary)',
-                          fontFamily: 'var(--cw-font-heading)'
-                        }}
-                      >
-                        ₹{v.price}
-                      </span>
+                      <div style={{ textAlign: 'right' }}>
+                        <span
+                          style={{
+                            fontWeight: 900,
+                            fontSize: '16px',
+                            color: 'var(--cw-color-primary)',
+                            fontFamily: 'var(--cw-font-heading)'
+                          }}
+                        >
+                          ₹{v.price}
+                        </span>
+                      </div>
                     </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Single Item Pricing Card */}
+            {!hasVariants && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 16px',
+                  borderRadius: '14px',
+                  backgroundColor: '#FFF8F3',
+                  border: '1.5px solid #FBD5B5',
+                  margin: '16px 0'
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '15px', color: '#0F172A' }}>
+                    Standard Fresh Portion
                   </div>
-                );
-              })}
-            </div>
+                  <div style={{ fontSize: '11px', color: '#64748B' }}>
+                    Prepared fresh to order
+                  </div>
+                </div>
+                <span style={{ fontWeight: 900, fontSize: '18px', color: 'var(--cw-color-primary)', fontFamily: 'var(--cw-font-heading)' }}>
+                  ₹{price}
+                </span>
+              </div>
+            )}
 
             {/* Confirm & Add Button */}
             <button
