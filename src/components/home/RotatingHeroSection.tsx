@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 // ─── The 5 Slides Specification ──────────────────────────────────────────────
 export interface HeroSlide {
@@ -138,7 +139,7 @@ export const RotatingHeroSection: React.FC = () => {
   const currentSlide = slides[currentIndex] || DEFAULT_SLIDES[0];
 
   const resolveHeroImg = useCallback((src: string) => {
-    if (!src) return '/assets/hero/hero-signature.jpg';
+    if (!src) return ASSETS.hero.signature;
     if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) return src;
     if (src.startsWith('/assets/') || src.startsWith('/images/')) return src;
     const backend = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';

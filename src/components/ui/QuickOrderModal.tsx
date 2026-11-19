@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DELIVERY_PARTNERS } from '../../utils/deliveryPartners';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 interface PhoneNumberOption {
   id: string;
@@ -165,7 +166,7 @@ export function QuickOrderModal() {
           {/* Chaiwale Brand Logo */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
             <img
-              src="/assets/chaiwale-logo.jpeg"
+              src={ASSETS.logo}
               alt="Chaiwale"
               style={{
                 width: '64px',

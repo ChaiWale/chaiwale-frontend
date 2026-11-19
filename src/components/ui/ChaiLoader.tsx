@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 interface ChaiLoaderProps {
   label?: string;
@@ -83,7 +84,7 @@ export default function ChaiLoader({
           }}
         >
           <Image
-            src="/assets/chaiwale-logo.jpeg"
+            src={ASSETS.logo}
             alt="Chaiwale"
             width={112}
             height={112}

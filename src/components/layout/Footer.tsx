@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { DELIVERY_PARTNERS } from '../../utils/deliveryPartners';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 function FooterPartnerPill({ partner }: { partner: (typeof DELIVERY_PARTNERS)[number] }) {
   const [hovered, setHovered] = React.useState(false);
@@ -116,7 +117,7 @@ export const Footer: React.FC = () => {
           {/* ── Brand Column ── */}
           <div>
             <img
-              src="/assets/chaiwale-logo.jpeg"
+              src={ASSETS.logo}
               alt="Chaiwale"
               style={{ height: '54px', width: 'auto', borderRadius: '10px', marginBottom: '16px' }}
             />

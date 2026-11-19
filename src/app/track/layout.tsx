@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Live Order Tracker | Chaiwale',
     description: 'Real-time order status tracking directly connected to the Chaiwale kitchen.',
     url: 'https://chaiwale.co.in/track',
-    images: ['/assets/chaiwale-logo.jpeg']
+    images: ['https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg']
   }
 };
 

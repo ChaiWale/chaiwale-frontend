@@ -1,3 +1,5 @@
+import { ASSETS } from './supabaseAssets';
+
 export interface DeliveryPartner {
   id: 'zomato' | 'swiggy' | 'toing' | 'ownly';
   name: string;
@@ -19,7 +21,7 @@ export const DELIVERY_PARTNERS: DeliveryPartner[] = [
     displayName: 'Zomato',
     tagline: 'Live tracking & great offers',
     url: 'https://zomato.onelink.me/xqzv/zmfs3x6y',
-    logo: '/assets/delivery-partners/zomato.png',
+    logo: ASSETS.deliveryPartners.zomato,
     brandColor: '#E23744',
     hoverColor: '#CB202D',
     lightBg: '#FFF5F5',
@@ -32,7 +34,7 @@ export const DELIVERY_PARTNERS: DeliveryPartner[] = [
     displayName: 'Swiggy',
     tagline: 'Lightning fast doorstep delivery',
     url: 'https://www.swiggy.com/menu/1476567?source=sharing',
-    logo: '/assets/delivery-partners/swiggy.png',
+    logo: ASSETS.deliveryPartners.swiggy,
     brandColor: '#FC8019',
     hoverColor: '#E06D0E',
     lightBg: '#FFF7ED',
@@ -45,7 +47,7 @@ export const DELIVERY_PARTNERS: DeliveryPartner[] = [
     displayName: 'Toing',
     tagline: 'Everyday lowest menu prices',
     url: 'https://www.toingit.com/menu/1476567',
-    logo: '/assets/delivery-partners/toing.png',
+    logo: ASSETS.deliveryPartners.toing,
     brandColor: '#00873E',
     hoverColor: '#006B32',
     lightBg: '#F0FDF4',
@@ -58,7 +60,7 @@ export const DELIVERY_PARTNERS: DeliveryPartner[] = [
     displayName: 'Ownly by Rapido',
     tagline: 'Zero commission food delivery',
     url: 'https://ownly.food/app/brand/BR505023',
-    logo: '/assets/delivery-partners/ownly.png',
+    logo: ASSETS.deliveryPartners.ownly,
     brandColor: '#E81075',
     hoverColor: '#C40A61',
     lightBg: '#FDF2F8',

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Request a Custom Catering Quote | Chaiwale',
     description: 'Instant custom catering estimates for corporate meals, events, and bulk orders.',
     url: 'https://chaiwale.co.in/quote',
-    images: ['/assets/chaiwale-logo.jpeg']
+    images: ['https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg']
   }
 };
 

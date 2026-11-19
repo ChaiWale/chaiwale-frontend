@@ -1,3 +1,5 @@
+import { ASSETS } from '../utils/supabaseAssets';
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
 export interface CategoryDto {
@@ -80,7 +82,7 @@ export async function fetchUpiConfig(): Promise<UpiConfigDto> {
     return {
       upiId: 'chaiwale@ptyes',
       accountName: 'Shubham Sharma',
-      qrUrl: '/assets/chaiwale-upi-qr.jpeg'
+      qrUrl: ASSETS.qrCode
     };
   }
   const data = await res.json();

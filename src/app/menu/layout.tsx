@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: 'https://chaiwale.co.in/menu',
     images: [
       {
-        url: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
+        url: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg',
         width: 1200,
         height: 630,
         alt: 'Chaiwale Rohini Full Menu - Biryani, Non-Veg, Thali & Kulhad Chai'

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ChaiLoader from '@/components/ui/ChaiLoader';
 import { FoodCard } from '../../components/ui/FoodCard';
 import { fetchCategories, fetchMenuItems, submitOrder, fetchUpiConfig, CategoryDto, MenuItemDto, UpiConfigDto } from '../../services/api.client';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 interface CartItem {
   id: string; // unique cart key: `${itemId}_${variantId || 'base'}`
@@ -1267,7 +1268,7 @@ export default function MenuPage() {
                       </p>
                       <div style={{ display: 'inline-block', backgroundColor: '#FFFFFF', padding: '10px', borderRadius: '12px', border: '1.5px solid #CBD5E1', marginBottom: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
                         <img
-                          src="/assets/chaiwale-upi-qr.jpeg"
+                          src={upiConfig?.qrUrl || ASSETS.qrCode}
                           alt="Chaiwale Paytm UPI QR"
                           style={{ width: '180px', height: '180px', objectFit: 'contain', display: 'block', borderRadius: '6px' }}
                         />

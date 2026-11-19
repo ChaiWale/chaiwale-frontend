@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Badge } from './Badge';
 import { resolveMediaUrl, MenuItemVariantDto } from '../../services/api.client';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 export interface FoodCardProps {
   id: string;
@@ -119,14 +120,14 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               loading="lazy"
               onError={(e) => {
                 e.currentTarget.onerror = null;
-                e.currentTarget.src = '/assets/chaiwale-logo.jpeg';
+                e.currentTarget.src = ASSETS.logo;
                 e.currentTarget.style.objectFit = 'contain';
                 e.currentTarget.style.padding = '8px';
               }}
             />
           ) : (
             <img
-              src="/assets/chaiwale-logo.jpeg"
+              src={ASSETS.logo}
               alt="Chaiwale"
               style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '8px' }}
               loading="lazy"

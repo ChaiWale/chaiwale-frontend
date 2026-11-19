@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 export interface DynamicBhandaraSectionProps {
   bannerData?: {
@@ -33,7 +34,7 @@ export const DynamicBhandaraSection: React.FC<DynamicBhandaraSectionProps> = ({ 
   const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(customMsg)}`;
 
   const resolveImgSrc = (src?: string) => {
-    if (!src) return '/assets/bhandara-banner.jpg';
+    if (!src) return ASSETS.bhandaraBanner;
     if (src.startsWith('http://') || src.startsWith('https://')) return src;
     if (src.startsWith('/assets/')) return src;
     const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';

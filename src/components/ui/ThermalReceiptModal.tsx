@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 export interface ThermalReceiptItem {
   name: string;
@@ -461,7 +462,7 @@ export const ThermalReceiptModal: React.FC<Props> = ({ isOpen, onClose, data }) 
               <div style={{ textAlign: 'center', borderBottom: '1.5px dashed #D1D5DB', paddingBottom: '8px', marginBottom: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '6px' }}>
                   <img
-                    src="/assets/chaiwale-logo.jpeg"
+                    src={ASSETS.logo}
                     alt="Chaiwale Official Logo"
                     style={{
                       width: '52px',

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ASSETS } from '../../utils/supabaseAssets';
 
 export const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -90,7 +91,7 @@ export const Header: React.FC = () => {
           {/* Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
             <img
-              src="/assets/chaiwale-logo.jpeg"
+              src={ASSETS.logo}
               alt="Chaiwale"
               style={{ height: '48px', width: 'auto', borderRadius: '8px' }}
             />

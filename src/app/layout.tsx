@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
+        url: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg',
         width: 1200,
         height: 630,
         alt: 'Chaiwale Rohini Delhi — Best Kulhad Chai, Biryani & North Indian Meals'
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     title: 'Chaiwale | Best Kulhad Chai, Biryani & Non-Veg Food in Rohini, Delhi',
     description:
       'Authentic Kulhad Chai, Chicken Dum Biryani, Champaran Handi Meat, North Indian Thali, and Bhandara Catering across Rohini Sector 2, 3 & Delhi NCR.',
-    images: ['https://chaiwale.co.in/assets/chaiwale-logo.jpeg']
+    images: ['https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg']
   },
   icons: {
     icon: [
@@ -123,11 +123,11 @@ const structuredData = {
       logo: {
         '@type': 'ImageObject',
         '@id': 'https://chaiwale.co.in/#logo',
-        url: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
-        contentUrl: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
+        url: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg',
+        contentUrl: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg',
         caption: 'Chaiwale Official Logo'
       },
-      image: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
+      image: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg',
       telephone: '+919310112564',
       email: 'support@chaiwale.co.in',
       address: {
@@ -151,7 +151,7 @@ const structuredData = {
       '@type': ['Restaurant', 'FoodEstablishment'],
       '@id': 'https://chaiwale.co.in/#restaurant',
       name: 'Chaiwale',
-      image: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
+      image: 'https://hwbdyuupfobpznfroapa.supabase.co/storage/v1/object/public/chaiwale-assets/chaiwale-logo.jpeg',
       description:
         'Chaiwale — Rohini\'s premier destination for authentic Kulhad Chai, Chicken & Mutton Dum Biryani, Champaran Ahuna Handi Meat, North Indian Thali, Momos, Burger & Street Food. Serving Rohini Sector 2, Sector 3, Pitampura, Shalimar Bagh & North Delhi. Community Bhandara catering, corporate bulk meals & party orders available.',
       address: {
