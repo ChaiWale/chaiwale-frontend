@@ -777,17 +777,42 @@ export default function MenuPage() {
 
             {orderSuccess ? (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                <span style={{ fontSize: '48px' }}>🎉</span>
-                <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--cw-color-primary)', marginTop: '12px' }}>
-                  Order Confirmed!
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  backgroundColor: '#FEF3C7',
+                  color: '#D97706',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '32px',
+                  margin: '0 auto 10px auto'
+                }}>
+                  ⏳
+                </div>
+                <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--cw-color-primary)', margin: 0 }}>
+                  Order Placed Successfully!
                 </h3>
-                <p style={{ fontSize: '15px', color: '#1E293B', marginTop: '6px' }}>
+                <div style={{
+                  display: 'inline-block',
+                  backgroundColor: '#FEF3C7',
+                  color: '#92400E',
+                  fontWeight: 700,
+                  fontSize: '12px',
+                  padding: '4px 14px',
+                  borderRadius: '12px',
+                  marginTop: '8px'
+                }}>
+                  🟡 Awaiting Store Confirmation
+                </div>
+                <p style={{ fontSize: '15px', color: '#1E293B', marginTop: '10px' }}>
                   Order Number: <strong>#{orderSuccess.orderNumber}</strong>
                 </p>
                 {orderSuccess.paymentMode === 'UPI' && (
                   <div style={{ padding: '12px', backgroundColor: '#FEF3C7', border: '1px solid #FCD34D', borderRadius: 'var(--cw-radius-md)', margin: '14px 0', fontSize: '13px', color: '#92400E' }}>
                     📱 <strong>UPI Payment Status: PENDING VERIFICATION</strong><br />
-                    Your transaction reference has been logged. Our kitchen & billing staff will verify the credit with our Paytm merchant bank before dispatch.
+                    Your transaction reference has been logged. Our store & billing team will verify the payment and confirm your order.
                   </div>
                 )}
                 {orderSuccess.paymentMode === 'CASH' && (
@@ -797,7 +822,7 @@ export default function MenuPage() {
                   </div>
                 )}
                 <p style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', marginTop: '4px', lineHeight: 1.5 }}>
-                  Your order has been transmitted directly to our Rohini kitchen. Authoritative billing calculations have been stored in the database.
+                  Your order has been transmitted directly to our Rohini store. The store team is reviewing your order and will confirm it shortly.
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
                   {/* WhatsApp Confirm Button */}
@@ -821,7 +846,7 @@ export default function MenuPage() {
                         boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)'
                       }}
                     >
-                      📲 Confirm Order on WhatsApp
+                      📲 Send Details to Store on WhatsApp
                     </a>
                   )}
                   <div style={{ display: 'flex', gap: '10px' }}>

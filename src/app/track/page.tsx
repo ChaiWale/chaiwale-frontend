@@ -52,19 +52,26 @@ function OrderTrackingContent() {
   }, [initialOrder]);
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    const s = (status || '').toUpperCase();
+    switch (s) {
+      case 'PENDING':
+      case 'NEW':
+        return { color: '#D97706', bg: '#FEF3C7', label: '🟡 Order Placed • Awaiting Store Confirmation' };
       case 'CONFIRMED':
-        return { color: '#0284C7', bg: '#E0F2FE', label: 'Order Confirmed' };
+        return { color: '#0284C7', bg: '#E0F2FE', label: '🔵 Order Confirmed by Store' };
       case 'PREPARING':
-        return { color: '#D97706', bg: '#FEF3C7', label: 'Kitchen Preparing' };
+        return { color: '#D97706', bg: '#FEF3C7', label: '🍳 Kitchen Preparing Your Food' };
+      case 'READY':
+        return { color: '#0D9488', bg: '#CCFBF1', label: '🥡 Food Ready for Pickup / Dispatch' };
       case 'OUT_FOR_DELIVERY':
-        return { color: '#7C3AED', bg: '#EDE9FE', label: 'Out For Delivery' };
+        return { color: '#7C3AED', bg: '#EDE9FE', label: '🛵 Out For Delivery' };
+      case 'DELIVERED':
       case 'COMPLETED':
-        return { color: '#16A34A', bg: '#DCFCE7', label: 'Delivered / Completed' };
+        return { color: '#16A34A', bg: '#DCFCE7', label: '✅ Delivered • Enjoy Your Meal!' };
       case 'CANCELLED':
-        return { color: '#DC2626', bg: '#FEE2E2', label: 'Cancelled' };
+        return { color: '#DC2626', bg: '#FEE2E2', label: '❌ Cancelled' };
       default:
-        return { color: '#D97706', bg: '#FEF3C7', label: 'Order Placed' };
+        return { color: '#D97706', bg: '#FEF3C7', label: 'Order Received' };
     }
   };
 
