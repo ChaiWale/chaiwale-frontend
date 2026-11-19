@@ -308,16 +308,16 @@ export function QuickOrderModal() {
                   >
                     <div
                       style={{
-                        width: '34px',
-                        height: '34px',
-                        borderRadius: '8px',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '9px',
                         overflow: 'hidden',
                         flexShrink: 0,
-                        backgroundColor: '#FFFFFF',
+                        backgroundColor: 'transparent',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.06)'
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
                       }}
                     >
                       <img

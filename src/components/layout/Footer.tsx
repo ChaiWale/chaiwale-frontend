@@ -1,6 +1,94 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { DELIVERY_PARTNERS } from '../../utils/deliveryPartners';
+
+function FooterPartnerPill({ partner }: { partner: (typeof DELIVERY_PARTNERS)[number] }) {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <a
+      href={partner.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`Order Chaiwale on ${partner.name}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '6px 14px',
+        borderRadius: '24px',
+        backgroundColor: hovered ? partner.lightBg : 'rgba(255, 255, 255, 0.07)',
+        border: `1px solid ${hovered ? partner.brandColor : 'rgba(255, 255, 255, 0.12)'}`,
+        textDecoration: 'none',
+        transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
+        transition: 'all 0.2s ease'
+      }}
+    >
+      <img
+        src={partner.logo}
+        alt={partner.name}
+        style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover' }}
+      />
+      <span
+        style={{
+          fontSize: '12px',
+          fontWeight: 700,
+          color: hovered ? partner.brandColor : '#FFFFFF',
+          transition: 'color 0.2s'
+        }}
+      >
+        {partner.displayName}
+      </span>
+    </a>
+  );
+}
+
+function FooterColPartnerLink({ partner }: { partner: (typeof DELIVERY_PARTNERS)[number] }) {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <a
+      href={partner.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`Order Chaiwale on ${partner.name}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '6px 8px',
+        borderRadius: '8px',
+        backgroundColor: hovered ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.05)',
+        border: `1px solid ${hovered ? partner.brandColor : 'rgba(255, 255, 255, 0.1)'}`,
+        textDecoration: 'none',
+        transform: hovered ? 'translateY(-1px)' : 'translateY(0)',
+        transition: 'all 0.2s ease'
+      }}
+    >
+      <img
+        src={partner.logo}
+        alt={partner.name}
+        style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover', flexShrink: 0 }}
+      />
+      <span
+        style={{
+          fontSize: '11px',
+          fontWeight: 600,
+          color: '#E8E0D8',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}
+      >
+        {partner.name}
+      </span>
+    </a>
+  );
+}
 
 export const Footer: React.FC = () => {
   return (
@@ -77,43 +165,7 @@ export const Footer: React.FC = () => {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
                 {DELIVERY_PARTNERS.map((partner) => (
-                  <a
-                    key={`footer-col-${partner.id}`}
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={`Order Chaiwale on ${partner.name}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '6px 8px',
-                      borderRadius: '8px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      textDecoration: 'none',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-                      e.currentTarget.style.borderColor = partner.brandColor;
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover', flexShrink: 0 }}
-                    />
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: '#E8E0D8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {partner.name}
-                    </span>
-                  </a>
+                  <FooterColPartnerLink key={`footer-col-${partner.id}`} partner={partner} />
                 ))}
               </div>
             </div>
@@ -213,47 +265,7 @@ export const Footer: React.FC = () => {
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
             {DELIVERY_PARTNERS.map((partner) => (
-              <a
-                key={`footer-bar-${partner.id}`}
-                href={partner.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`Order Chaiwale on ${partner.name}`}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '6px 14px',
-                  borderRadius: '24px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.07)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = partner.lightBg;
-                  e.currentTarget.style.borderColor = partner.brandColor;
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  const textEl = e.currentTarget.querySelector('span');
-                  if (textEl) (textEl as HTMLElement).style.color = partner.brandColor;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.07)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  const textEl = e.currentTarget.querySelector('span');
-                  if (textEl) (textEl as HTMLElement).style.color = '#FFFFFF';
-                }}
-              >
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover' }}
-                />
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#FFFFFF', transition: 'color 0.2s' }}>
-                  {partner.displayName}
-                </span>
-              </a>
+              <FooterPartnerPill key={`footer-bar-${partner.id}`} partner={partner} />
             ))}
           </div>
         </div>

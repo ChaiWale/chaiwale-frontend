@@ -58,7 +58,7 @@ export const DELIVERY_PARTNERS: DeliveryPartner[] = [
     displayName: 'Ownly by Rapido',
     tagline: 'Zero commission food delivery',
     url: 'https://ownly.food/app/brand/BR505023',
-    logo: '/assets/delivery-partners/ownly.jpg',
+    logo: '/assets/delivery-partners/ownly.png',
     brandColor: '#E81075',
     hoverColor: '#C40A61',
     lightBg: '#FDF2F8',

@@ -147,12 +147,12 @@ export function DeliveryAppsFloat() {
                     height: '38px',
                     borderRadius: '10px',
                     overflow: 'hidden',
-                    backgroundColor: '#F5EFE6',
+                    backgroundColor: 'transparent',
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
                   }}
                 >
                   <img
