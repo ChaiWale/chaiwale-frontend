@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { DELIVERY_PARTNERS, DeliveryPartner } from '../../utils/deliveryPartners';
+import { DeliveryRiderIcon } from './DeliveryRiderIcon';
 
 export function DeliveryAppsFloat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,8 +77,8 @@ export function DeliveryAppsFloat() {
             }}
           >
             <div>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#2B1810', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>🛵</span>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#2B1810', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <DeliveryRiderIcon size={24} riderColor="#D96B27" scooterColor="#2E1F18" speedLineColor="#D96B27" />
                 <span>Order on Food Apps</span>
               </div>
               <div style={{ fontSize: '11px', color: '#705F55', marginTop: '1px' }}>
@@ -221,49 +222,46 @@ export function DeliveryAppsFloat() {
         aria-expanded={isOpen}
         id="delivery-apps-floating-button"
         style={{
-          backgroundColor: isOpen ? '#211510' : '#D96B27',
+          backgroundColor: isOpen ? '#211510' : '#6F432A',
           color: '#FFFFFF',
-          width: '56px',
-          height: '56px',
+          width: '58px',
+          height: '58px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           boxShadow: isOpen
             ? '0 6px 20px rgba(33, 21, 16, 0.5)'
-            : '0 4px 16px rgba(217, 107, 39, 0.45)',
+            : '0 6px 20px rgba(111, 67, 42, 0.55)',
           border: '2px solid #FFFFFF',
           cursor: 'pointer',
           transition: 'all 0.22s ease',
           position: 'relative'
         }}
         onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = isOpen ? '#211510' : '#5A3520';
           e.currentTarget.style.transform = 'scale(1.08)';
-          e.currentTarget.style.boxShadow = '0 6px 22px rgba(217, 107, 39, 0.6)';
+          e.currentTarget.style.boxShadow = '0 8px 24px rgba(111, 67, 42, 0.65)';
         }}
         onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = isOpen ? '#211510' : '#6F432A';
           e.currentTarget.style.transform = 'scale(1)';
           e.currentTarget.style.boxShadow = isOpen
             ? '0 6px 20px rgba(33, 21, 16, 0.5)'
-            : '0 4px 16px rgba(217, 107, 39, 0.45)';
+            : '0 6px 20px rgba(111, 67, 42, 0.55)';
         }}
       >
         {isOpen ? (
           <span style={{ fontSize: '20px', fontWeight: 800 }}>✕</span>
         ) : (
-          <div style={{ position: 'relative', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {/* Delivery Rider / Bike Icon */}
-            <svg
-              width="26"
-              height="26"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7zM7 17c-.55 0-1-.45-1-1h2c0 .55-.45 1-1 1zm10 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM5 13c0-.55.45-1 1-1h2v2H5v-1zm12.65-2H15V9h2.35l.3 2z" />
-              <circle cx="17" cy="16" r="2" />
-              <circle cx="7" cy="16" r="2" />
-            </svg>
+          <div style={{ position: 'relative', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Custom Brand Delivery Rider Scooter Icon */}
+            <DeliveryRiderIcon
+              size={34}
+              riderColor="#F59E0B"
+              scooterColor="#FFFFFF"
+              speedLineColor="#F59E0B"
+            />
 
             {/* Notification Badge indicating 4 Apps */}
             <span
@@ -271,14 +269,14 @@ export function DeliveryAppsFloat() {
                 position: 'absolute',
                 top: '-7px',
                 right: '-7px',
-                backgroundColor: '#E23744',
+                backgroundColor: '#D96B27',
                 color: '#FFFFFF',
                 borderRadius: '10px',
                 fontSize: '10px',
                 fontWeight: 800,
                 padding: '1px 5px',
                 border: '1.5px solid #FFFFFF',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                boxShadow: '0 2px 4px rgba(0,0,0,0.25)'
               }}
             >
               4

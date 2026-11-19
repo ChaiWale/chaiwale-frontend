@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { DELIVERY_PARTNERS } from '../../utils/deliveryPartners';
 import { ASSETS } from '../../utils/supabaseAssets';
+import { DeliveryRiderIcon } from '../ui/DeliveryRiderIcon';
 
 function FooterPartnerPill({ partner }: { partner: (typeof DELIVERY_PARTNERS)[number] }) {
   const [hovered, setHovered] = React.useState(false);
@@ -42,50 +43,6 @@ function FooterPartnerPill({ partner }: { partner: (typeof DELIVERY_PARTNERS)[nu
         }}
       >
         {partner.displayName}
-      </span>
-    </a>
-  );
-}
-
-function FooterColPartnerLink({ partner }: { partner: (typeof DELIVERY_PARTNERS)[number] }) {
-  const [hovered, setHovered] = React.useState(false);
-  return (
-    <a
-      href={partner.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={`Order Chaiwale on ${partner.name}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        padding: '6px 8px',
-        borderRadius: '8px',
-        backgroundColor: hovered ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.05)',
-        border: `1px solid ${hovered ? partner.brandColor : 'rgba(255, 255, 255, 0.1)'}`,
-        textDecoration: 'none',
-        transform: hovered ? 'translateY(-1px)' : 'translateY(0)',
-        transition: 'all 0.2s ease'
-      }}
-    >
-      <img
-        src={partner.logo}
-        alt={partner.name}
-        style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover', flexShrink: 0 }}
-      />
-      <span
-        style={{
-          fontSize: '11px',
-          fontWeight: 600,
-          color: '#E8E0D8',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}
-      >
-        {partner.name}
       </span>
     </a>
   );
@@ -157,18 +114,6 @@ export const Footer: React.FC = () => {
               <span style={{ fontSize: '11px', color: '#7C6D67', fontFamily: 'monospace' }}>
                 23326001003387
               </span>
-            </div>
-
-            {/* Delivery Partner Apps */}
-            <div style={{ marginTop: '22px' }}>
-              <p style={{ color: '#ffffff', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px', opacity: 0.6 }}>
-                Order on Food Apps
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
-                {DELIVERY_PARTNERS.map((partner) => (
-                  <FooterColPartnerLink key={`footer-col-${partner.id}`} partner={partner} />
-                ))}
-              </div>
             </div>
           </div>
 
@@ -257,9 +202,9 @@ export const Footer: React.FC = () => {
             gap: '16px'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '18px' }}>🛵</span>
-            <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.04em' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <DeliveryRiderIcon size={26} riderColor="#F59E0B" scooterColor="#FFFFFF" speedLineColor="#F59E0B" />
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.04em' }}>
               Order Online From Your Favorite App:
             </span>
           </div>
