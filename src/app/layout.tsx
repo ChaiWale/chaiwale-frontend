@@ -5,7 +5,7 @@ import { AnnouncementBar } from '../components/layout/AnnouncementBar';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { WhatsAppFloat } from '../components/ui/WhatsAppFloat';
-import { ZomatoFloat } from '../components/ui/ZomatoFloat';
+import { DeliveryAppsFloat } from '../components/ui/DeliveryAppsFloat';
 import { QuickOrderModal } from '../components/ui/QuickOrderModal';
 
 export const viewport: Viewport = {
@@ -140,7 +140,11 @@ const structuredData = {
       },
       sameAs: [
         'https://zomato.onelink.me/xqzv/zmfs3x6y',
-        'https://wa.me/919310112564'
+        'https://www.swiggy.com/menu/1476567?source=sharing',
+        'https://www.toingit.com/menu/1476567',
+        'https://ownly.food/app/brand/BR505023',
+        'https://wa.me/919310112564',
+        'https://www.instagram.com/chaiwaleofficial/'
       ]
     },
     {
@@ -290,7 +294,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <QuickOrderModal />
-        <ZomatoFloat />
+        <DeliveryAppsFloat />
         <WhatsAppFloat />
       </body>
     </html>

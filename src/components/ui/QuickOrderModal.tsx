@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { DELIVERY_PARTNERS } from '../../utils/deliveryPartners';
 
 interface PhoneNumberOption {
   id: string;
@@ -32,14 +33,12 @@ export function QuickOrderModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Expanded accordion sections: 'none' | 'whatsapp' | 'call'
-  const [expandedSection, setExpandedSection] = useState<'none' | 'whatsapp' | 'call'>('none');
+  // Expanded accordion sections: 'none' | 'apps' | 'whatsapp' | 'call'
+  const [expandedSection, setExpandedSection] = useState<'none' | 'apps' | 'whatsapp' | 'call'>('none');
 
   // Selected phone number IDs (defaulting to 'primary')
   const [selectedWaNumber, setSelectedWaNumber] = useState<string>('919310112564');
   const [selectedCallNumber, setSelectedCallNumber] = useState<string>('919310112564');
-
-  const zomatoUrl = 'https://zomato.onelink.me/xqzv/zmfs3x6y';
 
   useEffect(() => {
     setMounted(true);
@@ -206,66 +205,162 @@ export function QuickOrderModal() {
         {/* 4 Action Choices */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '11px' }}>
           
-          {/* 1. ORDER ON ZOMATO */}
-          <a
-            href={zomatoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleClose}
-            id="modal-order-zomato"
+          {/* 1. ORDER ON FOOD APPS (ZOMATO, SWIGGY, TOING, OWNLY BY RAPIDO) */}
+          <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '11px 15px',
               borderRadius: '16px',
-              backgroundColor: '#FFF5F5',
-              border: '1.5px solid #FBC7C9',
-              textDecoration: 'none',
-              transition: 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 18px rgba(226, 55, 68, 0.18)';
-              e.currentTarget.style.borderColor = '#E23744';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-              e.currentTarget.style.borderColor = '#FBC7C9';
+              backgroundColor: '#FFF8F3',
+              border: `1.5px solid ${expandedSection === 'apps' ? '#D96B27' : '#FED7AA'}`,
+              overflow: 'hidden',
+              transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
             }}
           >
+            {/* Header / Toggle */}
             <div
+              onClick={() => setExpandedSection(expandedSection === 'apps' ? 'none' : 'apps')}
+              id="modal-order-delivery-apps"
               style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '12px',
-                backgroundColor: '#E23744',
-                color: '#FFFFFF',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
+                gap: '12px',
+                padding: '11px 15px',
+                cursor: 'pointer',
+                userSelect: 'none'
               }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7zM7 17c-.55 0-1-.45-1-1h2c0 .55-.45 1-1 1zm10 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM5 13c0-.55.45-1 1-1h2v2H5v-1zm12.65-2H15V9h2.35l.3 2z" />
-                <circle cx="17" cy="16" r="2" />
-                <circle cx="7" cy="16" r="2" />
-              </svg>
+              <div
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '12px',
+                  backgroundColor: '#D96B27',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 7c0-1.1-.9-2-2-2h-3v2h3v2.65L13.52 14H10V9H6c-2.21 0-4 1.79-4 4v3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h4.48L19 10.35V7zM7 17c-.55 0-1-.45-1-1h2c0 .55-.45 1-1 1zm10 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM5 13c0-.55.45-1 1-1h2v2H5v-1zm12.65-2H15V9h2.35l.3 2z" />
+                  <circle cx="17" cy="16" r="2" />
+                  <circle cx="7" cy="16" r="2" />
+                </svg>
+              </div>
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: '#9A3412', lineHeight: 1.2 }}>
+                  Order on Food Apps
+                </div>
+                <div style={{ fontSize: '11.5px', color: '#7C2D12', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {expandedSection === 'apps' ? 'Select an app below' : 'Zomato • Swiggy • Toing • Ownly'}
+                </div>
+              </div>
+
+              <div style={{ color: '#C2410C', fontWeight: 700, fontSize: '14px' }}>
+                {expandedSection === 'apps' ? '▲' : '▼'}
+              </div>
             </div>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: '#E23744', lineHeight: 1.2 }}>
-                Order on Zomato
-              </div>
-              <div style={{ fontSize: '11.5px', color: '#7A6264', marginTop: '2px' }}>
-                Live tracking • Offers • Fast delivery
-              </div>
-            </div>
+            {/* Expandable 4-Partner Choices */}
+            {expandedSection === 'apps' && (
+              <div
+                style={{
+                  padding: '8px 14px 14px 14px',
+                  borderTop: '1px solid #FFEDD5',
+                  backgroundColor: '#FFFFFF',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}
+              >
+                <div style={{ fontSize: '11.5px', fontWeight: 700, color: '#9A3412', margin: '4px 0 2px' }}>
+                  Choose Your Food Delivery Partner:
+                </div>
 
-            <div style={{ color: '#E23744', fontWeight: 700, fontSize: '16px' }}>➔</div>
-          </a>
+                {DELIVERY_PARTNERS.map((partner) => (
+                  <a
+                    key={partner.id}
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleClose}
+                    id={`modal-partner-${partner.id}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '8px 12px',
+                      borderRadius: '12px',
+                      backgroundColor: partner.lightBg,
+                      border: `1.5px solid ${partner.borderColor}`,
+                      textDecoration: 'none',
+                      transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = `0 4px 12px ${partner.borderColor}`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '34px',
+                        height: '34px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                        backgroundColor: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.06)'
+                      }}
+                    >
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: partner.brandColor }}>
+                          {partner.displayName}
+                        </span>
+                        {partner.badge && (
+                          <span
+                            style={{
+                              fontSize: '9px',
+                              fontWeight: 700,
+                              padding: '1px 4px',
+                              borderRadius: '3px',
+                              backgroundColor: '#FFFFFF',
+                              color: partner.brandColor,
+                              border: `1px solid ${partner.borderColor}`
+                            }}
+                          >
+                            {partner.badge}
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '10.5px', color: '#666', marginTop: '1px' }}>
+                        {partner.tagline}
+                      </div>
+                    </div>
+
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: partner.brandColor }}>
+                      Open ➔
+                    </span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* 2. ORDER ON WHATSAPP (WITH 2 NUMBER SELECTOR) */}
           <div

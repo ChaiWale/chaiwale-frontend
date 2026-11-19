@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { DELIVERY_PARTNERS } from '../../utils/deliveryPartners';
 
 export const Footer: React.FC = () => {
   return (
@@ -67,6 +68,54 @@ export const Footer: React.FC = () => {
               <span style={{ fontSize: '11px', color: '#7C6D67', fontFamily: 'monospace' }}>
                 23326001003387
               </span>
+            </div>
+
+            {/* Delivery Partner Apps */}
+            <div style={{ marginTop: '22px' }}>
+              <p style={{ color: '#ffffff', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px', opacity: 0.6 }}>
+                Order on Food Apps
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                {DELIVERY_PARTNERS.map((partner) => (
+                  <a
+                    key={`footer-col-${partner.id}`}
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Order Chaiwale on ${partner.name}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '6px 8px',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                      e.currentTarget.style.borderColor = partner.brandColor;
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover', flexShrink: 0 }}
+                    />
+                    <span style={{ fontSize: '11px', fontWeight: 600, color: '#E8E0D8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {partner.name}
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -140,6 +189,72 @@ export const Footer: React.FC = () => {
             >
               Open in Google Maps ↗
             </a>
+          </div>
+        </div>
+
+        {/* ── Delivery Partner Apps Highlight Bar ── */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '20px 0',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '18px' }}>🛵</span>
+            <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.04em' }}>
+              Order Online From Your Favorite App:
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+            {DELIVERY_PARTNERS.map((partner) => (
+              <a
+                key={`footer-bar-${partner.id}`}
+                href={partner.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Order Chaiwale on ${partner.name}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '6px 14px',
+                  borderRadius: '24px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.07)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = partner.lightBg;
+                  e.currentTarget.style.borderColor = partner.brandColor;
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  const textEl = e.currentTarget.querySelector('span');
+                  if (textEl) (textEl as HTMLElement).style.color = partner.brandColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.07)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  const textEl = e.currentTarget.querySelector('span');
+                  if (textEl) (textEl as HTMLElement).style.color = '#FFFFFF';
+                }}
+              >
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'cover' }}
+                />
+                <span style={{ fontSize: '12px', fontWeight: 700, color: '#FFFFFF', transition: 'color 0.2s' }}>
+                  {partner.displayName}
+                </span>
+              </a>
+            ))}
           </div>
         </div>
 
