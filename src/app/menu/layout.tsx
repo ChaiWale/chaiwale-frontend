@@ -1,26 +1,35 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Full Menu — Biryani, Litti Chokha, Thali, Chai & More | Order Online Rohini Delhi',
+  title: 'Full Menu — Biryani, Non-Veg, Thali, Chai & Snacks | Order Online Rohini Sector 2 & 3 Delhi',
   description:
-    'Explore the complete Chaiwale menu — Chicken & Mutton Dum Biryani, Litti Chokha, North Indian Thali, Kulhad Chai, Momos, Burgers, Paratha, Street Food & more. Fast home delivery across Rohini, Pitampura, Shalimar Bagh & North Delhi. Party orders, bulk orders & corporate catering available.',
+    'Explore the complete Chaiwale menu — Champaran Handi Chicken, Ahuna Mutton, Chicken & Mutton Dum Biryani, Royal Thalis, Kulhad Chai, Litti Chokha, Momos, Burgers & Street Food. Fast home delivery in Rohini Sector 2, Sector 3, Pitampura, Shalimar Bagh & North Delhi. Party & bulk orders available.',
   keywords: [
-    'chaiwale menu', 'chaiwale rohini menu', 'biryani menu rohini', 'chicken biryani order online rohini',
-    'mutton biryani order rohini', 'dum biryani near me', 'litti chokha rohini', 'litti chokha order online',
-    'north indian thali rohini', 'veg thali rohini', 'chicken thali rohini', 'kulhad chai online order',
-    'momos rohini', 'burger rohini', 'paratha rohini', 'street food rohini', 'party order rohini',
-    'bulk food order rohini', 'corporate lunch rohini', 'food delivery rohini sector 3',
-    'order food online rohini', 'chaiwale online order'
+    'rohini sec 2', 'rohini sector 2 food', 'rohini sec 2 non veg', 'non veg food rohini',
+    'champaran chicken rohini', 'ahuna mutton rohini', 'chicken curry rohini', 'mutton curry rohini',
+    'chicken biryani rohini', 'mutton biryani rohini', 'dum biryani near me', 'best biryani in rohini',
+    'north indian thali rohini', 'veg thali rohini', 'chicken thali rohini', 'anda thali rohini',
+    'chaiwale menu', 'chaiwale rohini menu', 'kulhad chai online order', 'litti chokha rohini',
+    'momos rohini', 'burger rohini', 'paratha rohini', 'street food rohini', 'bhandara catering delhi',
+    'party order rohini', 'bulk food order rohini sector 2', 'food delivery rohini sector 2',
+    'food delivery rohini sector 3', 'order food online rohini', 'chaiwale online order'
   ],
   alternates: {
     canonical: '/menu'
   },
   openGraph: {
-    title: 'Full Menu — Biryani, Litti Chokha, Thali, Chai & More | Chaiwale Rohini',
+    title: 'Full Menu — Biryani, Non-Veg, Thali, Chai & Snacks | Chaiwale Rohini Sector 2 & 3',
     description:
-      'Order Chicken & Mutton Dum Biryani, Litti Chokha, North Indian Thali, Kulhad Chai, Momos & more from Chaiwale Rohini. Fast delivery across North Delhi. Party & bulk orders welcome.',
+      'Order Champaran Handi Chicken, Ahuna Mutton, Dum Biryani, Royal Thalis, Kulhad Chai, Momos & more from Chaiwale Rohini. Fast delivery in Rohini Sector 2, Sector 3 & North Delhi.',
     url: 'https://chaiwale.co.in/menu',
-    images: ['/assets/chaiwale-logo.jpeg']
+    images: [
+      {
+        url: 'https://chaiwale.co.in/assets/chaiwale-logo.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Chaiwale Rohini Full Menu - Biryani, Non-Veg, Thali & Kulhad Chai'
+      }
+    ]
   }
 };
 
