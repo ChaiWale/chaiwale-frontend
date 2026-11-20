@@ -186,8 +186,51 @@ function OrderTrackingContent() {
                 </div>
               )}
 
+              {/* Google Review Callout when Delivered/Completed */}
+              {(order.status === 'COMPLETED' || order.status === 'DELIVERED') && (
+                <div style={{
+                  backgroundColor: '#FFFBEB',
+                  border: '2px solid #F59E0B',
+                  borderRadius: 'var(--cw-radius-lg)',
+                  padding: '18px',
+                  margin: '18px 0',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 14px rgba(245, 158, 11, 0.18)'
+                }}>
+                  <div style={{ fontSize: '24px', letterSpacing: '4px', marginBottom: '6px' }}>
+                    ⭐⭐⭐⭐⭐
+                  </div>
+                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#92400E', marginBottom: '4px' }}>
+                    Loved Your Food & Chai?
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#78350F', margin: '0 0 14px 0' }}>
+                    Please take 30 seconds to rate us and share your review on Google. It means everything to our kitchen team!
+                  </p>
+                  <a
+                    href="https://g.page/r/Ca1qOd1BBfkEEBM/review"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                      color: '#FFFFFF',
+                      padding: '11px 22px',
+                      borderRadius: 'var(--cw-radius-md)',
+                      fontWeight: 800,
+                      fontSize: '13px',
+                      textDecoration: 'none',
+                      boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)'
+                    }}
+                  >
+                    ⭐ Rate Chaiwale on Google
+                  </a>
+                </div>
+              )}
+
               <p style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', lineHeight: 1.6, marginTop: '8px' }}>
-                {order.status === 'COMPLETED'
+                {order.status === 'COMPLETED' || order.status === 'DELIVERED'
                   ? 'Your order has been completed. Thank you for dining with Chaiwale!'
                   : 'Your order is being prepared freshly at our Rohini kitchen. For urgent queries or modifications, connect with us on WhatsApp.'}
               </p>
