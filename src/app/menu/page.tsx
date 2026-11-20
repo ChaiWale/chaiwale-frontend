@@ -117,6 +117,7 @@ export default function MenuPage() {
   const [checkoutForm, setCheckoutForm] = useState({
     name: '',
     phone: '',
+    email: '',
     address: '',
     orderType: 'DIRECT_DELIVERY' as const,
     paymentMode: 'CASH' as 'CASH' | 'UPI',
@@ -351,6 +352,7 @@ export default function MenuPage() {
       const res = await submitOrder({
         customerName: checkoutForm.name,
         customerPhone: checkoutForm.phone,
+        customerEmail: checkoutForm.email.trim() || undefined,
         orderType: checkoutForm.orderType,
         deliveryAddress: checkoutForm.address,
         specialInstructions: checkoutForm.instructions ? `${checkoutForm.instructions} (Customer: ${checkoutForm.name}, Phone: ${checkoutForm.phone})` : `Customer: ${checkoutForm.name}, Phone: ${checkoutForm.phone}`,
@@ -810,6 +812,61 @@ export default function MenuPage() {
                 <p style={{ fontSize: '15px', color: '#1E293B', marginTop: '10px' }}>
                   Order Number: <strong>#{orderSuccess.orderNumber}</strong>
                 </p>
+
+                {/* Prominent Call Restaurant Confirmation Alert */}
+                <div style={{
+                  backgroundColor: '#FFFBEB',
+                  border: '2px solid #F59E0B',
+                  borderRadius: 'var(--cw-radius-lg)',
+                  padding: '16px',
+                  margin: '16px 0',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 14px rgba(245, 158, 11, 0.18)'
+                }}>
+                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#B45309', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                    ⚠️ Please Call Restaurant to Confirm Order
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#78350F', margin: '0 0 12px 0', fontWeight: 500 }}>
+                    Our kitchen will begin preparing your food fresh as soon as your confirmation is received.
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <a
+                      href="tel:+919310112564"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        backgroundColor: '#6F432A',
+                        color: '#FFFFFF',
+                        padding: '10px 16px',
+                        borderRadius: 'var(--cw-radius-md)',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        textDecoration: 'none'
+                      }}
+                    >
+                      📞 Call +91 93101 12564
+                    </a>
+                    <a
+                      href="tel:+919310110414"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        backgroundColor: '#FFFFFF',
+                        color: '#6F432A',
+                        border: '1.5px solid #6F432A',
+                        padding: '10px 16px',
+                        borderRadius: 'var(--cw-radius-md)',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        textDecoration: 'none'
+                      }}
+                    >
+                      📞 Call +91 93101 10414
+                    </a>
+                  </div>
+                </div>
                 {orderSuccess.paymentMode === 'UPI' && (
                   <div style={{ padding: '12px', backgroundColor: '#FEF3C7', border: '1px solid #FCD34D', borderRadius: 'var(--cw-radius-md)', margin: '14px 0', fontSize: '13px', color: '#92400E' }}>
                     📱 <strong>UPI Payment Status: PENDING VERIFICATION</strong><br />
@@ -1169,6 +1226,19 @@ export default function MenuPage() {
                       value={checkoutForm.phone}
                       onChange={(e) => setCheckoutForm({ ...checkoutForm, phone: e.target.value })}
                       placeholder="+91 99999 99999"
+                      style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--cw-radius-md)', border: '1px solid #CBD5E1', fontSize: '13px' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '4px', color: '#1E293B' }}>
+                      Email Address <span style={{ fontWeight: 400, color: '#64748B' }}>(Optional — for order receipt & status)</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={checkoutForm.email}
+                      onChange={(e) => setCheckoutForm({ ...checkoutForm, email: e.target.value })}
+                      placeholder="e.g. rahul@gmail.com"
                       style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--cw-radius-md)', border: '1px solid #CBD5E1', fontSize: '13px' }}
                     />
                   </div>

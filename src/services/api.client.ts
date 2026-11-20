@@ -61,6 +61,7 @@ export interface CreateOrderPayload {
   customerId?: string;
   customerName?: string;
   customerPhone?: string;
+  customerEmail?: string;
   orderType: 'DINE_IN' | 'TAKEAWAY' | 'DIRECT_DELIVERY' | 'PORTER';
   deliveryAddress?: string;
   deliveryDistanceKm?: number;
