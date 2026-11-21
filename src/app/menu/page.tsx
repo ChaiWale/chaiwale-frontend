@@ -26,6 +26,15 @@ export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Zomato-Style Quick Filter State
+  const [filterVegOnly, setFilterVegOnly] = useState<boolean>(false);
+  const [filterBestseller, setFilterBestseller] = useState<boolean>(false);
+  const [filterSpicy, setFilterSpicy] = useState<boolean>(false);
+  const [filterUnder150, setFilterUnder150] = useState<boolean>(false);
+  const [filterSortPrice, setFilterSortPrice] = useState<'NONE' | 'ASC' | 'DESC'>('NONE');
+  const [isCategorySheetOpen, setIsCategorySheetOpen] = useState<boolean>(false);
+  const [showScrollNavButton, setShowScrollNavButton] = useState<boolean>(false);
+
   // Cart state
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -96,6 +105,15 @@ export default function MenuPage() {
     return () => window.removeEventListener('resize', checkCategoryScroll);
   }, [categories]);
 
+  // Window scroll listener for floating Browse Menu button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollNavButton(window.scrollY > 280);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollCategories = (direction: 'left' | 'right') => {
     const el = categoryScrollRef.current;
     if (!el) return;
@@ -111,6 +129,15 @@ export default function MenuPage() {
     setSelectedCategory(catName);
     if (e?.currentTarget) {
       e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+    if (catName === 'All') {
+      window.scrollTo({ top: 320, behavior: 'smooth' });
+    } else {
+      const secId = 'cat-sec-' + (catName.toLowerCase().replace(/[^a-z0-9]/g, '-'));
+      const el = document.getElementById(secId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -286,14 +313,29 @@ export default function MenuPage() {
       );
     }
 
-    // Map categories to items
+    // Zomato Quick Filters
+    if (filterVegOnly) {
+      filtered = filtered.filter(it => it.is_veg && !it.is_egg);
+    }
+
+    if (filterBestseller) {
+      filtered = filtered.filter(it => it.tags && it.tags.some(t => t.toLowerCase().includes('bestseller') || t.toLowerCase().includes('must try') || t.toLowerCase().includes('special') || t.toLowerCase().includes('signature')));
+    }
+
+    if (filterSpicy) {
+      filtered = filtered.filter(it => it.spice_level && it.spice_level !== 'NONE');
+    }
+
+    if (filterUnder150) {
+      filtered = filtered.filter(it => Number(it.base_price) <= 150);
+    }
+
+    // Map categories to items: Keep ALL categories in catMap so entire menu is always visible & scrollable
     const catMap = new Map<string, { category: string; slug: string; items: MenuItemDto[] }>();
 
     // Prepare active category buckets
     categories.forEach((cat) => {
-      if (selectedCategory === 'All' || selectedCategory === cat.name || selectedCategory === cat.id) {
-        catMap.set(cat.id, { category: cat.name, slug: cat.slug, items: [] });
-      }
+      catMap.set(cat.id, { category: cat.name, slug: cat.slug, items: [] });
     });
 
     // Bucket items into their categories
@@ -304,12 +346,6 @@ export default function MenuPage() {
     });
 
     // Helper: Dietary sorting priority requested by user
-    // 1. Veg (low to high)
-    // 2. Egg (low to high)
-    // 3. Chicken (low to high)
-    // 4. Fish (low to high)
-    // 5. Mutton (low to high)
-    // 6. Prawn (low to high)
     const getDietaryRank = (item: MenuItemDto): number => {
       if (item.is_veg && !item.is_egg) return 1;
       if (item.is_egg) return 2;
@@ -325,6 +361,12 @@ export default function MenuPage() {
     // Sort items within each category
     catMap.forEach((group) => {
       group.items.sort((a, b) => {
+        if (filterSortPrice === 'ASC') {
+          return Number(a.base_price) - Number(b.base_price);
+        }
+        if (filterSortPrice === 'DESC') {
+          return Number(b.base_price) - Number(a.base_price);
+        }
         const rankA = getDietaryRank(a);
         const rankB = getDietaryRank(b);
         if (rankA !== rankB) return rankA - rankB;
@@ -333,7 +375,38 @@ export default function MenuPage() {
     });
 
     return Array.from(catMap.values()).filter((group) => group.items.length > 0);
-  }, [categories, items, selectedCategory, searchQuery]);
+  }, [categories, items, selectedCategory, searchQuery, filterVegOnly, filterBestseller, filterSpicy, filterUnder150, filterSortPrice]);
+
+  // Category Scrollspy to auto-highlight category pill on scroll
+  useEffect(() => {
+    let timeoutId: any = null;
+    const handleCategorySpy = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (window.scrollY <= 320) {
+          setSelectedCategory('All');
+          return;
+        }
+        if (groupedItems.length > 0) {
+          const scrollPosition = window.scrollY + 200;
+          for (let i = groupedItems.length - 1; i >= 0; i--) {
+            const group = groupedItems[i];
+            const secId = 'cat-sec-' + group.category.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            const el = document.getElementById(secId);
+            if (el && el.offsetTop <= scrollPosition) {
+              setSelectedCategory(group.category);
+              break;
+            }
+          }
+        }
+      }, 50);
+    };
+    window.addEventListener('scroll', handleCategorySpy, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleCategorySpy);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [groupedItems]);
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -388,7 +461,7 @@ export default function MenuPage() {
         }}
       >
         <div className="cw-container">
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: '240px' }}>
               <input
                 type="text"
@@ -398,10 +471,11 @@ export default function MenuPage() {
                 style={{
                   width: '100%',
                   padding: '10px 16px',
-                  borderRadius: 'var(--cw-radius-pill)',
-                  border: '1px solid var(--cw-color-border)',
-                  backgroundColor: '#FAF5EE',
-                  fontSize: '14px'
+                  borderRadius: '12px',
+                  border: '1px solid #E5E7EB',
+                  backgroundColor: '#F9FAFB',
+                  fontSize: '14px',
+                  outline: 'none'
                 }}
               />
             </div>
@@ -412,24 +486,314 @@ export default function MenuPage() {
                   setIsCheckoutOpen(true);
                 }}
                 style={{
-                  backgroundColor: 'var(--cw-color-primary)',
+                  backgroundColor: '#16A34A',
                   color: '#FFFFFF',
                   padding: '10px 18px',
-                  borderRadius: 'var(--cw-radius-pill)',
-                  fontWeight: 700,
+                  borderRadius: '12px',
+                  fontWeight: 800,
                   fontSize: '13px',
                   border: 'none',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  boxShadow: '0 2px 6px rgba(111, 67, 42, 0.2)'
+                  boxShadow: '0 2px 6px rgba(22, 163, 74, 0.25)'
                 }}
               >
                 🛒 Cart ({totalCartCount}) • ₹{totalCartPrice}
               </button>
             )}
           </div>
+
+          {/* Zomato Sticky Quick-Filter Chips */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '8px',
+              overflowX: 'auto',
+              paddingBottom: '8px',
+              marginBottom: '10px',
+              scrollbarWidth: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            {/* 🟢 Veg Only */}
+            <button
+              type="button"
+              onClick={() => setFilterVegOnly(!filterVegOnly)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                border: filterVegOnly ? '1.5px solid #16A34A' : '1px solid #E5E7EB',
+                backgroundColor: filterVegOnly ? '#F0FDF4' : '#FFFFFF',
+                color: filterVegOnly ? '#166534' : '#374151',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#16A34A' }} />
+              Veg Only
+            </button>
+
+            {/* ⭐ Bestsellers */}
+            <button
+              type="button"
+              onClick={() => setFilterBestseller(!filterBestseller)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                border: filterBestseller ? '1.5px solid #F59E0B' : '1px solid #E5E7EB',
+                backgroundColor: filterBestseller ? '#FFFBEB' : '#FFFFFF',
+                color: filterBestseller ? '#B45309' : '#374151',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>★</span> Bestseller
+            </button>
+
+            {/* 💰 Under ₹150 */}
+            <button
+              type="button"
+              onClick={() => setFilterUnder150(!filterUnder150)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                border: filterUnder150 ? '1.5px solid #6F432A' : '1px solid #E5E7EB',
+                backgroundColor: filterUnder150 ? '#FAF5EE' : '#FFFFFF',
+                color: filterUnder150 ? '#6F432A' : '#374151',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>⚡</span> Under ₹150
+            </button>
+
+            {/* 🌶️ Spicy */}
+            <button
+              type="button"
+              onClick={() => setFilterSpicy(!filterSpicy)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                border: filterSpicy ? '1.5px solid #DC2626' : '1px solid #E5E7EB',
+                backgroundColor: filterSpicy ? '#FEF2F2' : '#FFFFFF',
+                color: filterSpicy ? '#991B1B' : '#374151',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>🌶️</span> Spicy
+            </button>
+
+            {/* ↕️ Price Sort */}
+            <button
+              type="button"
+              onClick={() => {
+                if (filterSortPrice === 'NONE') setFilterSortPrice('ASC');
+                else if (filterSortPrice === 'ASC') setFilterSortPrice('DESC');
+                else setFilterSortPrice('NONE');
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                border: filterSortPrice !== 'NONE' ? '1.5px solid #2563EB' : '1px solid #E5E7EB',
+                backgroundColor: filterSortPrice !== 'NONE' ? '#EFF6FF' : '#FFFFFF',
+                color: filterSortPrice !== 'NONE' ? '#1D4ED8' : '#374151',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>↕</span> {filterSortPrice === 'ASC' ? 'Price: Low to High' : filterSortPrice === 'DESC' ? 'Price: High to Low' : 'Sort by Price'}
+            </button>
+          </div>
+
+          {/* Active Filters Tag Strip */}
+          {(filterVegOnly || filterBestseller || filterUnder150 || filterSpicy || filterSortPrice !== 'NONE' || Boolean(searchQuery.trim())) && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flexWrap: 'wrap',
+                padding: '8px 12px',
+                backgroundColor: '#F8FAFC',
+                borderRadius: '8px',
+                border: '1px dashed #CBD5E1',
+                marginBottom: '10px',
+                fontSize: '12px'
+              }}
+            >
+              <span style={{ fontWeight: 700, color: '#475569' }}>Applied Filters:</span>
+              {filterVegOnly && (
+                <span
+                  onClick={() => setFilterVegOnly(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#DCFCE7',
+                    color: '#15803D',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Remove Veg Only filter"
+                >
+                  Veg Only ✕
+                </span>
+              )}
+              {filterBestseller && (
+                <span
+                  onClick={() => setFilterBestseller(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#FEF3C7',
+                    color: '#B45309',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Remove Bestseller filter"
+                >
+                  ★ Bestseller ✕
+                </span>
+              )}
+              {filterUnder150 && (
+                <span
+                  onClick={() => setFilterUnder150(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#FAF5EE',
+                    color: '#6F432A',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Remove Under ₹150 filter"
+                >
+                  Under ₹150 ✕
+                </span>
+              )}
+              {filterSpicy && (
+                <span
+                  onClick={() => setFilterSpicy(false)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#FEE2E2',
+                    color: '#B91C1C',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Remove Spicy filter"
+                >
+                  🌶️ Spicy ✕
+                </span>
+              )}
+              {filterSortPrice !== 'NONE' && (
+                <span
+                  onClick={() => setFilterSortPrice('NONE')}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#EFF6FF',
+                    color: '#1D4ED8',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Remove Price sorting"
+                >
+                  {filterSortPrice === 'ASC' ? 'Price: Low to High' : 'Price: High to Low'} ✕
+                </span>
+              )}
+              {searchQuery.trim() && (
+                <span
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    backgroundColor: '#E2E8F0',
+                    color: '#334155',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Clear search"
+                >
+                  Search: "{searchQuery.trim()}" ✕
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setFilterVegOnly(false);
+                  setFilterBestseller(false);
+                  setFilterUnder150(false);
+                  setFilterSpicy(false);
+                  setFilterSortPrice('NONE');
+                  setSearchQuery('');
+                }}
+                style={{
+                  marginLeft: 'auto',
+                  border: 'none',
+                  background: 'none',
+                  color: '#DC2626',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  textDecoration: 'underline'
+                }}
+              >
+                Clear All
+              </button>
+            </div>
+          )}
 
           {/* Enhanced Category Bar with Left/Right Scroll Arrows */}
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
@@ -618,21 +982,25 @@ export default function MenuPage() {
         {!loading &&
           !error &&
           groupedItems.map(({ category, items: categoryItems }) => (
-            <section key={category} style={{ marginBottom: '32px' }}>
+            <section
+              key={category}
+              id={'cat-sec-' + (category.toLowerCase().replace(/[^a-z0-9]/g, '-'))}
+              style={{ marginBottom: '32px', scrollMarginTop: '160px' }}
+            >
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'baseline',
                   gap: '10px',
                   marginBottom: '16px',
-                  borderBottom: '2px solid var(--cw-color-border-light)',
+                  borderBottom: '2px solid #E5E7EB',
                   paddingBottom: '6px'
                 }}
               >
-                <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--cw-color-dark)' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#111827' }}>
                   {category}
                 </h2>
-                <span style={{ fontSize: '13px', color: 'var(--cw-color-text-muted)', fontWeight: 600 }}>
+                <span style={{ fontSize: '13px', color: '#6B7280', fontWeight: 600 }}>
                   ({categoryItems.length} items)
                 </span>
               </div>
@@ -640,7 +1008,7 @@ export default function MenuPage() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
                   gap: '14px'
                 }}
               >
@@ -673,53 +1041,185 @@ export default function MenuPage() {
           ))}
       </div>
 
-      {/* Floating Bottom Cart Bar */}
+      {/* Floating Category Menu Button for Mobile & Desktop */}
+      {showScrollNavButton && !isCheckoutOpen && !isCategorySheetOpen && (
+        <button
+          type="button"
+          onClick={() => setIsCategorySheetOpen(true)}
+          style={{
+            position: 'fixed',
+            bottom: totalCartCount > 0 ? '78px' : '22px',
+            right: '18px',
+            zIndex: 998,
+            backgroundColor: '#0F172A',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '24px',
+            padding: '10px 18px',
+            fontSize: '13px',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 18px rgba(0,0,0,0.3)',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <span>📖</span>
+          <span>Browse Menu</span>
+        </button>
+      )}
+
+      {/* Category Bottom Sheet Modal */}
+      {isCategorySheetOpen && (
+        <div
+          onClick={() => setIsCategorySheetOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(3px)',
+            zIndex: 1050,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderTopLeftRadius: '24px',
+              borderTopRightRadius: '24px',
+              width: '100%',
+              maxWidth: '460px',
+              maxHeight: '75vh',
+              overflowY: 'auto',
+              padding: '20px 20px 32px 20px',
+              boxShadow: '0 -8px 30px rgba(0,0,0,0.2)',
+              position: 'relative'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div style={{ fontSize: '17px', fontWeight: 800, color: '#1E2328' }}>
+                📖 Menu Categories
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCategorySheetOpen(false)}
+                style={{
+                  background: '#F1F5F9',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  cursor: 'pointer',
+                  fontSize: '15px',
+                  color: '#64748B'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {categories.map((cat) => {
+                const count = items.filter(i => i.category_id === cat.id).length;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory('All');
+                      setIsCategorySheetOpen(false);
+                      setTimeout(() => {
+                        const secId = 'cat-sec-' + (cat.name.toLowerCase().replace(/[^a-z0-9]/g, '-'));
+                        const el = document.getElementById(secId);
+                        if (el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }, 100);
+                    }}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '12px 16px',
+                      borderRadius: '12px',
+                      border: '1px solid #E5E7EB',
+                      backgroundColor: '#FFFFFF',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      color: '#1F2937',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <span>{cat.name}</span>
+                    <span style={{ fontSize: '12px', color: '#6B7280', backgroundColor: '#F3F4F6', padding: '2px 8px', borderRadius: '12px' }}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Zomato-Style Sticky Bottom Cart Bar */}
       {totalCartCount > 0 && !isCheckoutOpen && (
         <div
           style={{
             position: 'fixed',
-            bottom: '20px',
+            bottom: '16px',
             left: '50%',
             transform: 'translateX(-50%)',
-            backgroundColor: 'var(--cw-color-primary)',
+            width: 'calc(100% - 32px)',
+            maxWidth: '520px',
+            backgroundColor: '#16A34A',
             color: '#FFFFFF',
-            borderRadius: 'var(--cw-radius-pill)',
-            padding: '12px 24px',
+            borderRadius: '14px',
+            padding: '12px 18px',
             display: 'flex',
             alignItems: 'center',
-            gap: '20px',
-            boxShadow: '0 8px 24px rgba(111, 67, 42, 0.35)',
+            justifyContent: 'space-between',
+            boxShadow: '0 8px 24px rgba(22, 163, 74, 0.4)',
             zIndex: 1000
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '13px', fontWeight: 800 }}>
-              {totalCartCount} item{totalCartCount > 1 ? 's' : ''} added
+            <span style={{ fontSize: '13.5px', fontWeight: 800, letterSpacing: '0.02em' }}>
+              🛒 {totalCartCount} ITEM{totalCartCount > 1 ? 'S' : ''} • ₹{totalCartPrice}
             </span>
-            <span style={{ fontSize: '12px', opacity: 0.95, fontWeight: 700 }}>
-              Total: ₹{totalCartPrice}
+            <span style={{ fontSize: '11px', opacity: 0.9, fontWeight: 500 }}>
+              Direct Kitchen Delivery • Tap to Review
             </span>
           </div>
+
           <button
+            type="button"
             onClick={() => {
               setModalStep('CART');
               setIsCheckoutOpen(true);
             }}
             style={{
               backgroundColor: '#FFFFFF',
-              color: 'var(--cw-color-primary)',
-              padding: '8px 18px',
-              borderRadius: 'var(--cw-radius-pill)',
+              color: '#16A34A',
+              padding: '9px 18px',
+              borderRadius: '10px',
               fontWeight: 800,
               fontSize: '13px',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
             }}
           >
-            🛒 View Cart ({totalCartCount}) →
+            View Cart →
           </button>
         </div>
       )}

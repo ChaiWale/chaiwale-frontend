@@ -83,67 +83,71 @@ export const FoodCard: React.FC<FoodCardProps> = ({
       <div
         style={{
           backgroundColor: '#FFFFFF',
-          borderRadius: 'var(--cw-radius-lg)',
-          border: '1px solid var(--cw-color-border-light)',
-          padding: '16px',
+          borderRadius: '16px',
+          border: '1px solid #E5E7EB',
+          padding: '16px 16px 22px 16px',
           display: 'flex',
           alignItems: 'flex-start',
-          gap: '16px',
-          boxShadow: 'var(--cw-shadow-sm)',
-          transition: 'all var(--cw-transition-fast)',
+          justifyContent: 'space-between',
+          gap: '14px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+          transition: 'all 0.15s ease',
           position: 'relative'
         }}
       >
-        {/* Food Thumbnail on Left */}
-        <div
-          onClick={() => setIsModalOpen(true)}
-          title="Click to view full dish details"
-          style={{
-            width: '84px',
-            height: '84px',
-            minWidth: '84px',
-            borderRadius: 'var(--cw-radius-md)',
-            overflow: 'hidden',
-            backgroundColor: '#F2EBE1',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '1px solid var(--cw-color-border-light)',
-            cursor: 'pointer'
-          }}
-        >
-          {resolvedImage ? (
-            <img
-              src={resolvedImage}
-              alt={name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              loading="lazy"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = ASSETS.logo;
-                e.currentTarget.style.objectFit = 'contain';
-                e.currentTarget.style.padding = '8px';
-              }}
-            />
-          ) : (
-            <img
-              src={ASSETS.logo}
-              alt="Chaiwale"
-              style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '8px' }}
-              loading="lazy"
-            />
-          )}
-        </div>
-
-        {/* Middle: Details */}
+        {/* Left Column: Details, Dietary Icon, Tags, Price, Description */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-            <Badge variant={isEgg ? 'accent' : isVeg ? 'veg' : 'non-veg'}>
-              {isEgg ? 'Egg' : isVeg ? 'Veg' : 'Non-Veg'}
-            </Badge>
-            <span style={{ fontSize: '11px', color: 'var(--cw-color-text-muted)', fontWeight: 600, letterSpacing: '0.04em' }}>
+          {/* Dietary Indicator & Badges */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
+            {/* Zomato-Style Veg / Non-Veg / Egg Square Icon */}
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '16px',
+                height: '16px',
+                border: `1.5px solid ${isEgg ? '#D97706' : isVeg ? '#16A34A' : '#DC2626'}`,
+                borderRadius: '3px',
+                backgroundColor: '#FFFFFF',
+                padding: '2px',
+                boxSizing: 'border-box'
+              }}
+              title={isEgg ? 'Egg' : isVeg ? 'Pure Veg' : 'Non-Veg'}
+            >
+              <span
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: isVeg || isEgg ? '50%' : '1px',
+                  backgroundColor: isEgg ? '#D97706' : isVeg ? '#16A34A' : '#DC2626'
+                }}
+              />
+            </span>
+
+            {/* Bestseller / Signature Tag */}
+            {tags && tags.some(t => t.toLowerCase().includes('bestseller') || t.toLowerCase().includes('must try') || t.toLowerCase().includes('special')) && (
+              <span
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 800,
+                  color: '#92400E',
+                  backgroundColor: '#FEF3C7',
+                  padding: '2px 7px',
+                  borderRadius: '4px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px'
+                }}
+              >
+                ★ Bestseller
+              </span>
+            )}
+
+            <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
               {category}
             </span>
+
             {spiceLevel && spiceLevel !== 'NONE' && (
               <span style={{ fontSize: '11px' }} title={`Spice: ${spiceLevel}`}>
                 {spiceLevel === 'HOT' ? '🌶️🌶️🌶️' : spiceLevel === 'MEDIUM' ? '🌶️🌶️' : '🌶️'}
@@ -151,13 +155,14 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             )}
           </div>
 
+          {/* Dish Title */}
           <h4
             onClick={() => setIsModalOpen(true)}
             title="Click to view details"
             style={{
-              fontSize: '16px',
+              fontSize: '15.5px',
               fontWeight: 700,
-              color: 'var(--cw-color-text-main)',
+              color: '#111827',
               marginBottom: '4px',
               lineHeight: 1.3,
               cursor: 'pointer'
@@ -166,12 +171,26 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             {name}
           </h4>
 
+          {/* Price & Portions */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '6px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '15px', fontWeight: 800, color: '#1F2937' }}>
+              ₹{price}
+            </span>
+
+            {hasVariants && variants && (
+              <span style={{ fontSize: '11.5px', color: '#B45309', fontWeight: 600 }}>
+                ({variants.length} portions • from ₹{price})
+              </span>
+            )}
+          </div>
+
+          {/* Description with read more */}
           {description && (
-            <div style={{ marginBottom: '6px' }}>
+            <div>
               <p
                 style={{
-                  fontSize: '12.5px',
-                  color: '#475569',
+                  fontSize: '12px',
+                  color: '#4B5563',
                   lineHeight: 1.45,
                   margin: 0,
                   display: isDescExpanded ? 'block' : '-webkit-box',
@@ -193,126 +212,170 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                   background: 'none',
                   border: 'none',
                   padding: 0,
-                  marginTop: '2px',
+                  marginTop: '3px',
                   fontSize: '11px',
                   fontWeight: 700,
-                  color: 'var(--cw-color-primary)',
+                  color: '#6F432A',
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '2px'
                 }}
               >
-                {isDescExpanded ? 'Show less ▲' : 'Read details ▼'}
+                {isDescExpanded ? 'Less ▲' : 'more ▼'}
               </button>
             </div>
           )}
-
-          {tags && tags.length > 0 && (
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '6px', flexWrap: 'wrap' }}>
-              {tags.map((t) => (
-                <span
-                  key={t}
-                  style={{
-                    fontSize: '10px',
-                    padding: '1px 6px',
-                    borderRadius: '4px',
-                    backgroundColor: '#FEF3C7',
-                    color: '#92400E',
-                    fontWeight: 700
-                  }}
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px' }}>
-              <span style={{ fontSize: '12px', color: 'var(--cw-color-text-muted)' }}>₹</span>
-              <span style={{ fontSize: '17px', fontWeight: 800, color: 'var(--cw-color-primary)', fontFamily: 'var(--cw-font-heading)' }}>
-                {price}
-              </span>
-            </div>
-
-            {hasVariants && variants && (
-              <span style={{ fontSize: '11.5px', color: 'var(--cw-color-accent)', fontWeight: 700 }}>
-                {variants.length <= 2 && variants.every((v) => v.name.length < 15)
-                  ? `(${variants.map((v) => `${v.name}: ₹${v.price}`).join(' • ')})`
-                  : `(${variants.length} portions • from ₹${price})`}
-              </span>
-            )}
-          </div>
         </div>
 
-        {/* Right: + ADD / Quantity Control */}
-        <div style={{ minWidth: '94px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-          {qty === 0 ? (
-            <button
-              type="button"
-              onClick={handleAddClick}
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: 'var(--cw-color-primary)',
-                border: '1.5px solid var(--cw-color-primary)',
-                borderRadius: 'var(--cw-radius-pill)',
-                padding: '7px 18px',
-                fontSize: '13px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                boxShadow: '0 2px 4px rgba(111, 67, 42, 0.08)',
-                transition: 'all 0.15s ease',
-                fontFamily: 'var(--cw-font-heading)'
-              }}
-            >
-              + ADD
-            </button>
-          ) : (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '88px',
-                backgroundColor: 'var(--cw-color-primary)',
-                color: '#FFFFFF',
-                borderRadius: 'var(--cw-radius-pill)',
-                padding: '5px 10px',
-                boxShadow: '0 2px 6px rgba(111, 67, 42, 0.2)'
-              }}
-            >
-              <button
-                type="button"
-                onClick={handleSubtract}
-                style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '16px', fontWeight: 800, cursor: 'pointer', padding: '0 4px', lineHeight: 1 }}
-              >
-                -
-              </button>
-              <span style={{ fontSize: '14px', fontWeight: 800, fontFamily: 'var(--cw-font-heading)' }}>{qty}</span>
+        {/* Right Column: Zomato Square Photo + Overlapping ADD Button */}
+        <div
+          style={{
+            position: 'relative',
+            width: '116px',
+            minWidth: '116px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            paddingBottom: '14px'
+          }}
+        >
+          {/* Square Dish Image */}
+          <div
+            onClick={() => setIsModalOpen(true)}
+            title="Click to view full dish details"
+            style={{
+              width: '116px',
+              height: '104px',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              backgroundColor: '#F3F4F6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid #E5E7EB',
+              cursor: 'pointer',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
+            }}
+          >
+            {resolvedImage ? (
+              <img
+                src={resolvedImage}
+                alt={name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = ASSETS.logo;
+                  e.currentTarget.style.objectFit = 'contain';
+                  e.currentTarget.style.padding = '8px';
+                }}
+              />
+            ) : (
+              <img
+                src={ASSETS.logo}
+                alt="Chaiwale"
+                style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '10px' }}
+                loading="lazy"
+              />
+            )}
+          </div>
+
+          {/* Overlapping Zomato-Style ADD Button */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 2
+            }}
+          >
+            {qty === 0 ? (
               <button
                 type="button"
                 onClick={handleAddClick}
-                style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '16px', fontWeight: 800, cursor: 'pointer', padding: '0 4px', lineHeight: 1 }}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  color: '#16A34A',
+                  border: '1.5px solid #16A34A',
+                  borderRadius: '8px',
+                  padding: '6px 20px',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+                  transition: 'all 0.15s ease',
+                  letterSpacing: '0.02em',
+                  whiteSpace: 'nowrap'
+                }}
               >
-                +
+                ADD
               </button>
-            </div>
-          )}
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '94px',
+                  backgroundColor: '#16A34A',
+                  color: '#FFFFFF',
+                  borderRadius: '8px',
+                  padding: '5px 8px',
+                  boxShadow: '0 2px 8px rgba(22, 163, 74, 0.35)'
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={handleSubtract}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    fontSize: '16px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    padding: '0 4px',
+                    lineHeight: 1
+                  }}
+                >
+                  −
+                </button>
+                <span style={{ fontSize: '13.5px', fontWeight: 800 }}>{qty}</span>
+                <button
+                  type="button"
+                  onClick={handleAddClick}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    fontSize: '16px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    padding: '0 4px',
+                    lineHeight: 1
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            )}
+          </div>
 
+          {/* Customisable Pill Below Button */}
           {hasVariants && (
             <span
               onClick={() => setIsModalOpen(true)}
               style={{
-                fontSize: '10px',
-                color: 'var(--cw-color-accent)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
+                fontSize: '9.5px',
+                color: '#6B7280',
+                fontWeight: 600,
+                marginTop: '12px',
                 cursor: 'pointer'
               }}
             >
-              Customisable
+              customisable
             </span>
           )}
         </div>
